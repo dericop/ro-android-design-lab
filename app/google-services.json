@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "334191407056",
+    "firebase_url": "https://reduccion-de-obesidad.firebaseio.com",
+    "project_id": "reduccion-de-obesidad",
+    "storage_bucket": "reduccion-de-obesidad.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:334191407056:android:d453b2217289093f",
+        "android_client_info": {
+          "package_name": "com.ucaldas.ro.reduccionobesidad"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "334191407056-c8gs54945arb8bb6u63kfepqja5m9rcj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ucaldas.ro.reduccionobesidad",
+            "certificate_hash": "D194FBF5CE69C1F5E81DE9D46F03B347EB6F09E4"
+          }
+        },
+        {
+          "client_id": "334191407056-sfdju39dh4af8tk29cvqrbk6q4icjes0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDBwE-6S1pCxqlsoROZF1rkZ1DMYkGYw28"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "334191407056-sfdju39dh4af8tk29cvqrbk6q4icjes0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
