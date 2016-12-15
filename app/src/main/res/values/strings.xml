@@ -1,3 +1,24 @@
 <resources>
     <string name="app_name">Reduccion Obesidad</string>
+    <string name="title_activity_welcome">Inicio</string>
+    <string name="next">Siguiente</string>
+    <string name="skip">Saltar</string>
+    <string name="start">Iniciar</string>
+
+    <string name="slide_1_title">ROAPP Ucaldas</string>
+    <string name="slide_1_desc">La manera más fácil de reducir peso y mejorar hábitos.</string>
+
+    <string name="slide_2_title">¿Cómo funciona?</string>
+    <string name="slide_2_desc">Te registras, publicas tus hábitos y nuestros profesionales te ayudan a validarlos.</string>
+
+    <string name="slide_3_title">Beneficios</string>
+    <string name="slide_3_desc">Obtener retroalimentación de profesionales en nutrición de manera gratuita, además de mejorar tus hábitos y tu salud.</string>
+
+    <string name="slide_4_title">Simulaciones</string>
+    <string name="slide_4_desc">Tendrás la posibilidad de simular resultados a mediano plazo, visualizando tu estado de salud con tu hábitos actuales.</string>
+
+    <string name="play_again_desc">Para ver de nuevo, limpia los datos de la app</string>
+    <string name="play_again">Ver de nuevo</string>
+
+
 </resources>
