@@ -3,6 +3,8 @@ package com.ucaldas.ro.reduccionobesidad;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,6 +52,7 @@ public class Home extends Fragment {
         args.putString(ARG_PARAM2, param2);
 
         fragment.setArguments(args);
+
         return fragment;
     }
 
@@ -57,11 +60,20 @@ public class Home extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        /*FloatingActionButton fab = (FloatingActionButton) getContext().findViewById(R.id.btn_addPost);
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });*/
     }
 
     @Override

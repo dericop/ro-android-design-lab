@@ -12,12 +12,11 @@
         android:text="@string/hello_blank_fragment" />
 
     <com.getbase.floatingactionbutton.AddFloatingActionButton
-        android:id="@+id/semi_transparent"
+        android:id="@+id/btn_addPost"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="390dp"
-        android:layout_marginLeft="260dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="16dp"/>
+        android:layout_gravity="bottom|end"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="70dp"/>
 
 </FrameLayout>
