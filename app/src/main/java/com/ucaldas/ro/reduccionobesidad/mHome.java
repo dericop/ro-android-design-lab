@@ -1,5 +1,7 @@
 package com.ucaldas.ro.reduccionobesidad;
 
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -7,6 +9,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -17,6 +20,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.getbase.floatingactionbutton.AddFloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,14 +40,16 @@ public class mHome extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        AddFloatingActionButton fab = (AddFloatingActionButton) findViewById(R.id.btn_addPost);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                startActivity(new Intent(mHome.this, AddMenu.class));
+
+                /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();*/
             }
-        });*/
+        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -58,6 +65,17 @@ public class mHome extends AppCompatActivity
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+
+        if (Build.VERSION.SDK_INT >= 16){
+            toolbar.setBackground(ContextCompat.getDrawable(this, R.drawable.header));
+        } else{
+
+        }
+
+        /*final ActionBar actionBar = getActionBar();
+        BitmapDrawable background = new BitmapDrawable (BitmapFactory.decodeResource(getResources(), R.raw.actionbar_background));
+        background.setTileModeX(android.graphics.Shader.TileMode.REPEAT);
+        actionBar.setBackgroundDrawable(background);*/
     }
 
     private void setupViewPager(ViewPager viewPager) {

@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#00796B</color>
-    <color name="colorPrimaryDark">#004D40</color>
+    <color name="colorPrimary">#F7931E</color>
+    <color name="colorPrimaryDark">#d47408</color>
 
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#d47408</color>
     <color name="textColorPrimary">#FFFFFF</color>
     <color name="windowBackground">#FFFFFF</color>
     <color name="navigationBarColor">#000000</color>
+
+    <color name="floatButtonColor">#f7ff1e</color>
+
+    <color name="addPostTitles">#37474f</color>
 
 
     <!-- Colores de fondo de los slides-->

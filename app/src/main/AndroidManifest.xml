@@ -34,7 +34,11 @@
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings" />
-        <activity android:name=".AddPost"></activity>
+        <activity android:name=".AddPost" />
+        <activity
+            android:name=".AddMenu"
+            android:label="@string/title_activity_add_menu"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>
