@@ -21,11 +21,11 @@
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
-        <Button
+       <!-- <Button
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:text="Departure"
-            android:layout_gravity="left"/>
+            android:layout_gravity="left"/> -->
 
         </android.support.v7.widget.Toolbar>
 
