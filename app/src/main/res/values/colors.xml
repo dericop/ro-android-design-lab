@@ -9,7 +9,8 @@
     <color name="navigationBarColor">#000000</color>
 
     <color name="floatButtonColor">#f7ff1e</color>
-    <color name="addPostTitles">#37474f</color>
+    <color name="toolbarColor">#ffffff</color>
+    <color name="toolbarTextColor">#666</color>
     <color name="splashColor">#ffffff</color>
 
     <!-- Colores de fondo de los slides-->

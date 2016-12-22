@@ -46,6 +46,7 @@ public class mHome extends AppCompatActivity
             public void onClick(View view) {
                 startActivity(new Intent(mHome.this, AddMenu.class));
 
+
                 /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();*/
             }

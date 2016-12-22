@@ -116,7 +116,7 @@
 
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="title_activity_add_menu">AddMenu</string>
-
+    <string name="title_activity_add_post">Nueva Publicación</string>
     <string name="addMenuTittle">Nueva Publicación</string>
 
 

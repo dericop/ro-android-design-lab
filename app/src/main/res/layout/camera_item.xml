@@ -1,18 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/img_camera"
-        android:src="@drawable/ic_action_camera"/>
-    
-    <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Hola"/>
+        android:id="@+id/img_camera"
+        android:src="@drawable/ic_camera"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"/>
+
+    <TextView
+        android:id="@+id/itemTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nueva Foto"
+        android:layout_marginTop="10dp"
+        android:textColor="#888"
+        android:layout_gravity="center_horizontal"/>
 
 </LinearLayout>
