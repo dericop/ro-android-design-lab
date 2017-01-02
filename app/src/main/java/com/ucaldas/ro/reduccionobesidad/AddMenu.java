@@ -28,28 +28,30 @@ import android.widget.Toast;
 
 public class AddMenu extends AppCompatActivity {
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_menu);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(R.string.addMenuTittle);
-        toolbar.setTitleTextColor(getResources().getColor(R.color.toolbarTextColor));
-
         setSupportActionBar(toolbar);
         changeStatusBarColor();
 
-
-
-        final Drawable closeIcon = getResources().getDrawable(R.drawable.ic_action_close);
+        /*final Drawable closeIcon = getResources().getDrawable(R.drawable.ic_action_close);
         closeIcon.setColorFilter(getResources().getColor(R.color.toolbarTextColor), PorterDuff.Mode.SRC_ATOP);
 
         this.getSupportActionBar().setHomeAsUpIndicator(closeIcon);
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //this.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.toolbarTextColor)));
+        //this.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.toolbarTextColor)));*/
+
+        configureGrids();
+
+    }
 
 
+    private void configureGrids(){
+        //Gridview de actividades
         GridView gridview = (GridView) findViewById(R.id.gridview);
         gridview.setAdapter(new ItemAdapter(this));
 
@@ -58,8 +60,10 @@ public class AddMenu extends AppCompatActivity {
                                     int position, long id) {
             /* Toast.makeText(HelloGridView.this, "" + position,
                     Toast.LENGTH_SHORT).show();*/
+                if(position == 0){
+                    startActivity(new Intent(AddMenu.this, AddPost.class));
+                }
 
-                startActivity(new Intent(AddMenu.this, AddPost.class));
             }
         });
 
@@ -75,6 +79,7 @@ public class AddMenu extends AppCompatActivity {
                         Toast.LENGTH_SHORT).show();*/
             }
         });
+
     }
 
     @Override
@@ -90,6 +95,10 @@ public class AddMenu extends AppCompatActivity {
             window.setStatusBarColor(Color.TRANSPARENT);
         }
     }
+
+
+
+
 
     public class ItemAdapter extends BaseAdapter {
         private Context mContext;
