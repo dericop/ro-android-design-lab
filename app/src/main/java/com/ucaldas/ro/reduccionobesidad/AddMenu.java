@@ -21,6 +21,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -38,12 +39,8 @@ public class AddMenu extends AppCompatActivity {
         setSupportActionBar(toolbar);
         changeStatusBarColor();
 
-        /*final Drawable closeIcon = getResources().getDrawable(R.drawable.ic_action_close);
-        closeIcon.setColorFilter(getResources().getColor(R.color.toolbarTextColor), PorterDuff.Mode.SRC_ATOP);
-
-        this.getSupportActionBar().setHomeAsUpIndicator(closeIcon);
-        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //this.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.toolbarTextColor)));*/
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         configureGrids();
 
@@ -60,8 +57,17 @@ public class AddMenu extends AppCompatActivity {
                                     int position, long id) {
             /* Toast.makeText(HelloGridView.this, "" + position,
                     Toast.LENGTH_SHORT).show();*/
-                if(position == 0){
-                    startActivity(new Intent(AddMenu.this, AddPost.class));
+                switch(position){
+                    case 0:
+                        Intent intent = new Intent(getBaseContext(), AddPost.class);
+                        intent.putExtra("SOURCE_ID", "activities");
+                        startActivity(intent);
+                        break;
+                    case 1:
+                        Intent intentL = new Intent(getBaseContext(), LibraryActivity.class);
+                        intentL.putExtra("SOURCE_ID", "activities");
+                        startActivity(intentL);
+                        break;
                 }
 
             }
@@ -77,6 +83,20 @@ public class AddMenu extends AppCompatActivity {
                                     int position, long id) {
                 /* Toast.makeText(HelloGridView.this, "" + position,
                         Toast.LENGTH_SHORT).show();*/
+
+                switch(position){
+                    case 0:
+                        Intent intent = new Intent(getBaseContext(), AddPost.class);
+                        intent.putExtra("SOURCE_ID", "foods");
+                        startActivity(intent);
+                        break;
+                    case 1:
+                        Intent intentL = new Intent(getBaseContext(), LibraryActivity.class);
+                        intentL.putExtra("SOURCE_ID", "foods");
+                        startActivity(intentL);
+                        break;
+                }
+
             }
         });
 
@@ -95,10 +115,6 @@ public class AddMenu extends AppCompatActivity {
             window.setStatusBarColor(Color.TRANSPARENT);
         }
     }
-
-
-
-
 
     public class ItemAdapter extends BaseAdapter {
         private Context mContext;

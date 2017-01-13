@@ -23,28 +23,12 @@
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
             <Button
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:background="@drawable/ic_action_close"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="10dp"/>
-
-            <TextView
-                android:id="@+id/addPostBarTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Nueva Actividad"
-                android:textSize="20dp"
-                android:paddingStart="20dp"
-                android:paddingLeft="20dp"
-                android:gravity="center_vertical"/>
-
-            <Button
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_gravity="right"
                 android:background="@drawable/ic_action_save"
-                android:layout_marginRight="20dp"/>
+                android:layout_marginRight="20dp"
+                android:id="@+id/btn_save"/>
 
         </android.support.v7.widget.Toolbar>
 
@@ -107,13 +91,13 @@
 
 
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="CATEGORÍA"
-                    android:layout_marginTop="40dp"
-                    android:textColor="#37474f"
-                    android:textStyle="bold"
-                    android:id="@+id/lblCategory" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="CATEGORÍA"
+                android:layout_marginTop="40dp"
+                android:textColor="#37474f"
+                android:textStyle="bold"
+                android:id="@+id/lblCategory" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -122,11 +106,31 @@
                     android:layout_marginTop="20dp"
                     android:drawableRight="@drawable/ic_action_categories"
                     android:textColor="#37474f"
-                    android:id="@+id/txtCategory"
+                    android:linksClickable="true"
+                    android:textSize="16dp"
+                    android:gravity="center_vertical"
+                    android:id="@+id/txtCategory"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="FRECUENCIA"
+                    android:layout_marginTop="40dp"
+                    android:textColor="#37474f"
+                    android:textStyle="bold" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Seleccione una frecuencia"
+                    android:layout_marginTop="20dp"
+                    android:drawableRight="@drawable/ic_action_categories"
+                    android:textColor="#37474f"
+                    android:id="@+id/txtFrecuency"
                     android:linksClickable="true"
                     android:textSize="16dp"
                     android:gravity="center_vertical"/>
-
 
                 <TextView
                     android:layout_width="match_parent"

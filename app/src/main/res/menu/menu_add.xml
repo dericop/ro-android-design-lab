@@ -3,10 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
 
-    <item android:id="@+id/help2"
-        android:icon="@drawable/ic_tools"
-        android:title="hola"
-        android:showAsAction="always"/>
+    <item android:id="@+id/help"
+        android:icon="@drawable/ic_action_save"
+        android:title="hola" />
+
+
 
 
 

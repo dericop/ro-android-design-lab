@@ -6,9 +6,12 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 
 /**
@@ -19,7 +22,7 @@ import android.view.ViewGroup;
  * Use the {@link Home#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Home extends Fragment {
+public class Home extends ListFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -30,6 +33,10 @@ public class Home extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+
+    private ListView mListView;
+    ArrayAdapter<String> mLeadsAdapter;
 
     public Home() {
         // Required empty public constructor
@@ -64,6 +71,7 @@ public class Home extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
 
         /*FloatingActionButton fab = (FloatingActionButton) getContext().findViewById(R.id.btn_addPost);
 
@@ -100,6 +108,22 @@ public class Home extends Fragment {
                     + " must implement OnFragmentInteractionListener");
         }
     }*/
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        ListView mLeadsList;
+        HomeAdapter mLeadsAdapter;
+
+        mLeadsList = (ListView) view.findViewById(android.R.id.list);
+
+        mLeadsAdapter = new HomeAdapter(
+                getActivity(),
+                PostRepository.getInstance().getLeads());
+
+        mLeadsList.setAdapter(mLeadsAdapter);
+    }
 
     @Override
     public void onDetach() {
