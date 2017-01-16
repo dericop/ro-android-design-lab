@@ -18,14 +18,17 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorPrimary"
+            android:background="@color/toolbarColor"
+            android:elevation="4dp"
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
-            <!-- <Button
-                 android:layout_width="wrap_content"
-                 android:layout_height="50dp"
-                 android:text="Departure"
-                 android:layout_gravity="left"/> -->
+            <Button
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="right"
+                android:background="@drawable/ic_action_save"
+                android:layout_marginRight="20dp"
+                android:id="@+id/btn_save"/>
 
         </android.support.v7.widget.Toolbar>
 
@@ -54,49 +57,117 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <AutoCompleteTextView
-                        android:id="@+id/email"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/prompt_email"
-                        android:inputType="textEmailAddress"
-                        android:maxLines="1"
-                        android:singleLine="true" />
-
-                </android.support.design.widget.TextInputLayout>
-
-
-
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <EditText
-                        android:id="@+id/password"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/prompt_password"
-                        android:imeActionId="@+id/login"
-                        android:imeActionLabel="@string/action_sign_in_short"
-                        android:imeOptions="actionUnspecified"
-                        android:inputType="textPassword"
-                        android:maxLines="1"
-                        android:singleLine="true" />
-
-                </android.support.design.widget.TextInputLayout>
-
-                <Button
-                    android:id="@+id/email_sign_in_button"
-                    style="?android:textAppearanceSmall"
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="@string/action_sign_in"
+                    android:text="Ajustes"
+                    android:textStyle="bold"
+                    android:textSize="20dp"
+                    android:textColor="#37474f"
+                    android:drawableLeft="@drawable/ic_tools"
+                    android:drawablePadding="10dp"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="10dp"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="NOMBRE DE LA PUBLICACIÓN"
+                    android:layout_marginTop="20dp"
+                    android:textColor="#37474f"
+                    android:textStyle="bold"
+                    android:id="@+id/txtName" />
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/textInputEditText" />
+
+                </android.support.design.widget.TextInputLayout>
+
+
+                <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="CATEGORÍA"
+                android:layout_marginTop="40dp"
+                android:textColor="#37474f"
+                android:textStyle="bold"
+                android:id="@+id/lblCategory" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Seleccione una categoría"
+                    android:layout_marginTop="20dp"
+                    android:drawableRight="@drawable/ic_action_categories"
+                    android:textColor="#37474f"
+                    android:linksClickable="true"
+                    android:textSize="16dp"
+                    android:gravity="center_vertical"
+                    android:id="@+id/txtCategory"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="FRECUENCIA"
+                    android:layout_marginTop="40dp"
+                    android:textColor="#37474f"
                     android:textStyle="bold" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Seleccione una frecuencia"
+                    android:layout_marginTop="20dp"
+                    android:drawableRight="@drawable/ic_action_categories"
+                    android:textColor="#37474f"
+                    android:id="@+id/txtFrecuency"
+                    android:linksClickable="true"
+                    android:textSize="16dp"
+                    android:gravity="center_vertical"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="IMAGEN"
+                    android:layout_marginTop="40dp"
+                    android:textColor="#37474f"
+                    android:textStyle="bold"
+                    android:id="@+id/txtImage" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="20dp">
+
+                    <ImageView
+                        android:id="@+id/imagePreview"
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:background="@drawable/placeholder"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="ELEGIR IMAGEN"
+                        android:textColor="#fff"
+                        android:textStyle="bold"
+                        android:gravity="right"
+                        android:layout_marginTop="120dp"
+                        android:paddingRight="15dp"
+                        android:layout_alignLeft="@id/imagePreview"
+                        android:layout_alignTop="@id/imagePreview"
+                        android:layout_alignRight="@id/imagePreview"
+                        android:layout_alignBottom="@id/imagePreview" />
+
+                </RelativeLayout>
+
 
             </LinearLayout>
         </ScrollView>

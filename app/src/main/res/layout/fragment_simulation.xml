@@ -4,10 +4,11 @@
     android:layout_height="match_parent"
     tools:context="com.ucaldas.ro.reduccionobesidad.Simulation">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+    <ImageView
+        android:layout_width="380dp"
+        android:layout_height="300dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="-50dp"
+        android:background="@drawable/building"/>
 
 </FrameLayout>

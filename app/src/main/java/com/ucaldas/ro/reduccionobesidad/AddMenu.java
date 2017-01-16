@@ -21,6 +21,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -28,28 +29,26 @@ import android.widget.Toast;
 
 public class AddMenu extends AppCompatActivity {
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_menu);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(R.string.addMenuTittle);
-        toolbar.setTitleTextColor(getResources().getColor(R.color.toolbarTextColor));
-
         setSupportActionBar(toolbar);
         changeStatusBarColor();
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        configureGrids();
+
+    }
 
 
-        final Drawable closeIcon = getResources().getDrawable(R.drawable.ic_action_close);
-        closeIcon.setColorFilter(getResources().getColor(R.color.toolbarTextColor), PorterDuff.Mode.SRC_ATOP);
-
-        this.getSupportActionBar().setHomeAsUpIndicator(closeIcon);
-        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //this.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.toolbarTextColor)));
-
-
+    private void configureGrids(){
+        //Gridview de actividades
         GridView gridview = (GridView) findViewById(R.id.gridview);
         gridview.setAdapter(new ItemAdapter(this));
 
@@ -58,8 +57,19 @@ public class AddMenu extends AppCompatActivity {
                                     int position, long id) {
             /* Toast.makeText(HelloGridView.this, "" + position,
                     Toast.LENGTH_SHORT).show();*/
+                switch(position){
+                    case 0:
+                        Intent intent = new Intent(getBaseContext(), AddPost.class);
+                        intent.putExtra("SOURCE_ID", "activities");
+                        startActivity(intent);
+                        break;
+                    case 1:
+                        Intent intentL = new Intent(getBaseContext(), LibraryActivity.class);
+                        intentL.putExtra("SOURCE_ID", "activities");
+                        startActivity(intentL);
+                        break;
+                }
 
-                startActivity(new Intent(AddMenu.this, AddPost.class));
             }
         });
 
@@ -73,8 +83,23 @@ public class AddMenu extends AppCompatActivity {
                                     int position, long id) {
                 /* Toast.makeText(HelloGridView.this, "" + position,
                         Toast.LENGTH_SHORT).show();*/
+
+                switch(position){
+                    case 0:
+                        Intent intent = new Intent(getBaseContext(), AddPost.class);
+                        intent.putExtra("SOURCE_ID", "foods");
+                        startActivity(intent);
+                        break;
+                    case 1:
+                        Intent intentL = new Intent(getBaseContext(), LibraryActivity.class);
+                        intentL.putExtra("SOURCE_ID", "foods");
+                        startActivity(intentL);
+                        break;
+                }
+
             }
         });
+
     }
 
     @Override

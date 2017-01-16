@@ -9,9 +9,10 @@
     <color name="navigationBarColor">#000000</color>
 
     <color name="floatButtonColor">#f7ff1e</color>
-    <color name="toolbarColor">#ffffff</color>
+    <color name="toolbarColor">#F7931E</color>
     <color name="toolbarTextColor">#666</color>
     <color name="splashColor">#ffffff</color>
+    <color name="toolbarColorFood">#D2DE25</color>
 
     <!-- Colores de fondo de los slides-->
     <color name="bg_screen1">#fbb03b</color>
@@ -44,5 +45,7 @@
         <item>@color/dot_dark_screen3</item>
         <item>@color/dot_dark_screen4</item>
     </array>
+
+    <color name="black_overlay">#66000000</color>
 
 </resources>
