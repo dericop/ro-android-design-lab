@@ -30,10 +30,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".WelcomeActivity">
+        <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
+        </activity>
+        <activity android:name=".WelcomeActivity">
+
         </activity>
         <activity
             android:name=".MainActivity"
@@ -44,9 +47,6 @@
             android:label="@string/title_activity_m_home"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".LoginActivity"
-            android:label="@string/title_activity_login" />
-        <activity
             android:name=".AddMenu"
             android:label="@string/title_activity_add_menu"
             android:theme="@style/AppTheme" />
@@ -54,7 +54,8 @@
             android:name=".AddPost"
             android:label="@string/title_activity_library_post"
             android:theme="@style/AppTheme" />
-        <activity android:name=".LibraryActivity"></activity>
+        <activity android:name=".LibraryActivity" />
+
     </application>
 
 </manifest>

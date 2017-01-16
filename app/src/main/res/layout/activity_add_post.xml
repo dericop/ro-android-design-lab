@@ -60,7 +60,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Ajustes"
+                    android:text="@string/new_post_title_new_data"
                     android:textStyle="bold"
                     android:textSize="20dp"
                     android:textColor="#37474f"
@@ -72,7 +72,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="NOMBRE DE LA PUBLICACIÓN"
+                    android:text="@string/new_post_name"
                     android:layout_marginTop="20dp"
                     android:textColor="#37474f"
                     android:textStyle="bold"
@@ -89,53 +89,10 @@
 
                 </android.support.design.widget.TextInputLayout>
 
-
-                <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="CATEGORÍA"
-                android:layout_marginTop="40dp"
-                android:textColor="#37474f"
-                android:textStyle="bold"
-                android:id="@+id/lblCategory" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Seleccione una categoría"
-                    android:layout_marginTop="20dp"
-                    android:drawableRight="@drawable/ic_action_categories"
-                    android:textColor="#37474f"
-                    android:linksClickable="true"
-                    android:textSize="16dp"
-                    android:gravity="center_vertical"
-                    android:id="@+id/txtCategory"/>
-
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="FRECUENCIA"
-                    android:layout_marginTop="40dp"
-                    android:textColor="#37474f"
-                    android:textStyle="bold" />
-
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Seleccione una frecuencia"
-                    android:layout_marginTop="20dp"
-                    android:drawableRight="@drawable/ic_action_categories"
-                    android:textColor="#37474f"
-                    android:id="@+id/txtFrecuency"
-                    android:linksClickable="true"
-                    android:textSize="16dp"
-                    android:gravity="center_vertical"/>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="IMAGEN"
+                    android:text="@string/new_post_image"
                     android:layout_marginTop="40dp"
                     android:textColor="#37474f"
                     android:textStyle="bold"
@@ -155,7 +112,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="ELEGIR IMAGEN"
+                        android:text="@string/new_post_choose_image"
                         android:textColor="#fff"
                         android:textStyle="bold"
                         android:gravity="right"
@@ -167,6 +124,49 @@
                         android:layout_alignBottom="@id/imagePreview" />
 
                 </RelativeLayout>
+
+                <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/new_post_category"
+                android:layout_marginTop="40dp"
+                android:textColor="#37474f"
+                android:textStyle="bold"
+                android:id="@+id/lblCategory" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/new_post_placeholder_category"
+                    android:layout_marginTop="20dp"
+                    android:drawableRight="@drawable/ic_action_categories"
+                    android:textColor="#37474f"
+                    android:linksClickable="true"
+                    android:textSize="16dp"
+                    android:gravity="center_vertical"
+                    android:id="@+id/txtCategory"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/new_post_frecuency"
+                    android:layout_marginTop="40dp"
+                    android:textColor="#37474f"
+                    android:textStyle="bold" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/new_post_placeholder_frecuency"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:drawableRight="@drawable/ic_action_categories"
+                    android:textColor="#37474f"
+                    android:id="@+id/txtFrecuency"
+                    android:linksClickable="true"
+                    android:textSize="16dp"
+                    android:gravity="center_vertical"/>
 
 
             </LinearLayout>
