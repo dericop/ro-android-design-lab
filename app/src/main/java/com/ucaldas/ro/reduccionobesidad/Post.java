@@ -1,74 +1,76 @@
 package com.ucaldas.ro.reduccionobesidad;
 
+import com.google.firebase.database.IgnoreExtraProperties;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
  * Created by Dericop on 12/01/17.
  */
 
+@IgnoreExtraProperties
 public class Post {
 
-    private String mId;
     private String mName;
-    private String mTitle;
-    private String mCompany;
+    private String mCategory;
+    private String mFrecuency;
     private int mImage;
 
-    public Post(String name, String title, String company, int image) {
-        mId = UUID.randomUUID().toString();
+    public Post(){
+
+    }
+
+    public Post(String name, String category, String frecuency, int image) {
         mName = name;
-        mTitle = title;
-        mCompany = company;
+        mCategory = category;
+        mFrecuency = frecuency;
         mImage = image;
     }
 
-    public String getId() {
-        return mId;
-    }
-
-    public void setId(String mId) {
-        this.mId = mId;
-    }
-
-    public String getName() {
+    public String getmName() {
         return mName;
     }
 
-    public void setName(String mName) {
+    public void setmName(String mName) {
         this.mName = mName;
     }
 
-    public String getTitle() {
-        return mTitle;
+    public String getmCategory() {
+        return mCategory;
     }
 
-    public void setTitle(String title) {
-        this.mTitle = title;
+    public void setmCategory(String mCategory) {
+        this.mCategory = mCategory;
     }
 
-    public String getCompany() {
-        return mCompany;
+    public String getmFrecuency() {
+        return mFrecuency;
     }
 
-    public void setCompany(String mCompany) {
-        this.mCompany = mCompany;
+    public void setmFrecuency(String mFrecuency) {
+        this.mFrecuency = mFrecuency;
     }
 
-    public int getImage() {
+    public int getmImage() {
         return mImage;
     }
 
-    public void setImage(int mImage) {
+    public void setmImage(int mImage) {
         this.mImage = mImage;
     }
 
-    @Override
-    public String toString() {
-        return "Lead{" +
-                "ID='" + mId + '\'' +
-                ", Compañía='" + mCompany + '\'' +
-                ", Nombre='" + mName + '\'' +
-                ", Cargo='" + mTitle + '\'' +
-                '}';
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("name", mName);
+        result.put("category", mCategory);
+        result.put("frecuency", mFrecuency);
+        result.put("image", mImage);
+
+        return result;
     }
+
+
+
 }

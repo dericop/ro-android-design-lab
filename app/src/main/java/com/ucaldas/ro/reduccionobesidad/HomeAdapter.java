@@ -45,11 +45,11 @@ public class HomeAdapter extends ArrayAdapter<Post> {
         // Lead actual.
         Post lead = getItem(position);
 
-        // Setup.
-        Glide.with(getContext()).load(lead.getImage()).into(avatar);
-        name.setText(lead.getName());
-        title.setText(lead.getTitle());
-        company.setText(lead.getCompany());
+        // Setup
+        Glide.with(getContext()).load(lead.getmImage()).into(avatar);
+        name.setText(lead.getmName());
+        title.setText(lead.getmCategory());
+        company.setText(lead.getmFrecuency());
 
         return convertView;
     }

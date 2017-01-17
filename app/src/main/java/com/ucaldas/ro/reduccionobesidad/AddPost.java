@@ -6,16 +6,31 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Build;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class AddPost extends AppCompatActivity {
 
@@ -124,15 +139,60 @@ public class AddPost extends AppCompatActivity {
         /*
         * Evento para guardar una nueva publicación
         * */
+
         Button btn_save = (Button) findViewById(R.id.btn_save);
         btn_save.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                //Guardar los elementos del formulario en la base de datos
-                finish();
+            public void onClick(final View view) {
+            //Guardar los elementos del formulario en la base de dato
+
+            DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+            String key = database.child("posts").push().getKey();
+
+            Post post = new Post("post", "actividad", "1 vez", 1);
+            Map<String, Object> postValues = post.toMap();
+
+            Map<String, Object> childUpdates = new HashMap<>();
+
+            String userId = mHome.user.getUid();
+            childUpdates.put("/user-posts/" + userId + "/" + key, postValues);
+
+            OnCompleteListener saveListener = new OnCompleteListener() {
+                @Override
+                public void onComplete(@NonNull Task task) {
+                    if(task.isSuccessful()){
+                        finish();
+
+                    }else{
+                        Log.v("DB", task.getResult() + "");
+                        Toast.makeText(getBaseContext(), "Revisa tu conexión a internet o intentalo más tarde", Toast.LENGTH_LONG);
+                    }
+                }
+            };
+            database.updateChildren(childUpdates).addOnCompleteListener(saveListener);
+
+            //myRef.setValue("Hello, daniel!");
+
+            // Read from the database
+            /*myRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    // This method is called once with the initial value and again
+                    // whenever data at this location is updated.
+                    String value = dataSnapshot.getValue(String.class);
+                    Log.d("DB", "Value is: " + value);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError error) {
+                    // Failed to read value
+                    Log.w("DB", "Failed to read value.", error.toException());
+                }
+            });*/
             }
         });
     }
+
 
     private void createPopUp(String title, final CharSequence data[], final TextView viewToUpdate){
         /*

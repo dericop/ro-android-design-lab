@@ -64,11 +64,16 @@ public class LoginActivity extends AppCompatActivity implements
                 if (user != null) {
                     // User is signed in
                     Log.d("User", "onAuthStateChanged:signed_in:" + user.getUid());
+                    Toast.makeText(getBaseContext(), getString(R.string.login_successfull), Toast.LENGTH_LONG);
+
+                    mHome.user = user; //Asignación de usuario a la clase principal
+                    startActivity(new Intent(getBaseContext(), mHome.class));
+
                 } else {
                     // User is signed out
                     Log.d("User", "onAuthStateChanged:signed_out");
+                    Toast.makeText(getBaseContext(), getString(R.string.login_fail), Toast.LENGTH_LONG);
                 }
-                // ...
             }
         };
 
