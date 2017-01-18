@@ -243,18 +243,21 @@
     <string name="new_post_placeholder_frecuency">Seleccione una frecuencia</string>
 
     <string-array name="new_post_activity_categories">
+        <item>Seleccione una categoría</item>
         <item>Deporte</item>
         <item>Entretenimiento</item>
         <item>Trabajo</item>
         <item>Estudio</item>
     </string-array>
     <string-array name="new_post_food_categories">
+        <item>Seleccione una categoría</item>
         <item>Desayuno</item>
         <item>Almuerzo</item>
         <item>Comida</item>
         <item>Algo</item>
     </string-array>
     <string-array name="new_post_frecuencies">
+        <item>Seleccione una frecuencia</item>
         <item>Todos los días</item>
         <item>Casi todos los días</item>
         <item>2-3 veces a la semana</item>
@@ -268,8 +271,16 @@
         <item>Elegir de la galería</item>
     </string-array>
 
+    <!--  validaciones -->
+    <string name="add_post_validate_name">Debes ingresar un nombre</string>
+    <string name="add_post_validate_name_length">El nombre debe tener menos de 60 caracteres</string>
+    <string name="add_post_validate_line_breaks">El nombre no debe tener saltos de línea</string>
+    <string name="add_post_category_default_value">Seleccione una categoría</string>
+    <string name="add_post_frecuency_default_value">Seleccione una frecuencia</string>
+
     <!-- Strings relatecionados con el Login -->
     <string name="login_successfull">Inicio de sesión exitoso</string>
     <string name="login_fail">Revisa tu conexión a internet e intentalo más tarde.</string>
+
 
 </resources>

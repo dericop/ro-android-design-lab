@@ -19,9 +19,23 @@
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tabMode="fixed" />
+
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_m_home" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="105dp">
+
+        <include layout="@layout/content_m_home" />
+
+    </RelativeLayout>
+
 
     <com.getbase.floatingactionbutton.AddFloatingActionButton
         android:id="@+id/btn_addPost"

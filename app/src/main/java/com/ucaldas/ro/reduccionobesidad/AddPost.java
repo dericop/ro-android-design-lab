@@ -3,44 +3,73 @@ package com.ucaldas.ro.reduccionobesidad;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.ucaldas.ro.reduccionobesidad.R.id.imageView;
 
 public class AddPost extends AppCompatActivity {
 
     static final int REQUEST_IMAGE_CAPTURE = 1; //Bandera para verificar en los resultados de actividad si se ha tomado una foto.
     static final int RESULT_LOAD_IMAGE = 2; //Bandera para verificar en los resultados de actividad si se ha cargado una foto de la galería
-    String SOURCE = ""; //Indica el origen de un llamado, con el objetivo de reutilizar la vista.
+    private String SOURCE = ""; //Indica el origen de un llamado, con el objetivo de reutilizar la vista.
+
+    //Datos que el usuario va a ingresar para la publiación
+    private Spinner frecuencySpinner;
+    private Spinner categorySpinner;
+    private ImageView prev;
+
+    private CharSequence nameText;
+    private CharSequence category;
+    private CharSequence frecuency;
+    private Drawable image;
+
 
     final AppCompatActivity that = this; //Guardar el contexto para los menú de alerta.
-    CharSequence categories[]; //Arreglo con las categorias (Dependen de SOURCE)
-    CharSequence frecuencies[]; // Arreglo con las frecuencias (Dependen de SOURCE)
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +79,8 @@ public class AddPost extends AppCompatActivity {
         configureToolbarAndActions();
         assignActivitySourceAndInitData();
         initializePopUpActions();
+
+
     }
 
     private void assignActivitySourceAndInitData(){
@@ -57,23 +88,39 @@ public class AddPost extends AppCompatActivity {
         * Asigna el origen de la creación de esta vista
         * Inicializa los datos con respecto al origen
         * */
+        prev = (ImageView) findViewById(R.id.imagePreview);
         SOURCE = getIntent().getStringExtra("SOURCE_ID"); //Obtiene el origen
 
-        if(SOURCE.equals("activities")){ //¿El origen es de actividades?
+        //Creación del spinner de categorias
+        categorySpinner = (Spinner) findViewById(R.id.category_spinner);
+        ArrayAdapter<CharSequence> adapter;
 
+        if(SOURCE.equals("activities")){ //¿El origen es de actividades?
             setTitle(getString(R.string.new_post_activity_toolbar_title)); //Actualiza el titulo general
-            categories = getBaseContext().getResources().getStringArray(R.array.new_post_activity_categories); //Cargar el listado de categorías de actividades
+            adapter = ArrayAdapter.createFromResource(this,
+                    R.array.new_post_activity_categories, android.R.layout.simple_spinner_dropdown_item); //Cargar con las categorias de actividades
 
         }else{ //¿El origen es de alimentos?
+            adapter = ArrayAdapter.createFromResource(this,
+                    R.array.new_post_food_categories, android.R.layout.simple_spinner_dropdown_item); //Cargar con las categorias de alimentos
 
             setTitle(getString(R.string.new_post_food_toolbar_title)); //Actualiza el titulo general
+
             //Cambiar el color del toolbar
             Toolbar tool = (Toolbar) findViewById(R.id.toolbar);
             tool.setBackgroundColor(getResources().getColor(R.color.toolbarColorFood));
 
-            categories = getBaseContext().getResources().getStringArray(R.array.new_post_food_categories);//Cargar el listado de categorias de alimentos
         }
-        frecuencies = getBaseContext().getResources().getStringArray(R.array.new_post_frecuencies);//Carga el listado de frecuencias
+
+        // Creación del spinner de frecuencias para un nuevo post
+        frecuencySpinner = (Spinner) findViewById(R.id.frecuency_spinner);
+        ArrayAdapter<CharSequence> frecuencyAdapter;
+        frecuencyAdapter = ArrayAdapter.createFromResource(this, R.array.new_post_frecuencies, android.R.layout.simple_spinner_dropdown_item);
+
+        //Configuración de adaptadores para cargar los datos
+        frecuencySpinner.setAdapter(frecuencyAdapter);
+        categorySpinner.setAdapter(adapter);
+
     }
 
     private void changeStatusBarColor() {
@@ -88,27 +135,6 @@ public class AddPost extends AppCompatActivity {
     }
 
     private void initializePopUpActions(){
-        /*
-        * Inicializa las acciones y eventos para popUp.
-        * */
-        final TextView txtCategory = (TextView) findViewById(R.id.txtCategory);
-        final TextView txtFrecuency = (TextView) findViewById(R.id.txtFrecuency);
-
-        //Creación del evento de click para categorias.
-        txtCategory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                createPopUp(getString(R.string.subtitle_choose_categories), categories, txtCategory); //Mostrar popUp
-            }
-        });
-
-        //Creación del evento de click para frecuencias
-        txtFrecuency.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                createPopUp(getString(R.string.subtitle_choose_frecuencies), frecuencies, txtFrecuency); //Mostrar popUp
-            }
-        });
 
         //Creación del evento de click para el menu de tomar fotos
         ImageView prev = (ImageView) findViewById(R.id.imagePreview);
@@ -144,79 +170,169 @@ public class AddPost extends AppCompatActivity {
         btn_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-            //Guardar los elementos del formulario en la base de dato
+            //Guardar los elementos del formulario en la base de datos  imageViewOne.getDrawable() == null
 
-            DatabaseReference database = FirebaseDatabase.getInstance().getReference();
-            String key = database.child("posts").push().getKey();
+            if(userDataIsOK()){
 
-            Post post = new Post("post", "actividad", "1 vez", 1);
-            Map<String, Object> postValues = post.toMap();
+                FirebaseStorage storage = FirebaseStorage.getInstance();
+                StorageReference storageRef = storage.getReferenceFromUrl("gs://reduccion-de-obesidad-7414c.appspot.com");
+                StorageReference imagesRef = storageRef.child("images");
 
-            Map<String, Object> childUpdates = new HashMap<>();
+                prev.setDrawingCacheEnabled(true);
+                prev.buildDrawingCache();
+                Bitmap bitmap = prev.getDrawingCache();
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 60, baos);
 
-            String userId = mHome.user.getUid();
-            childUpdates.put("/user-posts/" + userId + "/" + key, postValues);
+                byte[] data = baos.toByteArray();
 
-            OnCompleteListener saveListener = new OnCompleteListener() {
-                @Override
-                public void onComplete(@NonNull Task task) {
-                    if(task.isSuccessful()){
-                        finish();
-
-                    }else{
-                        Log.v("DB", task.getResult() + "");
-                        Toast.makeText(getBaseContext(), "Revisa tu conexión a internet o intentalo más tarde", Toast.LENGTH_LONG);
+                UploadTask uploadTask = imagesRef.putBytes(data);
+                uploadTask.addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Handle unsuccessful uploads
+                        Log.v("ST", "problemas");
                     }
-                }
-            };
-            database.updateChildren(childUpdates).addOnCompleteListener(saveListener);
+                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Log.v("ST", "satisfactorio");
 
-            //myRef.setValue("Hello, daniel!");
+                        // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                        Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                        Log.v("ST",downloadUrl + "" );
+                    }
+                });
 
-            // Read from the database
-            /*myRef.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    // This method is called once with the initial value and again
-                    // whenever data at this location is updated.
-                    String value = dataSnapshot.getValue(String.class);
-                    Log.d("DB", "Value is: " + value);
-                }
+                DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+                String key = database.child("user-posts").push().getKey();
 
-                @Override
-                public void onCancelled(DatabaseError error) {
-                    // Failed to read value
-                    Log.w("DB", "Failed to read value.", error.toException());
-                }
-            });*/
+                Post post = new Post(nameText.toString(), category.toString(), frecuency.toString(), 1);
+                Map<String, Object> postValues = post.toMap();
+
+                Map<String, Object> childUpdates = new HashMap<>();
+
+                String userId = mHome.user.getUid();
+                childUpdates.put("/user-posts/" + userId + "/" + key, postValues);
+
+                OnCompleteListener saveListener = new OnCompleteListener() {
+                    @Override
+                    public void onComplete(@NonNull Task task) {
+                        if(task.isSuccessful()){
+                            //finish();
+
+                        }else{
+                            Log.v("DB", task.getResult() + "");
+                            Toast.makeText(getBaseContext(), "Revisa tu conexión a internet o intentalo más tarde", Toast.LENGTH_LONG);
+                        }
+                    }
+                };
+                database.updateChildren(childUpdates).addOnCompleteListener(saveListener);
+
+            }
+
+
+
             }
         });
     }
 
 
-    private void createPopUp(String title, final CharSequence data[], final TextView viewToUpdate){
-        /*
-        * Crear un popUp genérico con los datos enviados por parámetro
-        * @param title: Título que aparecerá  en el popUp
-        * @param data: Arreglo de datos para mostrar como opciones en el popUp
-        * @param viewToUpdate: Vista que contendrá el texto clickeado.
-        * */
-        AlertDialog.Builder builder = new AlertDialog.Builder(that);
-        builder.setTitle(title);
-        builder.setItems(data, new DialogInterface.OnClickListener() {
+    private boolean userDataIsOK(){
+        if (nameIsOK() && categoryIsOk() && frecuencyIsOk()){
+            if(imageIsOk()){
+                return true;
+            }else{
+                Snackbar.make(getCurrentFocus(), "Es necesario que adjunte una imagen.", 4000).show();
+            }
+
+        }else{
+            Snackbar.make(getCurrentFocus(), "Verifique la información ingresada.", 4000).show();
+        }
+
+        return false;
+    }
+
+    private boolean categoryIsOk(){
+        View category_view = categorySpinner.getSelectedView();
+        if (category_view != null && category_view instanceof TextView) {
+            TextView selectedTextView = (TextView) category_view;
+            category = selectedTextView.getText();
+
+            if(category.toString().trim().equals(getString(R.string.add_post_category_default_value))){
+                selectedTextView.setError("");
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private boolean imageIsOk(){
+        image = prev.getDrawable();
+        return image != null;
+    }
+
+    private boolean frecuencyIsOk(){
+        View frecuency_view = frecuencySpinner.getSelectedView();
+        if(frecuency_view != null && frecuency_view instanceof TextView){
+            TextView selectedTextView = (TextView) frecuency_view;
+            frecuency = selectedTextView.getText();
+            if(frecuency.toString().trim().equals(getString(R.string.add_post_frecuency_default_value))){
+                selectedTextView.setError("");
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean nameIsOK(){
+        //Agregar la funcionalidad de validaciones
+        final TextInputLayout nameLayout = (TextInputLayout) findViewById(R.id.txt_input_layour_name);
+        nameLayout.setErrorEnabled(true);
+
+        //Obtener el nombre ingresado
+        EditText nameEditText = nameLayout.getEditText();
+        nameEditText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                viewToUpdate.setText(data[which]);
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                nameLayout.setError("");
+                nameLayout.setErrorEnabled(false);
             }
         });
 
-        builder.show();
+        nameText = nameEditText.getText();
+
+        if(nameText.toString().trim().equals("")){ //Nombre vacío
+            nameLayout.setError(getString(R.string.add_post_validate_name));
+        }else if((nameText.length() > 60)){//Nombre de longitud incorrecta
+            nameLayout.setError(getString(R.string.add_post_validate_name_length));
+        }else if(nameText.toString().contains("\n")){//Nombre con saltos de linea
+            nameLayout.setError(getString(R.string.add_post_validate_line_breaks));
+        }else{
+            return true;
+        }
+
+        return false;
+
     }
 
     private void createPhotoOptions(){
          /*
         * Crear un popUp con opciones para tomar fotos o adjuntar archivos
         * */
+
+
         CharSequence options[] = getBaseContext().getResources().getStringArray(R.array.new_post_photo_options); //Cargar las opciones para el menú de fotos.
 
         AlertDialog.Builder builder = new AlertDialog.Builder(that);
@@ -254,13 +370,29 @@ public class AddPost extends AppCompatActivity {
         * Este método es llamado cuando se obtiene un resultado de otra vista, ej: tomar foto, adjuntar foto de galería
         * */
 
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) { //¿Se retornó de tomar una foto?
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
+        if (resultCode == RESULT_OK) { //¿Se retornó de tomar una foto?
 
-            ImageView prev = (ImageView) findViewById(R.id.imagePreview);
-            prev.setImageBitmap(imageBitmap);
+            if(requestCode == REQUEST_IMAGE_CAPTURE || requestCode == RESULT_LOAD_IMAGE){
+
+                loadImageResultInImageView(prev, data);
+
+            }
+
         }
+    }
+
+    private void loadImageResultInImageView(ImageView imageView, Intent data){
+
+        try {
+            final Uri imageUri = data.getData();
+            final InputStream imageStream = getContentResolver().openInputStream(imageUri);
+            final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+            imageView.setImageBitmap(selectedImage);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     private void dispatchTakePictureIntent() {

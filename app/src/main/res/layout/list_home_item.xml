@@ -61,7 +61,7 @@
         android:layout_alignLeft="@+id/btn_comment"
         android:layout_marginLeft="125dp"
         android:layout_below="@+id/tv_company"
-        android:text="Agregar (5)"/>
+        android:text="  Agregar  " />
 
 
 </RelativeLayout>
