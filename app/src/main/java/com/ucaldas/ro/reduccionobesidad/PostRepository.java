@@ -1,5 +1,6 @@
 package com.ucaldas.ro.reduccionobesidad;
 
+import android.net.Uri;
 import android.util.Log;
 
 import com.google.firebase.auth.FirebaseUser;
@@ -55,12 +56,11 @@ public class PostRepository {
     }
 
     private void savePost(Post lead) {
-        leads.put("1",new Post("Huevos, arepa y chocolate", "Agregado por: Juan Jaramillo", "Original: Carlos Lopez", R.drawable.sample_1));
-        leads.put("2",new Post("Avena con galletas", "Agregado por: Mauricio Mejía", "Original: Carlos Lopez", R.drawable.sample_2));
-        leads.put("3", new Post("Huevos, arepa y chocolate", "Agregado por: Juan Jaramillo", "Original: Carlos Lopez", R.drawable.sample_1));
-        leads.put("4", new Post("Huevos, arepa y chocolate", "Agregado por: Juan Jaramillo", "Original: Carlos Lopez", R.drawable.sample_1));
-        leads.put("5", new Post("Huevos, arepa y chocolate", "Agregado por: Juan Jaramillo", "Original: Carlos Lopez", R.drawable.sample_1));
-        leads.put("6", new Post("Huevos, arepa y chocolate", "Agregado por: Juan Jaramillo", "Original: Carlos Lopez", R.drawable.sample_1));
+        leads.put("1",new Post("Huevos, arepa y chocolate", "Agregado por: Juan Jaramillo", "Original: Carlos Lopez", "http://www.ibikes.cl/store/image/cache/data/B813012-200x200.jpg"));
+        leads.put("2",new Post("Huevos, arepa y chocolate", "Agregado por: Juan Jaramillo", "Original: Carlos Lopez", "http://www.ibikes.cl/store/image/cache/data/B813012-200x200.jpg"));
+        leads.put("3",new Post("Huevos, arepa y chocolate", "Agregado por: Juan Jaramillo", "Original: Carlos Lopez", "http://www.ibikes.cl/store/image/cache/data/B813012-200x200.jpg"));
+        leads.put("4",new Post("Huevos, arepa y chocolate", "Agregado por: Juan Jaramillo", "Original: Carlos Lopez", "http://www.ibikes.cl/store/image/cache/data/B813012-200x200.jpg"));
+        leads.put("5",new Post("Huevos, arepa y chocolate", "Agregado por: Juan Jaramillo", "Original: Carlos Lopez", "http://www.ibikes.cl/store/image/cache/data/B813012-200x200.jpg"));
     }
 
     public List<Post> getLeads() {

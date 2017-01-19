@@ -1,5 +1,6 @@
 package com.ucaldas.ro.reduccionobesidad;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -35,6 +36,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -67,6 +69,17 @@ public class AddPost extends AppCompatActivity {
     private CharSequence category;
     private CharSequence frecuency;
     private Drawable image;
+    private ProgressDialog progress;
+    private String progressTitle;
+
+    private Runnable changeMessage = new Runnable() {
+        @Override
+        public void run() {
+            //Log.v(TAG, strCharacters);
+            progress.setMessage(progressTitle);
+        }
+    };
+
 
 
     final AppCompatActivity that = this; //Guardar el contexto para los menú de alerta.
@@ -76,14 +89,15 @@ public class AddPost extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_post); //Asociar esta vista para el control de la interface
 
+        Log.v("User", mHome.user.getUid());
+
         configureToolbarAndActions();
         assignActivitySourceAndInitData();
         initializePopUpActions();
 
-
     }
 
-    private void assignActivitySourceAndInitData(){
+    private void assignActivitySourceAndInitData() {
         /*
         * Asigna el origen de la creación de esta vista
         * Inicializa los datos con respecto al origen
@@ -95,12 +109,12 @@ public class AddPost extends AppCompatActivity {
         categorySpinner = (Spinner) findViewById(R.id.category_spinner);
         ArrayAdapter<CharSequence> adapter;
 
-        if(SOURCE.equals("activities")){ //¿El origen es de actividades?
+        //if (SOURCE.equals("activities")) { //¿El origen es de actividades?
             setTitle(getString(R.string.new_post_activity_toolbar_title)); //Actualiza el titulo general
             adapter = ArrayAdapter.createFromResource(this,
                     R.array.new_post_activity_categories, android.R.layout.simple_spinner_dropdown_item); //Cargar con las categorias de actividades
 
-        }else{ //¿El origen es de alimentos?
+        /*} else { //¿El origen es de alimentos?
             adapter = ArrayAdapter.createFromResource(this,
                     R.array.new_post_food_categories, android.R.layout.simple_spinner_dropdown_item); //Cargar con las categorias de alimentos
 
@@ -110,7 +124,7 @@ public class AddPost extends AppCompatActivity {
             Toolbar tool = (Toolbar) findViewById(R.id.toolbar);
             tool.setBackgroundColor(getResources().getColor(R.color.toolbarColorFood));
 
-        }
+        }*/
 
         // Creación del spinner de frecuencias para un nuevo post
         frecuencySpinner = (Spinner) findViewById(R.id.frecuency_spinner);
@@ -134,7 +148,7 @@ public class AddPost extends AppCompatActivity {
         }
     }
 
-    private void initializePopUpActions(){
+    private void initializePopUpActions() {
 
         //Creación del evento de click para el menu de tomar fotos
         ImageView prev = (ImageView) findViewById(R.id.imagePreview);
@@ -146,7 +160,7 @@ public class AddPost extends AppCompatActivity {
         });
     }
 
-    private void configureToolbarAndActions(){
+    private void configureToolbarAndActions() {
         /*
         *  Habilitar el toolbar para acciones y agregar evento de guardar post.
         * */
@@ -161,105 +175,119 @@ public class AddPost extends AppCompatActivity {
 
     }
 
-    private void addSaveEventListener(){
+    private void addSaveEventListener() {
         /*
         * Evento para guardar una nueva publicación
         * */
+
 
         Button btn_save = (Button) findViewById(R.id.btn_save);
         btn_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-            //Guardar los elementos del formulario en la base de datos  imageViewOne.getDrawable() == null
+                //Guardar los elementos del formulario en la base de datos  imageViewOne.getDrawable() == null
 
-            if(userDataIsOK()){
+                    /*FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    DatabaseReference myRef = database.getReference("message");
 
-                FirebaseStorage storage = FirebaseStorage.getInstance();
-                StorageReference storageRef = storage.getReferenceFromUrl("gs://reduccion-de-obesidad-7414c.appspot.com");
-                StorageReference imagesRef = storageRef.child("images");
+                    myRef.setValue("Hello, Wdaniel");*/
 
-                prev.setDrawingCacheEnabled(true);
-                prev.buildDrawingCache();
-                Bitmap bitmap = prev.getDrawingCache();
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 60, baos);
+                if (mHome.user != null) {
+                    if (userDataIsOK()) {
 
-                byte[] data = baos.toByteArray();
+                        progress = ProgressDialog.show(that, "Agregando Publicación...",
+                                "Espera un momento", true);
 
-                UploadTask uploadTask = imagesRef.putBytes(data);
-                uploadTask.addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        // Handle unsuccessful uploads
-                        Log.v("ST", "problemas");
+                        FirebaseStorage storage = FirebaseStorage.getInstance();
+                        StorageReference storageRef = storage.getReferenceFromUrl("gs://reduccion-de-obesidad-7414c.appspot.com");
+                        StorageReference imagesRef = storageRef.child("images");
+
+                        prev.setDrawingCacheEnabled(true);
+                        prev.buildDrawingCache();
+                        Bitmap bitmap = prev.getDrawingCache();
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 60, baos);
+
+                        byte[] data = baos.toByteArray();
+
+                        UploadTask uploadTask = imagesRef.putBytes(data);
+                        uploadTask.addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                                // Handle unsuccessful uploads
+                                Snackbar.make(getCurrentFocus(), "Revise su conexión a internet e intentelo más tarde", 2000).show();
+                            }
+                        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                Log.v("ST", "satisfactorio");
+
+                                Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                                Log.v("ST", downloadUrl + "");
+
+                                DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+                                String key = database.child("user-posts").push().getKey();
+
+                                Post post = new Post(nameText.toString(), category.toString(), frecuency.toString(), downloadUrl + "");
+                                Map<String, Object> postValues = post.toMap();
+
+                                Map<String, Object> childUpdates = new HashMap<>();
+
+                                String userId = mHome.user.getUid();
+                                childUpdates.put("/user-posts/" + userId + "/" + key, postValues);
+
+                                OnCompleteListener saveListener = new OnCompleteListener() {
+                                    @Override
+                                    public void onComplete(@NonNull Task task) {
+
+                                            if (task.isSuccessful()) {
+                                                progress.dismiss();
+                                                finish();
+
+                                            } else {
+                                                Log.v("DB", task.getResult() + "");
+                                                progress.dismiss();
+                                                Snackbar.make(getCurrentFocus(), "Revise su conexión a internet o intentelo más tarde", 2000).show();
+                                            }
+                                    }
+                                };
+                                database.updateChildren(childUpdates).addOnCompleteListener(saveListener);
+
+
+                            }
+                        });
+
+
                     }
-                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Log.v("ST", "satisfactorio");
-
-                        // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
-                        Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                        Log.v("ST",downloadUrl + "" );
-                    }
-                });
-
-                DatabaseReference database = FirebaseDatabase.getInstance().getReference();
-                String key = database.child("user-posts").push().getKey();
-
-                Post post = new Post(nameText.toString(), category.toString(), frecuency.toString(), 1);
-                Map<String, Object> postValues = post.toMap();
-
-                Map<String, Object> childUpdates = new HashMap<>();
-
-                String userId = mHome.user.getUid();
-                childUpdates.put("/user-posts/" + userId + "/" + key, postValues);
-
-                OnCompleteListener saveListener = new OnCompleteListener() {
-                    @Override
-                    public void onComplete(@NonNull Task task) {
-                        if(task.isSuccessful()){
-                            //finish();
-
-                        }else{
-                            Log.v("DB", task.getResult() + "");
-                            Toast.makeText(getBaseContext(), "Revisa tu conexión a internet o intentalo más tarde", Toast.LENGTH_LONG);
-                        }
-                    }
-                };
-                database.updateChildren(childUpdates).addOnCompleteListener(saveListener);
-
-            }
-
-
+                }
 
             }
         });
     }
 
 
-    private boolean userDataIsOK(){
-        if (nameIsOK() && categoryIsOk() && frecuencyIsOk()){
-            if(imageIsOk()){
+    private boolean userDataIsOK() {
+        if (nameIsOK() && categoryIsOk() && frecuencyIsOk()) {
+            if (imageIsOk()) {
                 return true;
-            }else{
+            } else {
                 Snackbar.make(getCurrentFocus(), "Es necesario que adjunte una imagen.", 4000).show();
             }
 
-        }else{
+        } else {
             Snackbar.make(getCurrentFocus(), "Verifique la información ingresada.", 4000).show();
         }
 
         return false;
     }
 
-    private boolean categoryIsOk(){
+    private boolean categoryIsOk() {
         View category_view = categorySpinner.getSelectedView();
         if (category_view != null && category_view instanceof TextView) {
             TextView selectedTextView = (TextView) category_view;
             category = selectedTextView.getText();
 
-            if(category.toString().trim().equals(getString(R.string.add_post_category_default_value))){
+            if (category.toString().trim().equals(getString(R.string.add_post_category_default_value))) {
                 selectedTextView.setError("");
                 return false;
             }
@@ -268,17 +296,17 @@ public class AddPost extends AppCompatActivity {
         return true;
     }
 
-    private boolean imageIsOk(){
+    private boolean imageIsOk() {
         image = prev.getDrawable();
         return image != null;
     }
 
-    private boolean frecuencyIsOk(){
+    private boolean frecuencyIsOk() {
         View frecuency_view = frecuencySpinner.getSelectedView();
-        if(frecuency_view != null && frecuency_view instanceof TextView){
+        if (frecuency_view != null && frecuency_view instanceof TextView) {
             TextView selectedTextView = (TextView) frecuency_view;
             frecuency = selectedTextView.getText();
-            if(frecuency.toString().trim().equals(getString(R.string.add_post_frecuency_default_value))){
+            if (frecuency.toString().trim().equals(getString(R.string.add_post_frecuency_default_value))) {
                 selectedTextView.setError("");
                 return false;
             }
@@ -286,10 +314,10 @@ public class AddPost extends AppCompatActivity {
         return true;
     }
 
-    private boolean nameIsOK(){
+    private boolean nameIsOK() {
         //Agregar la funcionalidad de validaciones
         final TextInputLayout nameLayout = (TextInputLayout) findViewById(R.id.txt_input_layour_name);
-        nameLayout.setErrorEnabled(true);
+//        nameLayout.setErrorEnabled(true);
 
         //Obtener el nombre ingresado
         EditText nameEditText = nameLayout.getEditText();
@@ -313,13 +341,13 @@ public class AddPost extends AppCompatActivity {
 
         nameText = nameEditText.getText();
 
-        if(nameText.toString().trim().equals("")){ //Nombre vacío
+        if (nameText.toString().trim().equals("")) { //Nombre vacío
             nameLayout.setError(getString(R.string.add_post_validate_name));
-        }else if((nameText.length() > 60)){//Nombre de longitud incorrecta
+        } else if ((nameText.length() > 60)) {//Nombre de longitud incorrecta
             nameLayout.setError(getString(R.string.add_post_validate_name_length));
-        }else if(nameText.toString().contains("\n")){//Nombre con saltos de linea
+        } else if (nameText.toString().contains("\n")) {//Nombre con saltos de linea
             nameLayout.setError(getString(R.string.add_post_validate_line_breaks));
-        }else{
+        } else {
             return true;
         }
 
@@ -327,7 +355,7 @@ public class AddPost extends AppCompatActivity {
 
     }
 
-    private void createPhotoOptions(){
+    private void createPhotoOptions() {
          /*
         * Crear un popUp con opciones para tomar fotos o adjuntar archivos
         * */
@@ -337,10 +365,10 @@ public class AddPost extends AppCompatActivity {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(that);
         builder.setTitle(getString(R.string.new_post_choose_option));
-        builder.setItems(options, new DialogInterface.OnClickListener(){
+        builder.setItems(options, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int which) {
-                switch (which){
+                switch (which) {
                     case 0: //¿Presionaron la opción de nueva foto?
                         dispatchTakePictureIntent();
                         break;
@@ -372,7 +400,7 @@ public class AddPost extends AppCompatActivity {
 
         if (resultCode == RESULT_OK) { //¿Se retornó de tomar una foto?
 
-            if(requestCode == REQUEST_IMAGE_CAPTURE || requestCode == RESULT_LOAD_IMAGE){
+            if (requestCode == REQUEST_IMAGE_CAPTURE || requestCode == RESULT_LOAD_IMAGE) {
 
                 loadImageResultInImageView(prev, data);
 
@@ -381,7 +409,7 @@ public class AddPost extends AppCompatActivity {
         }
     }
 
-    private void loadImageResultInImageView(ImageView imageView, Intent data){
+    private void loadImageResultInImageView(ImageView imageView, Intent data) {
 
         try {
             final Uri imageUri = data.getData();
@@ -391,7 +419,6 @@ public class AddPost extends AppCompatActivity {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-
 
     }
 
@@ -405,11 +432,11 @@ public class AddPost extends AppCompatActivity {
         }
     }
 
-    private void dispatchGaleryPicture(){
+    private void dispatchGaleryPicture() {
         /*
         * Habilita la galería de fotos para adjuntar una foto.
         * */
-        Intent i = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(i, RESULT_LOAD_IMAGE);
     }
 

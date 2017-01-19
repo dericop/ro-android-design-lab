@@ -58,31 +58,60 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <TextView
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/new_post_title_new_data"
-                    android:textStyle="bold"
-                    android:textSize="20dp"
-                    android:textColor="#37474f"
-                    android:drawableLeft="@drawable/ic_tools"
-                    android:drawablePadding="10dp"
-                    android:gravity="center_vertical"
-                    android:layout_marginTop="10dp"/>
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/new_post_name"
-                    android:layout_marginTop="20dp"
-                    android:textColor="#37474f"
-                    android:textStyle="bold"
-                    android:id="@+id/txtName" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+
+                        <ImageView
+                            android:id="@+id/imagePreview"
+                            android:layout_width="0dp"
+                            android:background="@drawable/placeholder"
+                            android:layout_height="130dp"
+                            android:layout_weight=".80"/>
+                        
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight=".20">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical"
+                                android:background="@color/black_overlay">
+
+                                <ImageButton
+                                    android:layout_width="50dp"
+                                    android:layout_height="50dp"
+                                    android:background="@drawable/ic_add_a_photo"
+                                    android:layout_gravity="center_horizontal"/>
+
+                                <ImageButton
+                                    android:layout_width="50dp"
+                                    android:layout_height="50dp"
+                                    android:background="@drawable/ic_action_media"
+                                    android:layout_gravity="center_horizontal"
+                                    android:layout_marginTop="20dp"/>
+
+                            </LinearLayout>
+
+                        </RelativeLayout>
+
+                    </LinearLayout>
+
+                </RelativeLayout>
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/txt_input_layour_name">
+                    android:id="@+id/txt_input_layour_name"
+                    android:hint="Nombre de la publicación">
 
                     <android.support.design.widget.TextInputEditText
                         android:layout_width="match_parent"
@@ -90,42 +119,6 @@
                         android:id="@+id/textInputEditText" />
 
                 </android.support.design.widget.TextInputLayout>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/new_post_image"
-                    android:layout_marginTop="40dp"
-                    android:textColor="#37474f"
-                    android:textStyle="bold"
-                    android:id="@+id/txtImage" />
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="10dp">
-
-                    <ImageView
-                        android:id="@+id/imagePreview"
-                        android:layout_width="match_parent"
-                        android:layout_height="150dp"
-                        android:background="@drawable/placeholder"/>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/new_post_choose_image"
-                        android:textColor="#fff"
-                        android:textStyle="bold"
-                        android:gravity="right"
-                        android:layout_marginTop="120dp"
-                        android:paddingRight="15dp"
-                        android:layout_alignLeft="@id/imagePreview"
-                        android:layout_alignTop="@id/imagePreview"
-                        android:layout_alignRight="@id/imagePreview"
-                        android:layout_alignBottom="@id/imagePreview" />
-
-                </RelativeLayout>
 
                 <TextView
                 android:layout_width="match_parent"

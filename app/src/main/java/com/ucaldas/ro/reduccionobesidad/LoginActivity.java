@@ -73,6 +73,7 @@ public class LoginActivity extends AppCompatActivity implements
                     // User is signed out
                     Log.d("User", "onAuthStateChanged:signed_out");
                     Toast.makeText(getBaseContext(), getString(R.string.login_fail), Toast.LENGTH_LONG);
+
                 }
             }
         };

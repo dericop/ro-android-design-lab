@@ -39,8 +39,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
 public class mHome extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -80,25 +78,28 @@ public class mHome extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         View header=navigationView.getHeaderView(0);
 
+        if(user != null){
+            //Datos del usuario logueado
+            String displayName = user.getDisplayName();
+            String email = user.getEmail();
+            Uri image = user.getPhotoUrl();
 
-        //Datos del usuario logueado
-        String displayName = user.getDisplayName();
-        String email = user.getEmail();
-        Uri image = user.getPhotoUrl();
+            //Actualización de titulo del menú lateral
+            TextView navHeaderTitle = (TextView)header.findViewById(R.id.nav_header_title);
+            navHeaderTitle.setText(displayName);
 
-        //Actualización de titulo del menú lateral
-        TextView navHeaderTitle = (TextView)header.findViewById(R.id.nav_header_title);
-        navHeaderTitle.setText(displayName);
+            //Actualización de subtitulo del menu lateral
+            TextView navHeaderSubtitle = (TextView)header.findViewById(R.id.nav_header_subtitle);
+            navHeaderSubtitle.setText(email);
 
-        //Actualización de subtitulo del menu lateral
-        TextView navHeaderSubtitle = (TextView)header.findViewById(R.id.nav_header_subtitle);
-        navHeaderSubtitle.setText(email);
+            Log.v("User", image+"");
 
-        Log.v("User", image+"");
+            //Actualización de la imagen de perfil
+            ImageView imageView = (ImageView)header.findViewById(R.id.imageView);
+            Picasso.with(getBaseContext()).load(image).into(imageView);
+        }
 
-        //Actualización de la imagen de perfil
-        ImageView imageView = (ImageView)header.findViewById(R.id.imageView);
-        Picasso.with(getBaseContext()).load(image).into(imageView);
+
     }
 
     private void addListenerToFloatButton(){
@@ -109,7 +110,7 @@ public class mHome extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(mHome.this, AddMenu.class));  //Abrir menú de opciones
+                startActivity(new Intent(mHome.this, AddPost.class));  //Abrir menú de agregar POST
             }
         });
     }

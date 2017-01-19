@@ -1,5 +1,7 @@
 package com.ucaldas.ro.reduccionobesidad;
 
+import android.net.Uri;
+
 import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.util.HashMap;
@@ -16,13 +18,13 @@ public class Post {
     private String mName;
     private String mCategory;
     private String mFrecuency;
-    private int mImage;
+    private String mImage;
 
     public Post(){
 
     }
 
-    public Post(String name, String category, String frecuency, int image) {
+    public Post(String name, String category, String frecuency, String image) {
         mName = name;
         mCategory = category;
         mFrecuency = frecuency;
@@ -53,11 +55,11 @@ public class Post {
         this.mFrecuency = mFrecuency;
     }
 
-    public int getmImage() {
+    public String getmImage() {
         return mImage;
     }
 
-    public void setmImage(int mImage) {
+    public void setmImage(String mImage) {
         this.mImage = mImage;
     }
 
