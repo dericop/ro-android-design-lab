@@ -129,9 +129,9 @@ public class mHome extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        if (Build.VERSION.SDK_INT >= 16){
+        /*if (Build.VERSION.SDK_INT >= 16){
             toolbar.setBackground(ContextCompat.getDrawable(this, R.drawable.header));
-        }
+        }*/
     }
 
     private void setupViewPager(ViewPager viewPager) {

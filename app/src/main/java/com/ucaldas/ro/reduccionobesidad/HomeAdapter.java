@@ -38,9 +38,9 @@ public class HomeAdapter extends ArrayAdapter<Post> {
 
         // Referencias UI.
         ImageView avatar = (ImageView) convertView.findViewById(R.id.iv_avatar);
-        TextView name = (TextView) convertView.findViewById(R.id.tv_name);
-        TextView title = (TextView) convertView.findViewById(R.id.tv_title);
-        TextView company = (TextView) convertView.findViewById(R.id.tv_company);
+        TextView name = (TextView) convertView.findViewById(R.id.post_name);
+        TextView title = (TextView) convertView.findViewById(R.id.txt_by);
+        TextView company = (TextView) convertView.findViewById(R.id.txt_too);
 
         // Lead actual.
         Post lead = getItem(position);

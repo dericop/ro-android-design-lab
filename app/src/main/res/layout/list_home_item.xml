@@ -5,63 +5,154 @@
     android:layout_height="wrap_content"
     android:minHeight="?attr/listPreferredItemHeight"
     android:orientation="vertical"
-    android:paddingBottom="8dp"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="8dp">
+    android:paddingTop="4dp">
+        
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="170dp"
+        android:background="@drawable/home_item_shadow"
+        android:orientation="horizontal">
+        
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight=".45"
+            android:orientation="vertical"
+            android:layout_marginTop="10dp">
 
-    <ImageView
-        android:id="@+id/iv_avatar"
-        android:layout_width="80dp"
-        android:layout_height="87dp"
-        android:layout_centerVertical="true"
-        android:background="@drawable/sample_3"/>
+            <ImageView
+                android:id="@+id/iv_avatar"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_marginLeft="10dp"
+                android:background="@color/colorPrimary"/>
 
-    <TextView
-        android:id="@+id/tv_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="90dp"
-        android:text="Nombre"
-        android:textAppearance="?attr/textAppearanceListItem"
-        tools:text="Alexander Pierrot" />
+        </LinearLayout>
 
-    <TextView
-        android:id="@+id/tv_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/tv_name"
-        android:layout_below="@+id/tv_name"
-        android:text="Cargo"
-        tools:text="CEO" />
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight=".55"
+            android:orientation="vertical"
+            android:layout_marginTop="10dp">
 
-    <TextView
-        android:id="@+id/tv_company"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/tv_name"
-        android:layout_below="@+id/tv_title"
-        android:text="Compañía"
-        tools:text="Blue Insurances Ltd" />
 
-    <Button
-        android:id="@+id/btn_comment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/tv_name"
-        android:layout_below="@+id/tv_company"
-        android:text="Comentar (3)">
+            <TextView
+                android:id="@+id/post_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Bandeja Paisa con Chorizo"
+                android:layout_alignLeft="@id/post_name"
+                android:textAppearance="?attr/textAppearanceListItem"
+                tools:text="Alexander Pierrot"
+                android:textSize="18dp"
+                android:fontFamily="sans-serif"
+                android:textStyle="normal|bold"
+                android:textColor="#808285"
+                android:ellipsize="end"
+                android:paddingRight="8dp"
+                android:layout_marginTop="-7dp"
+                android:maxLines="2"
+                tools:textStyle="bold"
+                android:lineSpacingExtra="-4dp"/>
 
-    </Button>
+            <TextView
+                android:id="@+id/lbl_by"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/post_name"
+                android:layout_below="@+id/post_name"
+                android:layout_marginTop="7dp"
+                android:textSize="12dp"
+                android:text="Original"/>
 
-    <Button
-        android:id="@+id/btn_addToMyItems"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/btn_comment"
-        android:layout_marginLeft="125dp"
-        android:layout_below="@+id/tv_company"
-        android:text="  Agregar  " />
+            <TextView
+                android:id="@+id/txt_by"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/post_name"
+                android:layout_below="@+id/lbl_by"
+                android:text="Daniel Estiven Rico Posada"
+                android:textSize="14dp"
+                android:layout_marginTop="-4dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/lbl_too"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/post_name"
+                android:layout_below="@+id/lbl_by"
+                android:layout_marginTop="7dp"
+                android:textSize="12dp"
+                android:text="También agregado por" />
+
+            <TextView
+                android:id="@+id/txt_too"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/post_name"
+                android:layout_below="@+id/lbl_too"
+                android:text="Daniel Estiven Rico Posada"
+                android:textSize="12dp"
+                android:layout_marginTop="-4dp"
+                android:textStyle="bold"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_below="@id/txt_too">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center">
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent">
+
+                        <ImageButton
+                            android:id="@+id/action_reply"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@drawable/ic_action_reply"
+                            android:backgroundTint="#a7a9ac"
+                            android:layout_gravity="center"
+                            android:layout_marginRight="30dp"
+                            android:layout_marginTop="10dp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="34"
+                            android:layout_alignTop="@+id/action_reply"
+                            android:layout_marginLeft="32dp"
+                            android:layout_marginTop="8dp"
+                            android:textSize="12dp"/>
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+            </RelativeLayout>
+
+
+        </LinearLayout>
+        
+            
+
+
+
+
+
+
+        
+
+
+    </LinearLayout>
+
 
 
 </RelativeLayout>

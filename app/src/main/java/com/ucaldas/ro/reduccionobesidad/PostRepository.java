@@ -56,11 +56,11 @@ public class PostRepository {
     }
 
     private void savePost(Post lead) {
-        leads.put("1",new Post("Huevos, arepa y chocolate", "Agregado por: Juan Jaramillo", "Original: Carlos Lopez", "http://www.ibikes.cl/store/image/cache/data/B813012-200x200.jpg"));
-        leads.put("2",new Post("Huevos, arepa y chocolate", "Agregado por: Juan Jaramillo", "Original: Carlos Lopez", "http://www.ibikes.cl/store/image/cache/data/B813012-200x200.jpg"));
-        leads.put("3",new Post("Huevos, arepa y chocolate", "Agregado por: Juan Jaramillo", "Original: Carlos Lopez", "http://www.ibikes.cl/store/image/cache/data/B813012-200x200.jpg"));
-        leads.put("4",new Post("Huevos, arepa y chocolate", "Agregado por: Juan Jaramillo", "Original: Carlos Lopez", "http://www.ibikes.cl/store/image/cache/data/B813012-200x200.jpg"));
-        leads.put("5",new Post("Huevos, arepa y chocolate", "Agregado por: Juan Jaramillo", "Original: Carlos Lopez", "http://www.ibikes.cl/store/image/cache/data/B813012-200x200.jpg"));
+        leads.put("1",new Post("Huevos, arepa y chocolates mas una empada con queso", "Agregado por: Juan Jaramillo", "Original: Carlos Lopez", "http://colombia.gastronomia.com/uploads/noticias/bandeja%20paisa.bndFdXYzajQ1bWw0SVp5aS8vMTQ3Mzc4MjMxNC8.jpg"));
+        leads.put("2",new Post("Huevos, arepa y chocolate", "Juan Jaramillo", "Carlos Lopez", "http://www.ibikes.cl/store/image/cache/data/B813012-200x200.jpg"));
+        leads.put("3",new Post("Huevos, arepa y chocolate", "Juan Jaramillo", "Carlos Lopez", "http://www.ibikes.cl/store/image/cache/data/B813012-200x200.jpg"));
+        leads.put("4",new Post("Huevos, arepa y chocolate", "Juan Jaramillo", "Carlos Lopez", "http://www.ibikes.cl/store/image/cache/data/B813012-200x200.jpg"));
+        leads.put("5",new Post("Huevos, arepa y chocolate", "Juan Jaramillo", "Carlos Lopez", "http://www.ibikes.cl/store/image/cache/data/B813012-200x200.jpg"));
     }
 
     public List<Post> getLeads() {

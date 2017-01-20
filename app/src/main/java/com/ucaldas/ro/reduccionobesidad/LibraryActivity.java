@@ -24,7 +24,6 @@ public class LibraryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_library);
 
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         changeStatusBarColor();
@@ -44,7 +43,6 @@ public class LibraryActivity extends AppCompatActivity {
             gridview.setAdapter(new FoodAdapter(this));
 
         }
-
 
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,

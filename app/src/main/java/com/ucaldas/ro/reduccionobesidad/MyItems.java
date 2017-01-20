@@ -3,10 +3,12 @@ package com.ucaldas.ro.reduccionobesidad;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
 
 
 /**
@@ -58,6 +60,17 @@ public class MyItems extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        GridView grid_items = (GridView) view.findViewById(R.id.grid_items);
+        grid_items.setAdapter(new MyItemAdapter(this.getContext()));
+
+
     }
 
     @Override
