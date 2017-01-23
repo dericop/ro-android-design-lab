@@ -3,13 +3,13 @@
     <color name="colorPrimary">#44494e</color>
     <color name="colorPrimaryDark">#44494e</color>
 
-    <color name="colorAccent">#d47408</color>
+    <color name="colorAccent">#f59331</color>
     <color name="textColorPrimary">#FFFFFF</color>
     <color name="windowBackground">#FFFFFF</color>
     <color name="navigationBarColor">#000000</color>
+    <color name="form_labels">#d2d3d5</color>
 
     <color name="floatButtonColor">#f7ff1e</color>
-    <color name="toolbarColor">#F7931E</color>
     <color name="toolbarTextColor">#666</color>
     <color name="splashColor">#ffffff</color>
     <color name="toolbarColorFood">#D2DE25</color>
@@ -47,5 +47,8 @@
     </array>
 
     <color name="black_overlay">#66000000</color>
+
+    <color name="simulation_barItem_selected">#ec433d</color>
+    <color name="simuation_barItem_normal">#e6e7e8</color>
 
 </resources>

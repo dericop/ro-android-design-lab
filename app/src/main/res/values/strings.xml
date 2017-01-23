@@ -31,10 +31,6 @@
     <string name="title_activity_login">Iniciar</string>
 
 
-    <!-- String relacionados a agregar POST -->
-    <string name="action_add">Agregar</string>
-
-
     <!-- Strings related to login -->
     <string name="prompt_email">Nombre</string>
     <string name="prompt_password">Password (optional)</string>
@@ -237,10 +233,16 @@
     <string name="new_post_name">NOMBRE DE LA PUBLICACIÓN</string>
     <string name="new_post_image">IMAGEN</string>
     <string name="new_post_choose_image">ELEGIR IMAGEN</string>
-    <string name="new_post_category">CATEGORÍA</string>
-    <string name="new_post_frecuency">FRECUENCIA</string>
+    <string name="new_post_category">Categoría</string>
+    <string name="new_post_frecuency">Frecuencia</string>
     <string name="new_post_placeholder_category">Seleccione una categoría</string>
     <string name="new_post_placeholder_frecuency">Seleccione una frecuencia</string>
+    <string name="action_add">Agregar</string>
+    <string name="add_radio_activity">Actividad</string>
+    <string name="add_radio_food">Alimento</string>
+    <string name="add_name_label">Nombre de la publicación</string>
+    <string name="add_activity_duration">Duración de la actividad</string>
+    <string name="add_save_text">Guardar</string>
 
     <string-array name="new_post_activity_categories">
         <item>Seleccione una categoría</item>
@@ -281,6 +283,14 @@
     <!-- Strings relatecionados con el Login -->
     <string name="login_successfull">Inicio de sesión exitoso</string>
     <string name="login_fail">Revisa tu conexión a internet e intentalo más tarde.</string>
+
+    <!-- Strings relacionados con simulación -->
+    <string name="sim_con_message">Una persona con tus hábitos se verá así</string>
+    <string name="sim_hab_healthy">Hábitos saludables</string>
+    <string name="sim_hab_little_healthy">Hábitos poco saludables</string>
+    <string name="sim_hab_non_healthy">Hábitos no saludables</string>
+    <string name="sim_weight_message">Nivel de peso según los hábitos que tienes</string>
+
 
 
 </resources>
