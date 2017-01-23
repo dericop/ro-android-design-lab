@@ -245,21 +245,21 @@
     <string name="add_save_text">Guardar</string>
 
     <string-array name="new_post_activity_categories">
-        <item>Seleccione una categoría</item>
+        <item></item>
         <item>Deporte</item>
         <item>Entretenimiento</item>
         <item>Trabajo</item>
         <item>Estudio</item>
     </string-array>
     <string-array name="new_post_food_categories">
-        <item>Seleccione una categoría</item>
+        <item></item>
         <item>Desayuno</item>
         <item>Almuerzo</item>
         <item>Comida</item>
         <item>Algo</item>
     </string-array>
     <string-array name="new_post_frecuencies">
-        <item>Seleccione una frecuencia</item>
+        <item></item>
         <item>Todos los días</item>
         <item>Casi todos los días</item>
         <item>2-3 veces a la semana</item>
