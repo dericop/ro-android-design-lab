@@ -285,7 +285,7 @@
     <string name="login_fail">Revisa tu conexión a internet e intentalo más tarde.</string>
 
     <!-- Strings relacionados con simulación -->
-    <string name="sim_con_message">Una persona con tus hábitos se verá así</string>
+    <string name="sim_con_message">Una persona adulta tendría este pronóstico de salud según los hábitos compartidos</string>
     <string name="sim_hab_healthy">Hábitos saludables</string>
     <string name="sim_hab_little_healthy">Hábitos poco saludables</string>
     <string name="sim_hab_non_healthy">Hábitos no saludables</string>

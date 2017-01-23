@@ -11,6 +11,15 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black_overlay"
+            android:text="Resumen"
+            android:textSize="11dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="6dp"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -21,31 +30,30 @@
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="100dp"
                 android:layout_weight=".33"
                 android:background="@drawable/home_item_shadow"
-                android:layout_marginLeft="8dp">
+                android:layout_marginLeft="4dp"
+                android:layout_height="120dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="#fff"
                     android:layout_marginTop="1dp"
-                    android:layout_marginLeft="1dp"
                     android:layout_marginRight="1dp"
-                    android:layout_marginleft="1dp"
+                    android:layout_marginLeft="1dp"
                     android:layout_marginBottom="1dp"
                     android:orientation="vertical">
 
                     <!-- Contenido caja 1 -->
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="68dp"
-                        android:gravity="center">
+                        android:gravity="center"
+                        android:layout_height="88dp">
 
                         <LinearLayout
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
                             android:background="@drawable/circle"
                             android:backgroundTint="#8ec549"
                             android:id="@+id/sim_circle_box_1">
@@ -57,7 +65,7 @@
                                 android:gravity="center"
                                 android:text="23"
                                 android:textColor="#fff"
-                                android:textSize="12dp"
+                                android:textSize="14dp"
                                 android:padding="3dp" />
 
                         </LinearLayout>
@@ -76,10 +84,10 @@
                             android:text="@string/sim_hab_healthy"
                             android:maxWidth="80dp"
                             android:maxLines="2"
-                            android:textSize="10dp"
                             android:layout_gravity="center_horizontal"
                             android:textAlignment="center"
-                            android:lineSpacingExtra="-1dp" />
+                            android:lineSpacingExtra="-1dp"
+                            android:textSize="11dp" />
 
                     </LinearLayout>
 
@@ -89,10 +97,10 @@
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="100dp"
                 android:layout_weight=".33"
                 android:background="@drawable/home_item_shadow"
-                android:layout_marginLeft="8dp">
+                android:layout_marginLeft="4dp"
+                android:layout_height="120dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -101,7 +109,6 @@
                     android:layout_marginTop="1dp"
                     android:layout_marginLeft="1dp"
                     android:layout_marginRight="1dp"
-                    android:layout_marginleft="1dp"
                     android:layout_marginBottom="1dp"
                     android:orientation="vertical">
 
@@ -109,13 +116,13 @@
                     <!-- Contenido caja 2 -->
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="68dp"
-                        android:gravity="center">
+                        android:gravity="center"
+                        android:layout_height="88dp">
 
 
                         <LinearLayout
-                            android:layout_width="47dp"
-                            android:layout_height="47dp"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
                             android:background="@drawable/circle"
                             android:backgroundTint="#faaf4c"
                             android:id="@+id/sim_circle_box_2">
@@ -126,7 +133,7 @@
                                 android:textAlignment="center"
                                 android:gravity="center"
                                 android:text="80"
-                                android:textSize="15dp"
+                                android:textSize="18dp"
                                 android:textColor="#fff"
                                 android:padding="3dp" />
 
@@ -145,10 +152,10 @@
                             android:text="@string/sim_hab_little_healthy"
                             android:maxWidth="90dp"
                             android:maxLines="2"
-                            android:textSize="10dp"
                             android:layout_gravity="center_horizontal"
                             android:textAlignment="center"
-                            android:lineSpacingExtra="-1dp" />
+                            android:lineSpacingExtra="-1dp"
+                            android:textSize="11dp" />
 
                     </LinearLayout>
 
@@ -158,11 +165,11 @@
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="100dp"
                 android:layout_weight=".33"
                 android:background="@drawable/home_item_shadow"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp">
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
+                android:layout_height="120dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -171,7 +178,6 @@
                     android:layout_marginTop="1dp"
                     android:layout_marginLeft="1dp"
                     android:layout_marginRight="1dp"
-                    android:layout_marginleft="1dp"
                     android:layout_marginBottom="1dp"
                     android:orientation="vertical">
 
@@ -179,12 +185,12 @@
                     <!-- Contenido caja 3 -->
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="68dp"
-                        android:gravity="center">
+                        android:gravity="center"
+                        android:layout_height="88dp">
 
                         <LinearLayout
-                            android:layout_width="57dp"
-                            android:layout_height="57dp"
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
                             android:background="@drawable/circle"
                             android:backgroundTint="#fc5356"
                             android:id="@+id/sim_circle_box_3">
@@ -195,7 +201,7 @@
                                 android:textAlignment="center"
                                 android:gravity="center"
                                 android:text="100"
-                                android:textSize="20dp"
+                                android:textSize="22dp"
                                 android:textColor="#fff"
                                 android:padding="3dp" />
 
@@ -215,10 +221,10 @@
                             android:text="@string/sim_hab_non_healthy"
                             android:maxWidth="90dp"
                             android:maxLines="2"
-                            android:textSize="10dp"
                             android:layout_gravity="center_horizontal"
                             android:textAlignment="center"
-                            android:lineSpacingExtra="-1dp" />
+                            android:lineSpacingExtra="-1dp"
+                            android:textSize="11dp" />
 
                     </LinearLayout>
 
@@ -228,9 +234,23 @@
             </LinearLayout>
 
         </LinearLayout>
+        
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#d4d5d6"
+            android:layout_marginTop="4dp">
+        </View>
 
-
-
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Actividades"
+            android:textColor="@color/black_overlay"
+            android:textSize="11dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginBottom="7dp"
+            android:layout_marginTop="4dp"/>
 
         <!-- Sección simulación de contextura-->
         <LinearLayout
@@ -244,8 +264,8 @@
                 android:layout_height="320dp"
                 android:layout_weight=".55"
                 android:background="@drawable/home_item_shadow"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp">
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -254,8 +274,7 @@
                     android:layout_marginTop="1dp"
                     android:layout_marginLeft="1dp"
                     android:layout_marginRight="1dp"
-                    android:layout_marginleft="1dp"
-                    android:layout_marginBottom="1dp"
+                    android:layout_marginBottom="2dp"
                     android:orientation="vertical">
 
 
@@ -265,7 +284,7 @@
                         android:text="@string/sim_con_message"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="12dp"
-                        android:maxWidth="150dp"
+                        android:maxWidth="180dp"
                         android:textAlignment="center"
                         android:textSize="12dp"
                         android:textStyle="bold"
@@ -290,7 +309,7 @@
                 android:layout_height="260dp"
                 android:layout_weight=".45"
                 android:background="@drawable/home_item_shadow"
-                android:layout_marginRight="8dp">
+                android:layout_marginRight="4dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -299,7 +318,6 @@
                     android:layout_marginTop="1dp"
                     android:layout_marginLeft="1dp"
                     android:layout_marginRight="1dp"
-                    android:layout_marginleft="1dp"
                     android:layout_marginBottom="1dp"
                     android:orientation="vertical">
 
@@ -314,7 +332,6 @@
                         android:textSize="12dp"
                         android:textStyle="bold"
                         android:lineSpacingExtra="-2dp" />
-
 
                     <LinearLayout
                         android:layout_width="match_parent"

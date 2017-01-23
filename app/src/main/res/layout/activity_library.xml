@@ -16,7 +16,7 @@ tools:context="com.ucaldas.ro.reduccionobesidad.AddMenu">
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/toolbarColor"
+        android:background="@color/colorPrimary"
         android:elevation="4dp"
         app:popupTheme="@style/AppTheme.PopupOverlay">
 
