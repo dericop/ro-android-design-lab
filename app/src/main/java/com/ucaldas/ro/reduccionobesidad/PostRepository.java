@@ -39,9 +39,17 @@ public class PostRepository {
             database.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
+                    //GenericTypeIndicator<Map<String, Object>> t = new GenericTypeIndicator<Map<String, Object> >() {};
+                    //HashMap<String, Post> map = (HashMap<String, Post>)dataSnapshot.getValue();
+                    //Log.v("DB",map.get("-KbHwIwn4vujpXeeKsLL").getmName());
+
+                    for (DataSnapshot messageSnapshot: dataSnapshot.getChildren()) {
+                        Post message = messageSnapshot.getValue(Post.class);
+                        Log.v("DB", message +"");
+                    }
                     /*GenericTypeIndicator<Map<String, Post>> t = new GenericTypeIndicator<Map<String, Post> >() {};
                     Map<String, Post>  posts = dataSnapshot.getValue(t);
-                    Log.v("DB", posts.get("-KaiTu_DYBk2-0uCHPKt")+"");*/
+                    Log.v("DB", posts.get("-KbHyPCuAa75KXroCW7y")+"");*/
                 }
 
                 @Override

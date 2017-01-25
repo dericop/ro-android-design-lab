@@ -120,7 +120,7 @@
     <string name="title_activity_add_post">Nueva Actividad</string>
     <string name="addMenuTittle">Nueva Publicación</string>
 
-    <string name="title_activity_library_post">Biblioteca de Actividades</string>
+    <string name="title_activity_library_post">Nueva Publicación</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="large_text">
@@ -271,6 +271,12 @@
     <string-array name="new_post_photo_options">
         <item>Nueva Foto</item>
         <item>Elegir de la galería</item>
+    </string-array>
+    <string-array name="new_post_activity_duration">
+        <item>15 minutos</item>
+        <item>30 minutos</item>
+        <item>1 hora</item>
+        <item>Más de 1 hora</item>
     </string-array>
 
     <!--  validaciones -->

@@ -7,7 +7,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.design.widget.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -16,6 +16,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -65,9 +66,6 @@ public class mHome extends AppCompatActivity
         * */
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);
-
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewPager);
     }
 
     private void configureNavigationView(){
@@ -98,26 +96,37 @@ public class mHome extends AppCompatActivity
             ImageView imageView = (ImageView)header.findViewById(R.id.imageView);
             Picasso.with(getBaseContext()).load(image).into(imageView);
         }
-
-
     }
 
     private void addListenerToFloatButton(){
         /*
         * Configuración de las acciones del botón flotante.
         * */
-        AddFloatingActionButton fab = (AddFloatingActionButton) findViewById(R.id.btn_addPost);
-        fab.setOnClickListener(new View.OnClickListener() {
+
+        final FloatingActionButton camera_action = (FloatingActionButton) findViewById(R.id.btn_add_post_camera);
+        camera_action.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(mHome.this, AddPost.class));  //Abrir menú de agregar POST
+                Intent camera_intent = new Intent(getBaseContext(), AddPost.class);
+                camera_intent.putExtra("source","camera");
+                startActivity(camera_intent);
+            }
+        });
+
+        FloatingActionButton gallery_action = (FloatingActionButton) findViewById(R.id.btn_add_post_gallery);
+        gallery_action.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent gallery_intent = new Intent(getBaseContext(), AddPost.class);
+                gallery_intent.putExtra("source", "gallery");
+                startActivity(gallery_intent);
             }
         });
     }
 
     private void configureToolbarAndToggleActionBar(){
         /*
-        * Habiliar toolbar para soporte de acciones
+        * Habilitar toolbar para soporte de acciones
         * */
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -143,6 +152,28 @@ public class mHome extends AppCompatActivity
         adapter.addFragment(new MyItems(), "Mis Items");
         adapter.addFragment(new Simulation(), "Simulación");
         viewPager.setAdapter(adapter);
+
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(viewPager);
+        createTabIcons();
+    }
+
+    private void createTabIcons() {
+
+        TextView tabOne = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        tabOne.setText("Inicio");
+        tabOne.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_action_home, 0, 0);
+        tabLayout.getTabAt(0).setCustomView(tabOne);
+
+        TextView tabTwo = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        tabTwo.setText("Mis items");
+        tabTwo.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_action_items, 0, 0);
+        tabLayout.getTabAt(1).setCustomView(tabTwo);
+
+        TextView tabThree = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        tabThree.setText("Simulación");
+        tabThree.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_action_simulation, 0, 0);
+        tabLayout.getTabAt(2).setCustomView(tabThree);
     }
 
     @Override

@@ -27,4 +27,11 @@
         <item name="android:background">@color/black_overlay</item>
     </style>
 
+    <style name="ThemeSpinner">
+        <!-- Color when pressed -->
+        <item name="colorAccent">#ffa000</item>
+        <!-- Default color for the dropdown arrow and line -->
+        <item name="colorControlNormal">#a7a7a7</item>
+    </style>
+
 </resources>

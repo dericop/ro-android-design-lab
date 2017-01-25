@@ -57,9 +57,9 @@
                 <ImageView
                     android:id="@+id/imagePreview"
                     android:layout_width="match_parent"
-                    android:background="@drawable/sample_2"
+                    android:background="@color/colorPrimary"
                     android:layout_height="200dp"
-                    android:scaleType="centerCrop" />
+                    android:scaleType="centerInside" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -73,7 +73,7 @@
                         android:orientation="horizontal"
                         android:layout_marginTop="5dp">
 
-                        <RadioButton android:id="@+id/radio_pirates"
+                        <RadioButton android:id="@+id/radio_activity"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/add_radio_activity"
@@ -81,7 +81,7 @@
                             android:onClick="onRadioButtonClicked"
                             android:layout_marginRight="30dp"/>
 
-                        <RadioButton android:id="@+id/radio_ninjas"
+                        <RadioButton android:id="@+id/radio_food"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/add_radio_food"
@@ -104,15 +104,16 @@
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
                     android:id="@+id/txt_input_layour_name"
-                    android:background="@drawable/label_bottom_line">
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false">
 
                     <android.support.design.widget.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/textInputEditText"
-                        android:backgroundTint="#444"/>
+                        android:backgroundTint="#e9e9e9"
+                        android:paddingTop="0dp"/>
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -120,8 +121,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginTop="20dp">
-
+                    android:layout_marginTop="10dp">
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -129,7 +129,6 @@
                         android:layout_weight=".50"
                         android:paddingRight="5dp"
                         android:orientation="vertical">
-
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -147,7 +146,9 @@
                             android:layout_alignParentLeft="true"
                             android:layout_alignParentStart="true"
                             style="@style/Base.Widget.AppCompat.Spinner.Underlined"
-                            android:spinnerMode="dropdown" />
+                            android:theme="@style/ThemeSpinner"
+                            android:spinnerMode="dropdown"
+                            android:layout_marginTop="-8dp"/>
 
                     </LinearLayout>
 
@@ -169,15 +170,14 @@
                         <Spinner
                             android:id="@+id/frecuency_spinner"
                             android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="50dp"
                             android:layout_alignParentLeft="true"
                             android:layout_alignParentStart="true"
                             style="@style/Base.Widget.AppCompat.Spinner.Underlined"
-                            android:spinnerMode="dropdown"/>
-
+                            android:theme="@style/ThemeSpinner"
+                            android:spinnerMode="dropdown"
+                            android:layout_marginTop="-8dp"/>
                     </LinearLayout>
-
-
                 </LinearLayout>
 
 
@@ -185,7 +185,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:layout_marginTop="12dp">
+                    android:layout_marginTop="5dp">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -193,15 +193,19 @@
                         android:text="@string/add_activity_duration"
                         android:textColor="@color/form_labels"
                         android:textStyle="italic"
-                        android:textSize="10dp"/>
+                        android:textSize="10dp"
+                        android:layout_marginTop="5dp"
+                        android:id="@+id/spinner_duration_label"/>
 
                     <Spinner
                         android:id="@+id/activity_duration"
                         android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
-                        style="@style/Base.Widget.AppCompat.Spinner.Underlined" />
+                        style="@style/Base.Widget.AppCompat.Spinner.Underlined"
+                        android:theme="@style/ThemeSpinner"
+                        android:layout_height="50dp"
+                        android:layout_marginTop="-8dp"/>
 
                 </LinearLayout>
 
