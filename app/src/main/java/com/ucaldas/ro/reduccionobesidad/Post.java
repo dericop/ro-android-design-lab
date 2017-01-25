@@ -20,24 +20,27 @@ public class Post {
     private String mFrecuency;
     private String mImage;
     private String mDuration="";
+    private String mUser;
 
     public Post(){
 
     }
 
-    public Post(String name, String category, String frecuency, String image) {
+    public Post(String name, String category, String frecuency, String image, String user) {
         mName = name;
         mCategory = category;
         mFrecuency = frecuency;
         mImage = image;
+        mUser = user;
     }
 
-    public Post(String name, String category, String frecuency, String image, String duration){
+    public Post(String name, String category, String frecuency, String image, String duration, String user){
         mName = name;
         mCategory = category;
         mFrecuency = frecuency;
         mImage = image;
         mDuration = duration;
+        mUser = user;
     }
 
     public String getmName() {
@@ -76,12 +79,17 @@ public class Post {
 
     public void setmDuration(String mDuration){ this.mDuration = mDuration; }
 
+    public void setmUser(String mUser){ this.mUser = mUser; }
+
+    public String getmUser(){ return mUser; }
+
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
         result.put("name", mName);
         result.put("category", mCategory);
         result.put("frecuency", mFrecuency);
         result.put("image", mImage);
+        result.put("user", mUser);
 
         if(!this.mDuration.equals(""))
             result.put("duration", mDuration);

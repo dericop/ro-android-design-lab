@@ -261,19 +261,18 @@ public class AddPost extends AppCompatActivity{
                                             TextView activity_duration = (TextView) duration_view;
                                             durationActivity = activity_duration.getText();
 
-                                            post = new Post(nameText.toString(), category.toString(), frecuency.toString(), downloadUrl+"", durationActivity.toString());
+                                            post = new Post(nameText.toString(), category.toString(), frecuency.toString(), downloadUrl+"", durationActivity.toString(), mHome.user.getUid());
                                         }
                                     }else{
-                                        post = new Post(nameText.toString(), category.toString(), frecuency.toString(), downloadUrl+"");
+                                        post = new Post(nameText.toString(), category.toString(), frecuency.toString(), downloadUrl+"", mHome.user.getUid());
                                     }
 
                                     if(post != null){
                                         Map<String, Object> postValues = post.toMap();
 
                                         Map<String, Object> childUpdates = new HashMap<>();
-
-                                        String userId = mHome.user.getUid();
-                                        childUpdates.put("/user-posts/" + userId + "/" + key, postValues);
+                                        addSaveEventListener();
+                                        childUpdates.put("/user-posts/" + key, postValues);
 
                                         OnCompleteListener saveListener = new OnCompleteListener() {
                                             @Override

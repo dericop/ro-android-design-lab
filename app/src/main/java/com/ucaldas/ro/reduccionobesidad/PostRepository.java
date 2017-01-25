@@ -31,44 +31,14 @@ public class PostRepository {
     }
 
     private PostRepository() {
-        FirebaseUser user = mHome.user;
-        Log.v("DB", "preasd");
-
-        if(user != null){
-            DatabaseReference database = FirebaseDatabase.getInstance().getReference("user-posts").child(user.getUid());
-            database.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    //GenericTypeIndicator<Map<String, Object>> t = new GenericTypeIndicator<Map<String, Object> >() {};
-                    //HashMap<String, Post> map = (HashMap<String, Post>)dataSnapshot.getValue();
-                    //Log.v("DB",map.get("-KbHwIwn4vujpXeeKsLL").getmName());
-
-                    for (DataSnapshot messageSnapshot: dataSnapshot.getChildren()) {
-                        Post message = messageSnapshot.getValue(Post.class);
-                        Log.v("DB", message +"");
-                    }
-                    /*GenericTypeIndicator<Map<String, Post>> t = new GenericTypeIndicator<Map<String, Post> >() {};
-                    Map<String, Post>  posts = dataSnapshot.getValue(t);
-                    Log.v("DB", posts.get("-KbHyPCuAa75KXroCW7y")+"");*/
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
 
             savePost(new Post());
-        }
+
 
     }
 
     private void savePost(Post lead) {
-        leads.put("1",new Post("Huevos, arepa y chocolates mas una empada con queso", "Agregado por: Juan Jaramillo", "Original: Carlos Lopez", "http://colombia.gastronomia.com/uploads/noticias/bandeja%20paisa.bndFdXYzajQ1bWw0SVp5aS8vMTQ3Mzc4MjMxNC8.jpg"));
-        leads.put("2",new Post("Huevos, arepa y chocolate", "Juan Jaramillo", "Carlos Lopez", "http://www.ibikes.cl/store/image/cache/data/B813012-200x200.jpg"));
-        leads.put("3",new Post("Huevos, arepa y chocolate", "Juan Jaramillo", "Carlos Lopez", "http://www.ibikes.cl/store/image/cache/data/B813012-200x200.jpg"));
-        leads.put("4",new Post("Huevos, arepa y chocolate", "Juan Jaramillo", "Carlos Lopez", "http://www.ibikes.cl/store/image/cache/data/B813012-200x200.jpg"));
-        leads.put("5",new Post("Huevos, arepa y chocolate", "Juan Jaramillo", "Carlos Lopez", "http://www.ibikes.cl/store/image/cache/data/B813012-200x200.jpg"));
+
     }
 
     public List<Post> getLeads() {

@@ -7,11 +7,34 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
+
+import com.firebase.ui.database.FirebaseListAdapter;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 
 
 /**
@@ -113,16 +136,122 @@ public class Home extends ListFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ListView mLeadsList;
-        HomeAdapter mLeadsAdapter;
 
-        mLeadsList = (ListView) view.findViewById(android.R.id.list);
 
+        /*RecyclerView postList = (RecyclerView) view.findViewById(android.R.id.list);
+
+
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager.setReverseLayout(false);
+
+        postList.setHasFixedSize(false);
+        postList.setLayoutManager(layoutManager);
+
+
+        FirebaseRecyclerAdapter<GenericTypeIndicator, PostViewHolder> mAdapter = new FirebaseRecyclerAdapter<GenericTypeIndicator, PostViewHolder>(
+                GenericTypeIndicator.class, android.R.layout.two_line_list_item,
+                PostViewHolder.class, mDatabase) {
+
+            @Override
+            protected void populateViewHolder(final PostViewHolder viewHolder, final GenericTypeIndicator model, final int position) {
+
+                String key = this.getRef(position).getKey();
+                Log.v("DB", key);
+                mDatabase.child("user-posts").child(key).addListenerForSingleValueEvent(new ValueEventListener() {
+
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        String name = dataSnapshot.child("name").getValue(String.class);
+                        ((TextView)viewHolder.itemView.findViewById(android.R.id.text1)).setText(name);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+
+                });
+
+            }
+        };
+
+        postList.setAdapter(mAdapter);*/
+
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl("https://reduccion-de-obesidad-7414c.firebaseio.com/user-posts");
+        //mDatabase.keepSynced(true);
+
+        final ListView mLeadsList = (ListView) view.findViewById(android.R.id.list);
+
+        /*final FirebaseListAdapter<HashMap> firebaseListAdapter = new FirebaseListAdapter<HashMap>(
+                getActivity(),
+                HashMap.class,
+                R.layout.list_home_item,
+                mDatabase
+        ) {
+            @Override
+            protected void populateView(View v, HashMap model, int position) {
+
+
+            }
+
+            @Override
+            protected HashMap parseSnapshot(DataSnapshot snapshot) {
+                return (HashMap) snapshot.getValue();
+            }
+        };
+
+
+        mLeadsList.setAdapter(firebaseListAdapter);*/
+
+
+        final HomeAdapter mLeadsAdapter;
         mLeadsAdapter = new HomeAdapter(
                 getActivity(),
-                PostRepository.getInstance().getLeads());
+                new LinkedList<Post>());
 
         mLeadsList.setAdapter(mLeadsAdapter);
+
+        mDatabase.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Log.v("DB", dataSnapshot.getValue().toString());
+                HashMap map = (HashMap)dataSnapshot.getValue();
+
+                Log.v("DB", ((HashMap)map.get("-KbMbLITyK5aVJRF4_lV")).get("name")+"");
+                //mLeadsAdapter.add(new Post());
+
+
+                /*for (String k:map.keySet()) {
+                    mLeadsAdapter.add(map.get(k));
+                }*/
+
+                //Post post = dataSnapshot.getValue(Post.class);
+
+                mLeadsAdapter.notifyDataSetChanged();
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                Log.v("DB", "removed");
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
     @Override
@@ -145,4 +274,15 @@ public class Home extends ListFragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+
+    public static class PostViewHolder extends RecyclerView.ViewHolder{
+
+        public PostViewHolder(View itemView) {
+            super(itemView);
+        }
+
+
+    }
+
 }
