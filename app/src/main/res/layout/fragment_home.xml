@@ -5,6 +5,29 @@
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     tools:context="com.ucaldas.ro.reduccionobesidad.Home">
 
+    <FrameLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="top|center"
+    android:elevation="5dp">
+
+        <Button
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:src="@android:color/transparent"
+            android:text="Nuevas publicaciones"
+            android:textSize="14dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:background="@drawable/border_radius"
+            android:backgroundTint="@color/colorAccent"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:textColor="#fff"
+            android:id="@+id/btn_new_posts"
+            android:visibility="invisible"/>
+
+    </FrameLayout>
+
     <android.support.v4.widget.SwipeRefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/swiperefresh"

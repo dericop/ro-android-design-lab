@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -34,6 +35,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
@@ -53,9 +55,11 @@ public class Home extends ListFragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private SwipeRefreshLayout mSwipeRefreshing;
-    final AtomicInteger count = new AtomicInteger();
+    final AtomicInteger dataLoadersCounter = new AtomicInteger();
+    boolean isTheFirstLoad = true;
     DatabaseReference mDatabase = null;
     HomeAdapter mPostAdapter= null;
+    Button btn_new_posts = null;
 
 
     // TODO: Rename and change types of parameters
@@ -190,11 +194,16 @@ public class Home extends ListFragment {
 
         mListView.setAdapter(firebaseListAdapter);*/
 
+ 
         mDatabase.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Log.v("DB", dataSnapshot.getValue().toString());
-                HashMap map = (HashMap)dataSnapshot.getValue();
+                HashMap<String, HashMap> map = (HashMap)dataSnapshot.getValue();
+
+                /*for (String item:(Set<String>) map.keySet()){
+                    Log.v("DB", map+"");
+                }*/
 
                 //Log.v("DB", ((HashMap)map.get("-KbMbLITyK5aVJRF4_lV")).get("name")+"");
 
@@ -204,8 +213,18 @@ public class Home extends ListFragment {
                 mPostList.addFirst(new Post());
                 //Post post = dataSnapshot.getValue(Post.class);
 
+                if(isTheFirstLoad)
+                    btn_new_posts.setVisibility(View.INVISIBLE);
+                else
+                    btn_new_posts.setVisibility(View.VISIBLE);
+
+                Log.v("counter", isTheFirstLoad+"");
+
+                if(isTheFirstLoad && (dataSnapshot.getChildrenCount() == 1)){
+                    isTheFirstLoad = false;
+                }
+
                 mPostAdapter.notifyDataSetChanged();
-                mListView.smoothScrollToPosition(0);
                 mSwipeRefreshing.setRefreshing(false);
 
             }
@@ -239,7 +258,11 @@ public class Home extends ListFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+
         if(mSwipeRefreshing == null){
+            isTheFirstLoad = true;
+            btn_new_posts = (Button) view.findViewById(R.id.btn_new_posts);
+
             mSwipeRefreshing = (SwipeRefreshLayout) view.findViewById(R.id.swiperefresh);
             mListView = (ListView) view.findViewById(android.R.id.list);
             mPostList = new LinkedList<>();
@@ -265,6 +288,15 @@ public class Home extends ListFragment {
 
             refreshPostList();
 
+
+
+            btn_new_posts.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mListView.smoothScrollToPosition(0);
+                    btn_new_posts.setVisibility(View.INVISIBLE);
+                }
+            });
         }
 
         /*RecyclerView postList = (RecyclerView) view.findViewById(android.R.id.list);
