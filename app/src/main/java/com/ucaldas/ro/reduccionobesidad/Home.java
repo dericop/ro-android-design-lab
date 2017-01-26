@@ -1,6 +1,7 @@
 package com.ucaldas.ro.reduccionobesidad;
 
 import android.content.Context;
+import android.database.DataSetObserver;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -33,6 +34,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 
@@ -50,6 +52,11 @@ public class Home extends ListFragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private SwipeRefreshLayout mSwipeRefreshing;
+    final AtomicInteger count = new AtomicInteger();
+    DatabaseReference mDatabase = null;
+    HomeAdapter mPostAdapter= null;
+
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -59,7 +66,8 @@ public class Home extends ListFragment {
 
 
     private ListView mListView;
-    ArrayAdapter<String> mLeadsAdapter;
+    LinkedList<Post> mPostList;
+
 
     public Home() {
         // Required empty public constructor
@@ -111,6 +119,7 @@ public class Home extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
@@ -132,15 +141,133 @@ public class Home extends ListFragment {
         }
     }*/
 
+    private void refreshPostList(){
+        /*mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                int newCount = count.incrementAndGet();
+                mPostAdapter.add(new Post());
+                mPostAdapter.notifyDataSetChanged();
+
+                if(newCount == dataSnapshot.getChildrenCount()){
+                    mSwipeRefreshing.setRefreshing(false);
+                    count.set(0);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                mSwipeRefreshing.setRefreshing(false);
+            }
+
+        });*/
+
+        /*final FirebaseListAdapter<HashMap> firebaseListAdapter = new FirebaseListAdapter<HashMap>(
+                getActivity(),
+                HashMap.class,
+                R.layout.list_home_item,
+                mDatabase
+        ) {
+            @Override
+            protected void populateView(View v, HashMap model, int position) {
+
+            }
+
+            @Override
+            protected HashMap parseSnapshot(DataSnapshot snapshot) {
+                return (HashMap) snapshot.getValue();
+            }
+        };
+
+        firebaseListAdapter.registerDataSetObserver(new DataSetObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                mSwipeRefreshing.setRefreshing(false);
+            }
+        });
+
+        mListView.setAdapter(firebaseListAdapter);*/
+
+        mDatabase.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Log.v("DB", dataSnapshot.getValue().toString());
+                HashMap map = (HashMap)dataSnapshot.getValue();
+
+                //Log.v("DB", ((HashMap)map.get("-KbMbLITyK5aVJRF4_lV")).get("name")+"");
+
+                /*for (int i=0; i<map.keySet().size(); i++) {
+
+                }*/
+                mPostList.addFirst(new Post());
+                //Post post = dataSnapshot.getValue(Post.class);
+
+                mPostAdapter.notifyDataSetChanged();
+                mListView.smoothScrollToPosition(0);
+                mSwipeRefreshing.setRefreshing(false);
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                Log.v("DB", "removed");
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        if(mSwipeRefreshing == null){
+            mSwipeRefreshing = (SwipeRefreshLayout) view.findViewById(R.id.swiperefresh);
+            mListView = (ListView) view.findViewById(android.R.id.list);
+            mPostList = new LinkedList<>();
 
+            mPostAdapter = new HomeAdapter(
+                    getActivity(),
+                    mPostList);
+
+
+            mSwipeRefreshing.setRefreshing(true);
+            mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl("https://reduccion-de-obesidad-7414c.firebaseio.com/user-posts");
+            mDatabase.limitToLast(10);
+
+            mListView.setAdapter(mPostAdapter);
+
+            mSwipeRefreshing.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    //refreshPostList();
+                    mSwipeRefreshing.setRefreshing(false);
+                }
+            });
+
+            refreshPostList();
+
+        }
 
         /*RecyclerView postList = (RecyclerView) view.findViewById(android.R.id.list);
-
-
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setReverseLayout(false);
@@ -177,41 +304,15 @@ public class Home extends ListFragment {
 
         postList.setAdapter(mAdapter);*/
 
-        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl("https://reduccion-de-obesidad-7414c.firebaseio.com/user-posts");
-        //mDatabase.keepSynced(true);
-
-        final ListView mLeadsList = (ListView) view.findViewById(android.R.id.list);
-
-        /*final FirebaseListAdapter<HashMap> firebaseListAdapter = new FirebaseListAdapter<HashMap>(
-                getActivity(),
-                HashMap.class,
-                R.layout.list_home_item,
-                mDatabase
-        ) {
-            @Override
-            protected void populateView(View v, HashMap model, int position) {
 
 
-            }
-
-            @Override
-            protected HashMap parseSnapshot(DataSnapshot snapshot) {
-                return (HashMap) snapshot.getValue();
-            }
-        };
 
 
-        mLeadsList.setAdapter(firebaseListAdapter);*/
 
 
-        final HomeAdapter mLeadsAdapter;
-        mLeadsAdapter = new HomeAdapter(
-                getActivity(),
-                new LinkedList<Post>());
 
-        mLeadsList.setAdapter(mLeadsAdapter);
 
-        mDatabase.addChildEventListener(new ChildEventListener() {
+       /* mDatabase.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Log.v("DB", dataSnapshot.getValue().toString());
@@ -223,7 +324,7 @@ public class Home extends ListFragment {
 
                 /*for (String k:map.keySet()) {
                     mLeadsAdapter.add(map.get(k));
-                }*/
+                }
 
                 //Post post = dataSnapshot.getValue(Post.class);
 
@@ -250,9 +351,11 @@ public class Home extends ListFragment {
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });
+        });*/
 
     }
+
+
 
     @Override
     public void onDetach() {

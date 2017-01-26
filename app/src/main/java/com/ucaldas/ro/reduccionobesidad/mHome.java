@@ -152,6 +152,7 @@ public class mHome extends AppCompatActivity
         adapter.addFragment(new MyItems(), "Mis Items");
         adapter.addFragment(new Simulation(), "Simulación");
         viewPager.setAdapter(adapter);
+        viewPager.setOffscreenPageLimit(2);
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
