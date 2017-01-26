@@ -194,23 +194,35 @@ public class Home extends ListFragment {
 
         mListView.setAdapter(firebaseListAdapter);*/
 
- 
+
         mDatabase.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Log.v("DB", dataSnapshot.getValue().toString());
-                HashMap<String, HashMap> map = (HashMap)dataSnapshot.getValue();
+                //Log.v("DB", dataSnapshot.getValue().toString());
+                HashMap<String, String> map = (HashMap)dataSnapshot.getValue();
 
-                /*for (String item:(Set<String>) map.keySet()){
-                    Log.v("DB", map+"");
-                }*/
+                Log.v("DB", map.get("name"));
+                String name = map.get("name");
+                String frecuency = map.get("frecuency");
+                String category = map.get("category");
+                String image = map.get("image");
+                String user = map.get("user");
+
+                if(map.get("duration") != null){
+                    String duration = map.get("duration");
+                    mPostList.addFirst(new Post(name, category, frecuency, image, duration, user));
+
+                }else{
+                    mPostList.addFirst(new Post(name, category, frecuency, image, user));
+                }
+
 
                 //Log.v("DB", ((HashMap)map.get("-KbMbLITyK5aVJRF4_lV")).get("name")+"");
 
                 /*for (int i=0; i<map.keySet().size(); i++) {
 
                 }*/
-                mPostList.addFirst(new Post());
+
                 //Post post = dataSnapshot.getValue(Post.class);
 
                 if(isTheFirstLoad)
