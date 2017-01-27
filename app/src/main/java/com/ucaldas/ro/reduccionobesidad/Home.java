@@ -225,16 +225,15 @@ public class Home extends ListFragment {
 
                 //Post post = dataSnapshot.getValue(Post.class);
 
+                if(isTheFirstLoad){
+                    isTheFirstLoad = false;
+                }
+
+
                 if(isTheFirstLoad)
                     btn_new_posts.setVisibility(View.INVISIBLE);
                 else
                     btn_new_posts.setVisibility(View.VISIBLE);
-
-                Log.v("counter", isTheFirstLoad+"");
-
-                if(isTheFirstLoad && (dataSnapshot.getChildrenCount() == 1)){
-                    isTheFirstLoad = false;
-                }
 
                 mPostAdapter.notifyDataSetChanged();
                 mSwipeRefreshing.setRefreshing(false);
@@ -263,8 +262,6 @@ public class Home extends ListFragment {
         });
 
     }
-
-
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {

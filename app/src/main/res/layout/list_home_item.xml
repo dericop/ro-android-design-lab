@@ -78,6 +78,7 @@
                 android:text="Daniel Estiven Rico Posada"
                 android:textSize="14dp"
                 android:layout_marginTop="-4dp"
+                android:layout_marginRight="8dp"
                 android:textStyle="bold" />
 
             <TextView

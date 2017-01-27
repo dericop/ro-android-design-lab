@@ -71,6 +71,8 @@ public class MyItems extends Fragment {
         grid_items.setAdapter(new MyItemAdapter(this.getContext()));
 
 
+
+
     }
 
     @Override

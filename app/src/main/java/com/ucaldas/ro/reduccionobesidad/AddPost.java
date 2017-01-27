@@ -273,6 +273,7 @@ public class AddPost extends AppCompatActivity{
                                         Map<String, Object> childUpdates = new HashMap<>();
                                         addSaveEventListener();
                                         childUpdates.put("/user-posts/" + key, postValues);
+                                        //childUpdates.put("/user-data/"+key, postValues);
 
                                         OnCompleteListener saveListener = new OnCompleteListener() {
                                             @Override

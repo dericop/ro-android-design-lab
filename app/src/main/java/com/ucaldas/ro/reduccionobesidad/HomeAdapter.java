@@ -40,7 +40,7 @@ public class HomeAdapter extends ArrayAdapter<Post> {
         ImageView avatar = (ImageView) convertView.findViewById(R.id.iv_avatar);
         TextView name = (TextView) convertView.findViewById(R.id.post_name);
         TextView title = (TextView) convertView.findViewById(R.id.txt_by);
-        TextView company = (TextView) convertView.findViewById(R.id.txt_too);
+        TextView otherUser = (TextView) convertView.findViewById(R.id.txt_too);
 
         // Lead actual.
         Post lead = getItem(position);
@@ -48,8 +48,8 @@ public class HomeAdapter extends ArrayAdapter<Post> {
         // Setup
         Glide.with(getContext()).load(lead.getmImage()).into(avatar);
         name.setText(lead.getmName());
-        title.setText(lead.getmCategory());
-        company.setText(lead.getmFrecuency());
+        title.setText(lead.getmUser());
+        otherUser.setText("");
 
         return convertView;
     }
