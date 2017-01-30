@@ -1,6 +1,8 @@
 package com.ucaldas.ro.reduccionobesidad;
 
 import android.net.Uri;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 
@@ -15,6 +17,7 @@ import java.util.UUID;
 @IgnoreExtraProperties
 public class Post {
 
+    private String mId;
     private String mName;
     private String mCategory;
     private String mFrecuency;
@@ -26,7 +29,8 @@ public class Post {
 
     }
 
-    public Post(String name, String category, String frecuency, String image, String user) {
+    public Post(String id, String name, String category, String frecuency, String image, String user) {
+        mId = id;
         mName = name;
         mCategory = category;
         mFrecuency = frecuency;
@@ -34,7 +38,8 @@ public class Post {
         mUser = user;
     }
 
-    public Post(String name, String category, String frecuency, String image, String duration, String user){
+    public Post(String id, String name, String category, String frecuency, String image, String duration, String user){
+        mId = id;
         mName = name;
         mCategory = category;
         mFrecuency = frecuency;
@@ -42,6 +47,10 @@ public class Post {
         mDuration = duration;
         mUser = user;
     }
+
+    public String getmId(){ return mId; }
+
+    public void setmId(String id){ mId = id; }
 
     public String getmName() {
         return mName;
@@ -90,6 +99,7 @@ public class Post {
         result.put("frecuency", mFrecuency);
         result.put("image", mImage);
         result.put("user", mUser);
+        result.put("id", mId);
 
         if(!this.mDuration.equals(""))
             result.put("duration", mDuration);
@@ -101,4 +111,5 @@ public class Post {
     public String toString() {
         return this.mName;
     }
+
 }

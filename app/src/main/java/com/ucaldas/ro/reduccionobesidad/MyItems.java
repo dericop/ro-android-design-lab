@@ -5,10 +5,20 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 
 /**
@@ -67,11 +77,55 @@ public class MyItems extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        GridView grid_items = (GridView) view.findViewById(R.id.grid_items);
-        grid_items.setAdapter(new MyItemAdapter(this.getContext()));
+        final GridView grid_items = (GridView) view.findViewById(R.id.grid_items);
+        final ArrayList<Post> myItems = new ArrayList<>();
+        final MyItemAdapter itemAdapter = new MyItemAdapter(this.getContext(), myItems);
+        grid_items.setAdapter(itemAdapter);
 
+        Log.v("view", "test view");
 
+        if(mHome.user != null){
+            DatabaseReference firebaseDatabase = FirebaseDatabase.getInstance().getReference().child("user-data").child(mHome.user.getUid());
+            firebaseDatabase.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.hasChildren()){
+                        myItems.clear();
 
+                        HashMap<String, HashMap<String, String>> map = (HashMap)dataSnapshot.getValue();
+
+                        Log.v("DB", map.toString());
+                        for (String key: map.keySet()){
+                            HashMap<String, String> values = map.get(key);
+
+                            String name = values.get("name");
+                            String frecuency = values.get("frecuency");
+                            String category = values.get("category");
+                            String image = values.get("image");
+                            String user = values.get("user");
+                            String id = values.get("id");
+
+                            if(map.get("duration") != null){
+                                String duration = values.get("duration");
+                                myItems.add(new Post(id, name, category, frecuency, image, duration, user));
+
+                            }else{
+                                myItems.add(new Post(id, name, category, frecuency, image, user));
+                            }
+
+                            itemAdapter.notifyDataSetChanged();
+
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+        }
 
     }
 

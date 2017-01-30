@@ -1,6 +1,7 @@
 package com.ucaldas.ro.reduccionobesidad;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.DataSetObserver;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -207,13 +209,14 @@ public class Home extends ListFragment {
                 String category = map.get("category");
                 String image = map.get("image");
                 String user = map.get("user");
+                String id = map.get("id");
 
                 if(map.get("duration") != null){
                     String duration = map.get("duration");
-                    mPostList.addFirst(new Post(name, category, frecuency, image, duration, user));
+                    mPostList.addFirst(new Post(id, name, category, frecuency, image, duration, user));
 
                 }else{
-                    mPostList.addFirst(new Post(name, category, frecuency, image, user));
+                    mPostList.addFirst(new Post(id, name, category, frecuency, image, user));
                 }
 
 
@@ -263,6 +266,7 @@ public class Home extends ListFragment {
 
     }
 
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -297,8 +301,6 @@ public class Home extends ListFragment {
 
             refreshPostList();
 
-
-
             btn_new_posts.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -306,6 +308,8 @@ public class Home extends ListFragment {
                     btn_new_posts.setVisibility(View.INVISIBLE);
                 }
             });
+
+
         }
 
         /*RecyclerView postList = (RecyclerView) view.findViewById(android.R.id.list);
@@ -395,6 +399,8 @@ public class Home extends ListFragment {
         });*/
 
     }
+
+
 
 
 

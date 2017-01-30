@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/bg_screen3">
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/home_item_shadow"
+
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="50dp"
+        android:layout_marginTop="30dp">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -14,13 +23,14 @@
         <ImageView
             android:layout_width="@dimen/img_width_height"
             android:layout_height="@dimen/img_width_height"
-            android:src="@drawable/ic_items" />
+            android:src="@drawable/ic_items"
+            android:tint="#607d8b"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/slide_3_title"
-            android:textColor="@android:color/white"
+            android:textColor="#37474f"
             android:textSize="@dimen/slide_title"
             android:textStyle="bold" />
 
@@ -32,9 +42,11 @@
             android:paddingRight="@dimen/desc_padding"
             android:text="@string/slide_3_desc"
             android:textAlignment="center"
-            android:textColor="@android:color/white"
+            android:textColor="#546e7a"
             android:textSize="@dimen/slide_desc" />
 
     </LinearLayout>
+
+    </RelativeLayout>
 
 </RelativeLayout>

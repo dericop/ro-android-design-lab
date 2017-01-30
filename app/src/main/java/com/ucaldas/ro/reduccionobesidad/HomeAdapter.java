@@ -1,10 +1,13 @@
 package com.ucaldas.ro.reduccionobesidad;
 
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,8 +21,11 @@ import java.util.List;
 
 public class HomeAdapter extends ArrayAdapter<Post> {
 
+    private Context mContext;
+
     public HomeAdapter(Context context, List<Post> objects) {
         super(context, 0, objects);
+        this.mContext = context;
     }
 
     @Override
@@ -43,14 +49,31 @@ public class HomeAdapter extends ArrayAdapter<Post> {
         TextView otherUser = (TextView) convertView.findViewById(R.id.txt_too);
 
         // Lead actual.
-        Post lead = getItem(position);
+        final Post post = getItem(position);
 
         // Setup
-        Glide.with(getContext()).load(lead.getmImage()).into(avatar);
-        name.setText(lead.getmName());
-        title.setText(lead.getmUser());
+        Glide.with(getContext()).load(post.getmImage()).into(avatar);
+        name.setText(post.getmName());
+        title.setText(post.getmUser());
         otherUser.setText("");
+
+        ImageButton action_reply = (ImageButton) convertView.findViewById(R.id.action_reply);
+        action_reply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent replyIntent = new Intent(mContext, AddPost.class);
+                replyIntent.putExtra("source", "reply");
+                replyIntent.putExtra("id", post.getmId());
+                replyIntent.putExtra("image", post.getmImage());
+                replyIntent.putExtra("name", post.getmName());
+                mContext.startActivity(replyIntent);
+
+            }
+        });
 
         return convertView;
     }
+
+
 }

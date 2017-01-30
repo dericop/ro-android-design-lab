@@ -28,7 +28,7 @@
                 android:layout_height="120dp"
                 android:layout_marginLeft="10dp"
                 android:background="@color/colorPrimary"
-                android:scaleType="center"/>
+                android:scaleType="centerCrop"/>
 
         </LinearLayout>
 
@@ -38,74 +38,82 @@
             android:layout_weight=".55"
             android:orientation="vertical"
             android:layout_marginTop="10dp">
-
-
-            <TextView
-                android:id="@+id/post_name"
+            
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Bandeja Paisa con Chorizo"
-                android:layout_alignLeft="@id/post_name"
-                android:textAppearance="?attr/textAppearanceListItem"
-                tools:text="Alexander Pierrot"
-                android:textSize="18dp"
-                android:fontFamily="sans-serif"
-                android:textStyle="normal|bold"
-                android:textColor="#808285"
-                android:ellipsize="end"
-                android:paddingRight="8dp"
-                android:layout_marginTop="-7dp"
-                android:maxLines="2"
-                tools:textStyle="bold"
-                android:lineSpacingExtra="-4dp"/>
+                android:layout_height="120dp"
+                android:id="@+id/top_data_container"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/lbl_by"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/post_name"
-                android:layout_below="@+id/post_name"
-                android:layout_marginTop="7dp"
-                android:textSize="12dp"
-                android:text="Original"/>
 
-            <TextView
-                android:id="@+id/txt_by"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/post_name"
-                android:layout_below="@+id/lbl_by"
-                android:text="Daniel Estiven Rico Posada"
-                android:textSize="14dp"
-                android:layout_marginTop="-4dp"
-                android:layout_marginRight="8dp"
-                android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/post_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Bandeja Paisa con Chorizo"
+                    android:layout_alignLeft="@id/post_name"
+                    android:textAppearance="?attr/textAppearanceListItem"
+                    tools:text="Alexander Pierrot"
+                    android:textSize="18dp"
+                    android:fontFamily="sans-serif"
+                    android:textStyle="normal|bold"
+                    android:textColor="#808285"
+                    android:ellipsize="end"
+                    android:paddingRight="8dp"
+                    android:layout_marginTop="-7dp"
+                    android:maxLines="2"
+                    tools:textStyle="bold"
+                    android:lineSpacingExtra="-4dp"/>
 
-            <TextView
-                android:id="@+id/lbl_too"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/post_name"
-                android:layout_below="@+id/lbl_by"
-                android:layout_marginTop="7dp"
-                android:textSize="12dp"
-                android:text="También agregado por" />
+                <TextView
+                    android:id="@+id/lbl_by"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/post_name"
+                    android:layout_below="@+id/post_name"
+                    android:layout_marginTop="7dp"
+                    android:textSize="12dp"
+                    android:text="Original"/>
 
-            <TextView
-                android:id="@+id/txt_too"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/post_name"
-                android:layout_below="@+id/lbl_too"
-                android:text="Daniel Estiven Rico Posada"
-                android:textSize="12dp"
-                android:layout_marginTop="-4dp"
-                android:textStyle="bold"/>
+                <TextView
+                    android:id="@+id/txt_by"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/post_name"
+                    android:layout_below="@+id/lbl_by"
+                    android:text="Daniel Estiven Rico Posada"
+                    android:textSize="14dp"
+                    android:layout_marginTop="-4dp"
+                    android:layout_marginRight="8dp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/lbl_too"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/post_name"
+                    android:layout_below="@+id/lbl_by"
+                    android:layout_marginTop="7dp"
+                    android:textSize="12dp"
+                    android:text="También agregado por" />
+
+                <TextView
+                    android:id="@+id/txt_too"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/post_name"
+                    android:layout_below="@+id/lbl_too"
+                    android:text="Daniel Estiven Rico Posada"
+                    android:textSize="12dp"
+                    android:layout_marginTop="-4dp"
+                    android:textStyle="bold"/>
+
+            </LinearLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_below="@id/txt_too">
+                android:layout_below="@id/top_data_container">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -123,8 +131,7 @@
                             android:background="@drawable/ic_action_reply"
                             android:backgroundTint="#a7a9ac"
                             android:layout_gravity="center"
-                            android:layout_marginRight="30dp"
-                            android:layout_marginTop="10dp"/>
+                            android:layout_marginRight="30dp"/>
 
                         <TextView
                             android:layout_width="wrap_content"

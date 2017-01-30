@@ -27,6 +27,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -37,6 +38,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -79,6 +81,8 @@ public class AddPost extends AppCompatActivity{
     private Drawable image;
     private ProgressDialog progress;
     final AppCompatActivity that = this; //Guardar el contexto para los menú de alerta.
+    private String idForReply;
+    String imageForReply;
 
     private ArrayAdapter<CharSequence> categoryAdapter;
 
@@ -92,6 +96,12 @@ public class AddPost extends AppCompatActivity{
 
         configureToolbarAndActions();
         assignActivitySourceAndInitData();
+
+        //Esconder el teclado
+        getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+        );
+
     }
 
     public void onRadioButtonClicked(View view) {
@@ -142,7 +152,24 @@ public class AddPost extends AppCompatActivity{
         SOURCE = getIntent().getStringExtra("source"); //Obtiene el origen
         isActivity = true; //Inicialmente se configura el post como una publicación de actividad
 
-        if (SOURCE.equals("camera")) { //¿El origen es de foto?
+        if(SOURCE.equals("reply")){
+            imageForReply = getIntent().getStringExtra("image");
+            String name = getIntent().getStringExtra("name");
+            idForReply = getIntent().getStringExtra("id");
+
+            TextView txt_name = (TextView) findViewById(R.id.textInputEditText);
+            txt_name.setEnabled(false);
+            txt_name.setText(name);
+
+            RadioButton radioActivity = (RadioButton) findViewById(R.id.radio_activity);
+            RadioButton radioFood = (RadioButton) findViewById(R.id.radio_food);
+            radioActivity.setEnabled(false);
+            radioFood.setEnabled(false);
+
+            Glide.with(this).load(imageForReply).into(prev);
+
+
+        }else if (SOURCE.equals("camera")) { //¿El origen es de foto?
             dispatchTakePictureIntent();
         } else { // ¿El origen es de galería?
             dispatchGaleryPicture();
@@ -187,12 +214,31 @@ public class AddPost extends AppCompatActivity{
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
+
         addSaveEventListener();
 
         changeStatusBarColor();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+    }
+
+    private Post getPostData(String key, String downloadUrl){
+        Post post = null;
+        if(isActivity){
+            View duration_view = durationSpinner.getSelectedView();
+            if (duration_view != null && duration_view instanceof TextView) {
+                CharSequence durationActivity = "";
+                TextView activity_duration = (TextView) duration_view;
+                durationActivity = activity_duration.getText();
+
+                post = new Post(key, nameText.toString(), category.toString(), frecuency.toString(), downloadUrl+"", durationActivity.toString(), mHome.user.getUid());
+            }
+        }else{
+            post = new Post(key, nameText.toString(), category.toString(), frecuency.toString(), downloadUrl+"", mHome.user.getUid());
+        }
+        return post;
     }
 
     private void addSaveEventListener() {
@@ -210,95 +256,129 @@ public class AddPost extends AppCompatActivity{
                 if (mHome.user != null) {
                     if (userDataIsOK()) {
 
-                        progress = ProgressDialog.show(that, "Agregando Publicación...",
-                                "Espera un momento", true);
+                        if(SOURCE.equals("reply")){
+                            progress = ProgressDialog.show(that, "Compartiendo Publicación...",
+                                    "Espera un momento", true);
 
-                        FirebaseStorage storage = FirebaseStorage.getInstance();
-                        StorageReference storageRef = storage.getReferenceFromUrl("gs://reduccion-de-obesidad-7414c.appspot.com");
+                            if(isOnline()){
+                                DatabaseReference datRef = FirebaseDatabase.getInstance().getReference();
+                                String dataKey = datRef.child("user-data").push().getKey();
+
+                                Post post = getPostData(idForReply, imageForReply);
+                                Map<String, Object> mapForItems = post.toMap();
+
+                                Log.v("db", idForReply);
+
+                                Map<String, Object> mapForUpdate = new HashMap<>();
+                                mapForUpdate.put("/user-posts/"+idForReply+"/"+"last_share", mHome.user.getUid());
+                                mapForUpdate.put("/user-data/"+mHome.user.getUid()+"/"+dataKey, mapForItems);
 
 
-                        prev.setDrawingCacheEnabled(true);
-                        prev.buildDrawingCache();
-                        Bitmap bitmap = prev.getDrawingCache();
-                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 60, baos);
-                        byte[] data = baos.toByteArray();
+                                //mapForUpdate.put("user-data/"+mHome.user.getUid()+"/", );
 
 
-                        Calendar cal = Calendar.getInstance();
-                        String date = cal.get(Calendar.YEAR) +"" + cal.get(Calendar.MONTH) +""+ cal.get(Calendar.DAY_OF_MONTH)+"" + cal.get(Calendar.HOUR)+"" + cal.get(Calendar.MINUTE)+"" + cal.get(Calendar.SECOND)+"";
-
-                        StorageReference imagesRef = storageRef.child("images/"+mHome.user.getUid()+ "/" + date);
-
-                        if(isOnline()){
-                            UploadTask uploadTask = imagesRef.putBytes(data);
-                            uploadTask.addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception exception) {
-                                    // Handle unsuccessful uploads
-                                    Log.v("Add", "Error");
-                                    Snackbar.make(getCurrentFocus(), "Revise su conexión a internet e intentelo más tarde", 2000).show();
-                                    progress.dismiss();
-
-                                }
-                            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                @Override
-                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                    Log.v("ST", "satisfactorio");
-
-                                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                                    Log.v("ST", downloadUrl + "");
-
-                                    DatabaseReference database = FirebaseDatabase.getInstance().getReference();
-                                    String key = database.child("user-posts").push().getKey();
-
-                                    Post post = null;
-
-                                    if(isActivity){
-                                        View duration_view = durationSpinner.getSelectedView();
-                                        if (duration_view != null && duration_view instanceof TextView) {
-                                            CharSequence durationActivity = "";
-                                            TextView activity_duration = (TextView) duration_view;
-                                            durationActivity = activity_duration.getText();
-
-                                            post = new Post(nameText.toString(), category.toString(), frecuency.toString(), downloadUrl+"", durationActivity.toString(), mHome.user.getUid());
-                                        }
-                                    }else{
-                                        post = new Post(nameText.toString(), category.toString(), frecuency.toString(), downloadUrl+"", mHome.user.getUid());
+                                datRef.updateChildren(mapForUpdate).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        progress.dismiss();
+                                        finish();
                                     }
+                                });
 
-                                    if(post != null){
-                                        Map<String, Object> postValues = post.toMap();
 
-                                        Map<String, Object> childUpdates = new HashMap<>();
-                                        addSaveEventListener();
-                                        childUpdates.put("/user-posts/" + key, postValues);
-                                        //childUpdates.put("/user-data/"+key, postValues);
 
-                                        OnCompleteListener saveListener = new OnCompleteListener() {
-                                            @Override
-                                            public void onComplete(@NonNull Task task) {
+                            }else{
+                                Snackbar.make(getCurrentFocus(), "Revise su conexión a internet e intentelo más tarde", 2000).show();
+                                progress.dismiss();
+                            }
 
-                                                if (task.isSuccessful()) {
-                                                    progress.dismiss();
-                                                    finish();
 
-                                                } else {
-                                                    Log.v("DB", task.getResult() + "");
-                                                    progress.dismiss();
-                                                    Snackbar.make(getCurrentFocus(), "Revise su conexión a internet o intentelo más tarde", 2000).show();
-                                                }
-                                            }
-                                        };
-                                        database.updateChildren(childUpdates).addOnCompleteListener(saveListener);
-                                    }
 
-                                }
-                            });
                         }else{
-                            Snackbar.make(getCurrentFocus(), "Revise su conexión a internet e intentelo más tarde", 2000).show();
-                            progress.dismiss();
+
+                            progress = ProgressDialog.show(that, "Agregando Publicación...",
+                                    "Espera un momento", true);
+
+                            FirebaseStorage storage = FirebaseStorage.getInstance();
+                            StorageReference storageRef = storage.getReferenceFromUrl("gs://reduccion-de-obesidad-7414c.appspot.com");
+
+
+                            prev.setDrawingCacheEnabled(true);
+                            prev.buildDrawingCache();
+                            Bitmap bitmap = prev.getDrawingCache();
+                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, 60, baos);
+                            byte[] data = baos.toByteArray();
+
+
+                            Calendar cal = Calendar.getInstance();
+                            String date = cal.get(Calendar.YEAR) +"" + cal.get(Calendar.MONTH) +""+ cal.get(Calendar.DAY_OF_MONTH)+"" + cal.get(Calendar.HOUR)+"" + cal.get(Calendar.MINUTE)+"" + cal.get(Calendar.SECOND)+"";
+
+                            StorageReference imagesRef = storageRef.child("images/"+mHome.user.getUid()+ "/" + date);
+
+                            if(isOnline()){
+                                UploadTask uploadTask = imagesRef.putBytes(data);
+                                uploadTask.addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception exception) {
+                                        // Handle unsuccessful uploads
+                                        Log.v("Add", "Error");
+                                        Snackbar.make(getCurrentFocus(), "Revise su conexión a internet e intentelo más tarde", 2000).show();
+                                        progress.dismiss();
+
+                                    }
+                                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                    @Override
+                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                        Log.v("ST", "satisfactorio");
+
+                                        Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                                        Log.v("ST", downloadUrl + "");
+
+                                        DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+                                        String key = database.child("user-posts").push().getKey();
+                                        String dataKey = database.child("user-data").push().getKey();
+
+                                        Post post = getPostData(key, downloadUrl.toString());
+
+                                        if(post != null){
+                                            Map<String, Object> postValues = post.toMap();
+
+
+                                            Map<String, Object> childUpdates = new HashMap<>();
+                                            //addSaveEventListener();
+                                            childUpdates.put("/user-posts/" + key, postValues);
+                                            childUpdates.put("/user-data/"+mHome.user.getUid()+"/"+dataKey, postValues);
+
+                                            OnCompleteListener saveListener = new OnCompleteListener() {
+                                                @Override
+                                                public void onComplete(@NonNull Task task) {
+
+                                                    if (task.isSuccessful()) {
+                                                        progress.dismiss();
+                                                        finish();
+
+                                                    } else {
+                                                        Log.v("DB", task.getResult() + "");
+                                                        progress.dismiss();
+                                                        Snackbar.make(getCurrentFocus(), "Revise su conexión a internet o intentelo más tarde", 2000).show();
+                                                    }
+                                                }
+                                            };
+                                            database.updateChildren(childUpdates).addOnCompleteListener(saveListener);
+                                        }
+
+                                    }
+                                });
+                            }else{
+                                Snackbar.make(getCurrentFocus(), "Revise su conexión a internet e intentelo más tarde", 2000).show();
+                                progress.dismiss();
+                            }
+
+
+
                         }
+
 
                     }
                 }

@@ -8,6 +8,10 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
+import java.util.ArrayList;
+
 /**
  * Created by disenoestrategico on 20/01/17.
  */
@@ -15,19 +19,21 @@ import android.widget.TextView;
 public class MyItemAdapter extends BaseAdapter {
 
     private Context mContext;
+    private ArrayList<Post> mPostList;
 
-    public MyItemAdapter(Context c) {
+    public MyItemAdapter(Context c, ArrayList<Post> postList) {
         mContext = c;
+        mPostList = postList;
     }
 
     @Override
     public int getCount() {
-        return 10;
+        return mPostList.size();
     }
 
     @Override
-    public Object getItem(int i) {
-        return null;
+    public Post getItem(int i) {
+        return this.mPostList.get(i);
     }
 
     @Override
@@ -41,16 +47,27 @@ public class MyItemAdapter extends BaseAdapter {
         LayoutInflater inflater = (LayoutInflater) mContext.
                 getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        View cameraView;
+        View convertView;
 
         if (view == null) {
-            cameraView = inflater.inflate(R.layout.list_my_items_item, null);
+            convertView = inflater.inflate(R.layout.list_my_items_item, null);
 
+            // Referencias UI.
+            ImageView thumbnail = (ImageView) convertView.findViewById(R.id.thumbnail);
+            TextView name = (TextView) convertView.findViewById(R.id.title);
+
+            // Lead actual.
+            Post post = getItem(i);
+
+            // Setup
+            Glide.with(mContext).load(post.getmImage()).into(thumbnail);
+            name.setText(post.getmName());
 
         } else {
-            cameraView = (View) view;
+            convertView = (View) view;
+
         }
 
-        return cameraView;
+        return convertView;
     }
 }

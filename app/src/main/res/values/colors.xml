@@ -15,22 +15,22 @@
     <color name="toolbarColorFood">#D2DE25</color>
 
     <!-- Colores de fondo de los slides-->
-    <color name="bg_screen1">#fbb03b</color>
-    <color name="bg_screen2">#ed5079</color>
-    <color name="bg_screen3">#c2e059</color>
-    <color name="bg_screen4">#f16c24</color>
+    <color name="bg_screen1">#ffff</color>
+    <color name="bg_screen2">#ffff</color>
+    <color name="bg_screen3">#ffff</color>
+    <color name="bg_screen4">#ffff</color>
 
     <!-- Colores de puntos inactivos (Slides) -->
-    <color name="dot_dark_screen1">#bc842c</color>
-    <color name="dot_dark_screen2">#b23c5b</color>
-    <color name="dot_dark_screen3">#92a843</color>
-    <color name="dot_dark_screen4">#b5511b</color>
+    <color name="dot_dark_screen1">#cfd8dc</color>
+    <color name="dot_dark_screen2">#cfd8dc</color>
+    <color name="dot_dark_screen3">#cfd8dc</color>
+    <color name="dot_dark_screen4">#cfd8dc</color>
 
     <!-- Colores de puntos activos (Slides) -->
-    <color name="dot_light_screen1">#fdd089</color>
-    <color name="dot_light_screen2">#f496af</color>
-    <color name="dot_light_screen3">#daec9b</color>
-    <color name="dot_light_screen4">#f7a77c</color>
+    <color name="dot_light_screen1">#37474f</color>
+    <color name="dot_light_screen2">#37474f</color>
+    <color name="dot_light_screen3">#37474f</color>
+    <color name="dot_light_screen4">#37474f</color>
 
     <array name="array_dot_active">
         <item>@color/dot_light_screen1</item>
