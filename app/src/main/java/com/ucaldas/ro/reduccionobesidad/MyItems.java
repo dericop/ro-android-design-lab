@@ -114,6 +114,8 @@ public class MyItems extends Fragment {
                             }
 
                             itemAdapter.notifyDataSetChanged();
+                            grid_items.setAdapter(itemAdapter);
+
 
                         }
                     }

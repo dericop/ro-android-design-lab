@@ -219,7 +219,6 @@ public class Home extends ListFragment {
                     mPostList.addFirst(new Post(id, name, category, frecuency, image, user));
                 }
 
-
                 //Log.v("DB", ((HashMap)map.get("-KbMbLITyK5aVJRF4_lV")).get("name")+"");
 
                 /*for (int i=0; i<map.keySet().size(); i++) {
@@ -348,14 +347,6 @@ public class Home extends ListFragment {
         };
 
         postList.setAdapter(mAdapter);*/
-
-
-
-
-
-
-
-
 
        /* mDatabase.addChildEventListener(new ChildEventListener() {
             @Override

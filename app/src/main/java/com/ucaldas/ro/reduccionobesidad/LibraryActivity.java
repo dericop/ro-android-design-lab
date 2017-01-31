@@ -110,14 +110,7 @@ public class LibraryActivity extends AppCompatActivity {
 
         // references to our images
         private Integer[] mThumbIds = {
-                R.drawable.sample_1,R.drawable.sample_2,
-                R.drawable.sample_3,R.drawable.sample_4,
-                R.drawable.sample_1,R.drawable.sample_2,
-                R.drawable.sample_3,R.drawable.sample_4,
-                R.drawable.sample_1,R.drawable.sample_2,
-                R.drawable.sample_3,R.drawable.sample_4,
-                R.drawable.sample_1,R.drawable.sample_2,
-                R.drawable.sample_3,R.drawable.sample_4,
+
 
         };
     }
@@ -162,15 +155,7 @@ public class LibraryActivity extends AppCompatActivity {
 
         // references to our images
         private Integer[] mThumbIds = {
-                R.drawable.sample_f_1,R.drawable.sample_f_2,
-                R.drawable.sample_f_3,R.drawable.sample_f_4,
-                R.drawable.sample_f_5,R.drawable.sample_f_1,
-                R.drawable.sample_f_1,R.drawable.sample_f_2,
-                R.drawable.sample_f_3,R.drawable.sample_f_4,
-                R.drawable.sample_f_5,R.drawable.sample_f_1,
-                R.drawable.sample_f_1,R.drawable.sample_f_2,
-                R.drawable.sample_f_3,R.drawable.sample_f_4,
-                R.drawable.sample_f_5,R.drawable.sample_f_1,
+
 
         };
     }
