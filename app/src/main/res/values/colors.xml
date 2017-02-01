@@ -51,4 +51,16 @@
     <color name="simulation_barItem_selected">#ec433d</color>
     <color name="simuation_barItem_normal">#e6e7e8</color>
 
+
+    <color name="habit_good">#8cc53f</color>
+    <color name="habit_medium">#faaf40</color>
+    <color name="habit_bad">#ee4136</color>
+
+    <color name="severe_obesity">#9d1f63</color>
+    <color name="obesity_2">#bd1e2d</color>
+    <color name="obesity_1">#ee4136</color>
+    <color name="overweight">#faaf40</color>
+    <color name="normal_weight">#8cc53f</color>
+
+
 </resources>

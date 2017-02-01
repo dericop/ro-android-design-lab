@@ -1,11 +1,14 @@
 package com.ucaldas.ro.reduccionobesidad;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,9 +22,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.IOException;
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -64,12 +72,8 @@ public class Simulation extends Fragment {
     private LinearLayout obesity_level_2_container;
     private LinearLayout severe_obesity_container;
 
-    //Conteo de items de buenos habitos, medios, malos
-    private final AtomicInteger goodHabitsCount = new AtomicInteger(0);
-    private final AtomicInteger mediumHabitsCount = new AtomicInteger(0);
-    private final AtomicInteger badHabitsCount = new AtomicInteger(0);
-
-
+    //Dialogo de progreso
+    private ProgressDialog progress;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -135,89 +139,219 @@ public class Simulation extends Fragment {
         }
     }*/
 
+
+
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         getGraphicalComponents(view); // Inicialización de componentes gráficos
 
         if(mHome.user != null){
+            final String[] foodsString = getResources().getStringArray(R.array.new_post_food_categories);
+            final List<String> foodsCategories = Arrays.asList(foodsString);
             DatabaseReference firebaseDatabase = FirebaseDatabase.getInstance().getReference().child("user-data").child(mHome.user.getUid());
+            final AtomicInteger countOfHealthy = new AtomicInteger(0);
+            final AtomicInteger countOfMedium = new AtomicInteger(0);
+            final AtomicInteger countOfBad = new AtomicInteger(0);
+
             firebaseDatabase.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    Log.v("DB", dataSnapshot.getValue().toString());
+                    /*progress = ProgressDialog.show(getContext(), "Creando simulación...",
+                            "Espera un momento", true);*/
 
+                    double totalAverage = 0;
                     Map<String, HashMap> data = (HashMap) dataSnapshot.getValue();
+                    Log.v("Foods", data.toString());
+
                     for(String key: data.keySet()){
-                        Map<String, String> post = data.get(key);
-                        String activityType = post.get("category");
 
-                        List<String> foodsCategories = Arrays.asList(getResources().getStringArray(R.array.new_post_food_categories));
+                        Map<String, Object> post = data.get(key);
 
-                        if(foodsCategories.contains(activityType)){ //¿Es un alimento?
-                            String result = post.get("result");
-                            if(result != null){
-
-                                int resultValue = Integer.parseInt(result);
-                                switch (resultValue){
-                                    case 1: //Indica mal hàbito
-                                        badHabitsCount.incrementAndGet();
-                                        break;
-                                    case 2: //Indica hábito medio
-                                        mediumHabitsCount.incrementAndGet();
-                                        break;
-                                    case 3: //Indica buen hábito
-                                        goodHabitsCount.incrementAndGet();
-                                        break;
-                                }
-
-                                healthyHabits.setText(goodHabitsCount+"");
-                                mediumHabits.setText(mediumHabits+"");
-                                badHabits.setText(badHabits+"");
-
-
-                                /*//Cálculo para la tendencia en obesidad
-                                String processedLevel = data.get("processed_level");
-                                String sugarLevel = data.get("sugar_level");
-
-                                if(processedLevel != null && sugarLevel != null){
-                                    int processedValue = Integer.parseInt(processedLevel);
-                                    int sugarValue = Integer.parseInt(sugarLevel);
-
-                                }*/
+                        //String activityType = post.get("category")+"";
+                        //foodsCategories.contains(activityType) &&
+                        if(post.get("result") != null){
+                            long result = (long)post.get("result");
+                            if(result == 3){
+                                countOfHealthy.incrementAndGet();
+                            }else if(result == 2){
+                                countOfMedium.incrementAndGet();
+                            }else{
+                                countOfBad.incrementAndGet();
                             }
 
+                            if(post.get("average") != null) {
+                                try {
+                                    totalAverage += (Double) post.get("average");
+                                }catch (NumberFormatException ex){
+                                    totalAverage += 0.0;
+                                }
 
-                        }else{
-
+                            }
                         }
+                    }
+
+                    //Lógica para la sección superior de la interface
+
+                    healthyHabits.setText(countOfHealthy.get()+"");
+                    mediumHabits.setText(countOfMedium.get()+"");
+                    badHabits.setText(countOfBad.get()+"");
+
+                    ViewGroup.LayoutParams circleBox1Params = sim_circle_box_1.getLayoutParams();
+                    ViewGroup.LayoutParams circleBox2Params = sim_circle_box_2.getLayoutParams();
+                    ViewGroup.LayoutParams circleBox3Params = sim_circle_box_3.getLayoutParams();
+
+                    int newSizeBox1 = countOfHealthy.get();
+                    int newSizeBox2 = countOfMedium.get();
+                    int newSizeBox3 = countOfBad.get();
+
+                    LinkedList orderedList = new LinkedList();
+                    orderedList.push(newSizeBox1);
+                    orderedList.push(newSizeBox2);
+                    orderedList.push(newSizeBox3);
+
+                    Collections.sort(orderedList);
+
+                    //Ubicación del tamaño para el componente 1
+                    if(orderedList.indexOf(newSizeBox1) == 2){
+                        newSizeBox1 = 80;
+
+                    } else if(orderedList.indexOf(newSizeBox1) == 1)
+                        newSizeBox1 = 60;
+                    else
+                        newSizeBox1 = 40;
+
+                    //Ubicación del tamaño para el componente 2
+                    if(orderedList.indexOf(newSizeBox2) == 2){
+                        newSizeBox2 = 80;
+
+                    } else if(orderedList.indexOf(newSizeBox2) == 1)
+                        newSizeBox2 = 60;
+                    else
+                        newSizeBox2 = 40;
+
+                    //Ubicación del tamaño para el componente 3
+                    if(orderedList.indexOf(newSizeBox3) == 2){
+                        newSizeBox3 = 80;
+
+                    }else if(orderedList.indexOf(newSizeBox3) == 1)
+                        newSizeBox3 = 60;
+                    else
+                        newSizeBox3 = 40;
+
+                    if(getActivity() != null){
+                        healthyHabits.setTextSize((newSizeBox1 * 14)/40);
+                        mediumHabits.setTextSize((newSizeBox2 * 14)/40);
+                        badHabits.setTextSize((newSizeBox3 * 14)/40);
 
 
+                        circleBox1Params.width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, newSizeBox1, getResources().getDisplayMetrics());
+                        circleBox1Params.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, newSizeBox1, getResources().getDisplayMetrics());;
+                        sim_circle_box_1.setLayoutParams(circleBox1Params);
+
+                        circleBox2Params.width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, newSizeBox2, getResources().getDisplayMetrics());
+                        circleBox2Params.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, newSizeBox2, getResources().getDisplayMetrics());
+                        sim_circle_box_2.setLayoutParams(circleBox2Params);
+
+                        circleBox3Params.width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, newSizeBox3, getResources().getDisplayMetrics());
+                        circleBox3Params.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, newSizeBox3, getResources().getDisplayMetrics());
+                        sim_circle_box_3.setLayoutParams(circleBox3Params);
+
+
+                        totalAverage /= (countOfHealthy.get() + countOfMedium.get() + countOfBad.get());
+                        paintLevel(totalAverage, view);
 
                     }
+
+
+                    countOfHealthy.set(0);
+                    countOfMedium.set(0);
+                    countOfBad.set(0);
+
                 }
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
 
                 }
+
             });
         }
 
+    }
+
+    private void paintLevel(double average, View view){
+        final LinearLayout humanContainer = (LinearLayout) view.findViewById(R.id.human_container);
+        final ImageView humanImageView = (ImageView) view.findViewById(R.id.human_image_view);
+
+        restartDefaultView(severe_obesity_container);
+        restartDefaultView(obesity_level_2_container);
+        restartDefaultView(obesity_level_1_container);
+        restartDefaultView(overweight_container);
+        restartDefaultView(normal_weight_container);
+
+        if(average!=0 && average < 2){
+            Log.v("DBO", "Obeso severo");
+            severe_obesity_container.getChildAt(0).setBackgroundColor(getResources().getColor(R.color.severe_obesity));
+            severe_obesity_container.getChildAt(1).setBackgroundColor(getResources().getColor(R.color.severe_obesity));
+            severe_obesity_container.getChildAt(2).setBackgroundColor(getResources().getColor(R.color.severe_obesity));
+
+            humanContainer.setBackgroundColor(getResources().getColor(R.color.severe_obesity));
+            humanImageView.setBackgroundDrawable(getResources().getDrawable(R.drawable.silueta_humano_6));
+
+        }else if(average >= 2 && average <4){
+            Log.v("DBO", "Obeso 2");
+
+            obesity_level_2_container.getChildAt(0).setBackgroundColor(getResources().getColor(R.color.obesity_2));
+            obesity_level_2_container.getChildAt(1).setBackgroundColor(getResources().getColor(R.color.obesity_2));
+            obesity_level_2_container.getChildAt(2).setBackgroundColor(getResources().getColor(R.color.obesity_2));
+
+            humanContainer.setBackgroundColor(getResources().getColor(R.color.obesity_2));
+            humanImageView.setBackgroundDrawable(getResources().getDrawable(R.drawable.silueta_humano_5));
 
 
+        }else if(average >=4 && average <6){
+            Log.v("DBO", "Obeso 1");
 
+            obesity_level_1_container.getChildAt(0).setBackgroundColor(getResources().getColor(R.color.obesity_1));
+            obesity_level_1_container.getChildAt(1).setBackgroundColor(getResources().getColor(R.color.obesity_1));
+            obesity_level_1_container.getChildAt(2).setBackgroundColor(getResources().getColor(R.color.obesity_1));
 
+            humanContainer.setBackgroundColor(getResources().getColor(R.color.obesity_1));
+            humanImageView.setBackgroundDrawable(getResources().getDrawable(R.drawable.silueta_humano_4));
+        }else if(average >= 6 && average <8){
 
+            overweight_container.getChildAt(0).setBackgroundColor(getResources().getColor(R.color.overweight));
+            overweight_container.getChildAt(1).setBackgroundColor(getResources().getColor(R.color.overweight));
+            overweight_container.getChildAt(2).setBackgroundColor(getResources().getColor(R.color.overweight));
 
+            humanContainer.setBackgroundColor(getResources().getColor(R.color.overweight));
+            humanImageView.setBackgroundDrawable(getResources().getDrawable(R.drawable.silueta_humano_3));
+            Log.v("DBO", "Sobrepeso");
 
+        }else if(average >= 8){
+            Log.v("DBO", "Peso normal");
+            normal_weight_container.getChildAt(0).setBackgroundColor(getResources().getColor(R.color.normal_weight));
+            normal_weight_container.getChildAt(1).setBackgroundColor(getResources().getColor(R.color.normal_weight));
+            normal_weight_container.getChildAt(2).setBackgroundColor(getResources().getColor(R.color.normal_weight));
+
+            humanContainer.setBackgroundColor(getResources().getColor(R.color.normal_weight));
+            humanImageView.setBackgroundDrawable(getResources().getDrawable(R.drawable.silueta_humano_2));
+
+        }
+    }
+
+    private void restartDefaultView(LinearLayout view){
+        view.getChildAt(0).setBackgroundColor(getResources().getColor(R.color.simuation_barItem_normal));
+        view.getChildAt(1).setBackgroundColor(getResources().getColor(R.color.simuation_barItem_normal));
+        view.getChildAt(2).setBackgroundColor(getResources().getColor(R.color.simuation_barItem_normal));
     }
 
     private void getGraphicalComponents(View view){
 
         healthyHabits = (TextView) view.findViewById(R.id.healthyHabits);
-        badHabits = (TextView) view.findViewById(R.id.mediumHabits);
+        badHabits = (TextView) view.findViewById(R.id.bad_habits);
         mediumHabits = (TextView) view.findViewById(R.id.mediumHabits);
 
         sim_circle_box_1 = (LinearLayout) view.findViewById(R.id.sim_circle_box_1);
@@ -226,13 +360,12 @@ public class Simulation extends Fragment {
 
         human_image_view = (ImageView) view.findViewById(R.id.human_image_view);
 
-        low_weight_container = (LinearLayout) view.findViewById(R.id.low_weight_container);
+        //low_weight_container = (LinearLayout) view.findViewById(R.id.low_weight_container);
         normal_weight_container = (LinearLayout) view.findViewById(R.id.normal_weight_container);
         overweight_container = (LinearLayout) view.findViewById(R.id.overweight_container);
         obesity_level_1_container = (LinearLayout) view.findViewById(R.id.obesity_level_1_container);
         obesity_level_2_container = (LinearLayout) view.findViewById(R.id.obesity_level_2_container);
         severe_obesity_container = (LinearLayout) view.findViewById(R.id.severe_obesity_container);
-
     }
 
     @Override
