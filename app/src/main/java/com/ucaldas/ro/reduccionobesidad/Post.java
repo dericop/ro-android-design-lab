@@ -24,6 +24,8 @@ public class Post {
     private String mImage;
     private String mDuration="";
     private String mUser;
+    private double mAverage;
+    private long mResult;
 
     public Post(){
 
@@ -36,6 +38,7 @@ public class Post {
         mFrecuency = frecuency;
         mImage = image;
         mUser = user;
+
     }
 
     public Post(String id, String name, String category, String frecuency, String image, String duration, String user){
@@ -47,6 +50,38 @@ public class Post {
         mDuration = duration;
         mUser = user;
     }
+
+    public Post(String id, String name, String category, String frecuency, String image, String user, long result, double average ) {
+        mId = id;
+        mName = name;
+        mCategory = category;
+        mFrecuency = frecuency;
+        mImage = image;
+        mUser = user;
+        mResult = result;
+        mAverage = average;
+
+    }
+
+    public Post(String id, String name, String category, String frecuency, String image, String duration, String user, long result, double average){
+        mId = id;
+        mName = name;
+        mCategory = category;
+        mFrecuency = frecuency;
+        mImage = image;
+        mDuration = duration;
+        mUser = user;
+        mResult = result;
+        mAverage = average;
+    }
+
+    public double getmAverage(){ return mAverage; }
+
+    public void setmAverage(double average){ mAverage = average; }
+
+    public long getmResult(){ return mResult; }
+
+    public void setmResult(long result){ mResult = result; }
 
     public String getmId(){ return mId; }
 

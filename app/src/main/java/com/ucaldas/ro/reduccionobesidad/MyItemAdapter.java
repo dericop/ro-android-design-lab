@@ -1,11 +1,13 @@
 package com.ucaldas.ro.reduccionobesidad;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -55,6 +57,8 @@ public class MyItemAdapter extends BaseAdapter {
             // Referencias UI.
             ImageView thumbnail = (ImageView) convertView.findViewById(R.id.thumbnail);
             TextView name = (TextView) convertView.findViewById(R.id.title);
+            LinearLayout resultItem = (LinearLayout) convertView.findViewById(R.id.result_item);
+            TextView txtAverage = (TextView) convertView.findViewById(R.id.txt_average_data);
 
             // Lead actual.
             Post post = getItem(i);
@@ -62,6 +66,28 @@ public class MyItemAdapter extends BaseAdapter {
             // Setup
             Glide.with(mContext).load(post.getmImage()).into(thumbnail);
             name.setText(post.getmName());
+            long result = post.getmResult();
+
+            if(result == 0){
+                txtAverage.setVisibility(View.INVISIBLE);
+                resultItem.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.circle_clock));
+
+            }else{
+                txtAverage.setVisibility(View.VISIBLE);
+                txtAverage.setText(post.getmAverage()+"");
+
+                switch ((int)result){
+                    case 1:
+                        resultItem.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.circle_bad));
+                        break;
+                    case 2:
+                        resultItem.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.circle_medium));
+                        break;
+                    case 3:
+                        resultItem.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.circle_good));
+                        break;
+                }
+            }
 
         } else {
             convertView = (View) view;

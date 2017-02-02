@@ -96,26 +96,35 @@ public class MyItems extends Fragment {
 
                         Log.v("DB", map.toString());
                         for (String key: map.keySet()){
-                            HashMap<String, String> values = map.get(key);
+                            HashMap<String, Object> values = (HashMap) map.get(key);
 
-                            String name = values.get("name");
-                            String frecuency = values.get("frecuency");
-                            String category = values.get("category");
-                            String image = values.get("image");
-                            String user = values.get("user");
-                            String id = values.get("id");
+                            String name = (String)values.get("name");
+                            String frecuency = (String)values.get("frecuency");
+                            String category = (String)values.get("category");
+                            String image = (String)values.get("image");
+                            String user = (String)values.get("user");
+                            String id = (String)values.get("id");
 
-                            if(map.get("duration") != null){
-                                String duration = values.get("duration");
-                                myItems.add(new Post(id, name, category, frecuency, image, duration, user));
+                            long result = 0;
+                            if(values.get("result") != null){
+                                result = (long)values.get("result");
+                            }
 
+                            double average = 0.0;
+                            if(values.get("average") != null){
+                                average = (double)values.get("average");
+                            }
+
+                            if(values.get("duration") != null){
+                                Log.v("DB", result+":result");
+                                String duration = (String)values.get("duration");
+                                myItems.add(new Post(id, name, category, frecuency, image, duration, user, result, average));
                             }else{
-                                myItems.add(new Post(id, name, category, frecuency, image, user));
+                                myItems.add(new Post(id, name, category, frecuency, image, user, result, average));
                             }
 
                             itemAdapter.notifyDataSetChanged();
                             grid_items.setAdapter(itemAdapter);
-
 
                         }
                     }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.DataSetObserver;
 import android.net.Uri;
+import android.nfc.FormatException;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -200,32 +201,40 @@ public class Home extends ListFragment {
         mDatabase.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                //Log.v("DB", dataSnapshot.getValue().toString());
-                HashMap<String, String> map = (HashMap)dataSnapshot.getValue();
 
-                Log.v("DB", map.get("name"));
-                String name = map.get("name");
-                String frecuency = map.get("frecuency");
-                String category = map.get("category");
-                String image = map.get("image");
-                String user = map.get("user");
-                String id = map.get("id");
+                HashMap<String, Object> map = (HashMap)dataSnapshot.getValue();
 
-                if(map.get("duration") != null){
-                    String duration = map.get("duration");
-                    mPostList.addFirst(new Post(id, name, category, frecuency, image, duration, user));
+                String name = (String)map.get("name");
+                String frecuency =(String) map.get("frecuency");
+                String category = (String)map.get("category");
+                String image = (String)map.get("image");
+                String user = (String)map.get("user");
+                String id = (String)map.get("id");
 
-                }else{
-                    mPostList.addFirst(new Post(id, name, category, frecuency, image, user));
+                long result = 0;
+                if(map.get("result") != null){
+                    result = (long)map.get("result");
+                    Log.v("DB", result+":result");
                 }
 
-                //Log.v("DB", ((HashMap)map.get("-KbMbLITyK5aVJRF4_lV")).get("name")+"");
+                double average = 0.0;
+                if(map.get("average") != null){
+                    try {
+                        average = (double)map.get("average");
+                    }catch (NumberFormatException ex){
 
-                /*for (int i=0; i<map.keySet().size(); i++) {
+                    }
 
-                }*/
+                }
 
-                //Post post = dataSnapshot.getValue(Post.class);
+
+                if(map.get("duration") != null){
+                    String duration = (String)map.get("duration");
+                    mPostList.addFirst(new Post(id, name, category, frecuency, image, duration, user, result, average));
+                }else{
+                    mPostList.addFirst(new Post(id, name, category, frecuency, image, user, result, average));
+                }
+
 
                 if(isTheFirstLoad){
                     isTheFirstLoad = false;
@@ -244,7 +253,53 @@ public class Home extends ListFragment {
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                HashMap<String, Object> map = (HashMap)dataSnapshot.getValue();
 
+                String name = (String)map.get("name");
+                String frecuency =(String) map.get("frecuency");
+                String category = (String)map.get("category");
+                String image = (String)map.get("image");
+                String user = (String)map.get("user");
+                String id = (String)map.get("id");
+
+                long result = 0;
+                if(map.get("result") != null){
+                    result = (long)map.get("result");
+                    Log.v("DB", result+":result");
+                }
+
+                double average = 0.0;
+                if(map.get("average") != null){
+                    try {
+                        average = (double)map.get("average");
+                    }catch (NumberFormatException ex){
+
+                    }
+
+                }
+
+                //if(map.get("duration") != null){
+                //String duration = (String)map.get("duration");
+                //Post newPost = new Post(id, name, category, frecuency, image, duration, user, result, average);
+
+                for (int i=0; i<mPostList.size(); i++){
+                    if(mPostList.get(i).getmId().equals(id)){
+                        mPostList.get(i).setmResult(result);
+                        mPostList.get(i).setmAverage(average);
+
+                        Log.v("DBO", "Encontrado");
+
+                        /*mPostList.get(i).setmId(id);
+                        mPostList.get(i).setmName(name);
+                        mPostList.get(i).setmCategory(category);
+                        mPostList.get(i).setmCategory(category);*/
+                    }
+                }
+
+                //}
+
+                mPostAdapter.notifyDataSetChanged();
+                mSwipeRefreshing.setRefreshing(false);
             }
 
             @Override
@@ -262,9 +317,7 @@ public class Home extends ListFragment {
 
             }
         });
-
     }
-
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {

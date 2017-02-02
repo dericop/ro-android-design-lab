@@ -30,12 +30,15 @@
                 android:background="@color/colorPrimary"
                 android:scaleType="centerCrop"/>
 
+            <!-- Item de calificación -->
             <LinearLayout
                 android:layout_width="45dp"
                 android:layout_height="45dp"
-                android:background="@drawable/circle"
+                android:background="@drawable/circle_clock"
                 android:layout_marginTop="-15dp"
-                android:layout_marginLeft="15dp">
+                android:layout_marginLeft="15dp"
+                android:id="@+id/result_item"
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -46,7 +49,9 @@
                     android:text="3"
                     android:layout_marginTop="-2dp"
                     android:layout_marginLeft="2dp"
-                    android:textColor="#fff"/>
+                    android:textColor="#fff"
+                    android:id="@+id/txt_average_data"
+                    android:visibility="invisible"/>
 
             </LinearLayout>
 
@@ -80,7 +85,7 @@
                     android:textColor="#808285"
                     android:ellipsize="end"
                     android:paddingRight="8dp"
-                    android:layout_marginTop="-7dp"
+                    android:layout_marginTop="-5dp"
                     android:maxLines="2"
                     tools:textStyle="bold"
                     android:lineSpacingExtra="-4dp"/>
