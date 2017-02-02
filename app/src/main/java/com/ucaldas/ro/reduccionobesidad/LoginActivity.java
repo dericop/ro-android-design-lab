@@ -1,7 +1,9 @@
 package com.ucaldas.ro.reduccionobesidad;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,6 +24,11 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class LoginActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener,View.OnClickListener {
@@ -30,6 +37,7 @@ public class LoginActivity extends AppCompatActivity implements
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private static final int RC_SIGN_IN = 9001;
+    private ProgressDialog progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,16 +70,36 @@ public class LoginActivity extends AppCompatActivity implements
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    // User is signed in
-                    Log.d("User", "onAuthStateChanged:signed_in:" + user.getUid());
+                    // AUser is signed in
+                    Log.d("AUser", "onAuthStateChanged:signed_in:" + user.getUid());
                     Toast.makeText(getBaseContext(), getString(R.string.login_successfull), Toast.LENGTH_LONG);
 
                     mHome.user = user; //Asignación de usuario a la clase principal
+
+                    //Almacenar el usuario que se ha logueado
+                    AUser newUser = new AUser(user.getUid(), user.getDisplayName(), user.getEmail(), user.getPhotoUrl().toString());
+                    DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+                    mDatabase.child("users").child(user.getUid()).setValue(newUser);
+
                     startActivity(new Intent(getBaseContext(), mHome.class));
 
+                    /*mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            //progress.dismiss();
+                        }
+                    });*/
+
+
                 } else {
-                    // User is signed out
-                    Log.d("User", "onAuthStateChanged:signed_out");
+                    // AUser is signed out
+                    Log.d("AUser", "onAuthStateChanged:signed_out");
+                    //progress.dismiss();
                     Toast.makeText(getBaseContext(), getString(R.string.login_fail), Toast.LENGTH_LONG);
 
                 }
@@ -84,6 +112,8 @@ public class LoginActivity extends AppCompatActivity implements
     protected void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
+        /*progress = ProgressDialog.show(this, "Iniciando Sesión...",
+                "Espera un momento", true);*/
     }
 
     @Override
@@ -92,6 +122,7 @@ public class LoginActivity extends AppCompatActivity implements
         if(mAuthListener != null){
             mAuth.removeAuthStateListener(mAuthListener);
         }
+        //progress.dismiss();
     }
 
 
@@ -107,29 +138,32 @@ public class LoginActivity extends AppCompatActivity implements
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
+                //progress.dismiss();
             } else {
                 // Google Sign In failed, update UI appropriately
                 // ...
+                //progress.dismiss();
+                Snackbar.make(getCurrentFocus(), "Revise su conexión a internet e intentelo más tarde", 2000).show();
                 handleSignInResult(result);
             }
         }
     }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
-        Log.d("User", "firebaseAuthWithGoogle:" + acct.getId());
+        Log.d("AUser", "firebaseAuthWithGoogle:" + acct.getId());
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d("User", "signInWithCredential:onComplete:" + task.isSuccessful());
+                        Log.d("AUser", "signInWithCredential:onComplete:" + task.isSuccessful());
 
                         // If sign in fails, display a message to the user. If sign in succeeds
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
-                            Log.w("User", "signInWithCredential", task.getException());
+                            Log.w("AUser", "signInWithCredential", task.getException());
 
                             Toast.makeText(LoginActivity.this, "Revisa tu conexión a internet e intentalo más tarde.",
                                     Toast.LENGTH_SHORT).show();
@@ -142,9 +176,8 @@ public class LoginActivity extends AppCompatActivity implements
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Log.v("User", connectionResult.getErrorMessage());
-        Toast.makeText(LoginActivity.this, "Revisa tu conexión a internet e intentalo más tarde.",
-                Toast.LENGTH_SHORT).show();
+        Log.v("AUser", connectionResult.getErrorMessage());
+        Snackbar.make(getCurrentFocus(), "Revise su conexión a internet e intentelo más tarde", 2000).show();
     }
 
     @Override
@@ -171,7 +204,6 @@ public class LoginActivity extends AppCompatActivity implements
 
         } else {
             // Signed out, show unauthenticated UI.
-
         }
     }
 }

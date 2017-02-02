@@ -25,6 +25,7 @@ import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -227,7 +228,6 @@ public class Home extends ListFragment {
 
                 }
 
-
                 if(map.get("duration") != null){
                     String duration = (String)map.get("duration");
                     mPostList.addFirst(new Post(id, name, category, frecuency, image, duration, user, result, average));
@@ -360,8 +360,6 @@ public class Home extends ListFragment {
                     btn_new_posts.setVisibility(View.INVISIBLE);
                 }
             });
-
-
         }
 
         /*RecyclerView postList = (RecyclerView) view.findViewById(android.R.id.list);

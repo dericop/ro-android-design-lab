@@ -92,7 +92,7 @@ public class AddPost extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_post); //Asociar esta vista para el control de la interface
 
-        Log.v("User", mHome.user.getUid());
+        //Log.v("AUser", mHome.user.getUid());
 
         configureToolbarAndActions();
         assignActivitySourceAndInitData();

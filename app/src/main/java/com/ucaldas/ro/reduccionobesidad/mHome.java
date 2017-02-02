@@ -90,7 +90,7 @@ public class mHome extends AppCompatActivity
             TextView navHeaderSubtitle = (TextView)header.findViewById(R.id.nav_header_subtitle);
             navHeaderSubtitle.setText(email);
 
-            Log.v("User", image+"");
+            Log.v("AUser", image+"");
 
             //Actualización de la imagen de perfil
             ImageView imageView = (ImageView)header.findViewById(R.id.imageView);
