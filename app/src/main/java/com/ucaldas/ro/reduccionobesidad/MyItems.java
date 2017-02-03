@@ -110,17 +110,17 @@ public class MyItems extends Fragment {
                                 result = (long)values.get("result");
                             }
 
-                            double average = 0.0;
+                            long average = 0;
                             if(values.get("average") != null){
-                                average = (double)values.get("average");
+                                average = (long)values.get("average");
                             }
 
                             if(values.get("duration") != null){
                                 Log.v("DB", result+":result");
                                 String duration = (String)values.get("duration");
-                                myItems.add(new Post(id, name, category, frecuency, image, duration, user, result, average));
+                                myItems.add(new Post(id, name, category, frecuency, image, duration, user, result, average, "", ""));
                             }else{
-                                myItems.add(new Post(id, name, category, frecuency, image, user, result, average));
+                                myItems.add(new Post(id, name, category, frecuency, image, user, result, average, "",""));
                             }
 
                             itemAdapter.notifyDataSetChanged();

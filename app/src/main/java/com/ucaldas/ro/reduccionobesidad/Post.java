@@ -24,12 +24,16 @@ public class Post {
     private String mImage;
     private String mDuration="";
     private String mUser;
-    private double mAverage;
+    private long mAverage;
     private long mResult;
+    private String mUserName;
+    private String mTooShared;
 
     public Post(){
 
     }
+
+    /*Constructores para la creación de un post*/
 
     public Post(String id, String name, String category, String frecuency, String image, String user) {
         mId = id;
@@ -51,7 +55,9 @@ public class Post {
         mUser = user;
     }
 
-    public Post(String id, String name, String category, String frecuency, String image, String user, long result, double average ) {
+    /*Constructores para obtener posts de la base de datos */
+
+    public Post(String id, String name, String category, String frecuency, String image, String user, long result, long average, String userName, String tooShared) {
         mId = id;
         mName = name;
         mCategory = category;
@@ -60,10 +66,12 @@ public class Post {
         mUser = user;
         mResult = result;
         mAverage = average;
+        mUserName = userName;
+        mTooShared = tooShared;
 
     }
 
-    public Post(String id, String name, String category, String frecuency, String image, String duration, String user, long result, double average){
+    public Post(String id, String name, String category, String frecuency, String image, String duration, String user, long result, long average, String userName, String tooShared){
         mId = id;
         mName = name;
         mCategory = category;
@@ -73,11 +81,21 @@ public class Post {
         mUser = user;
         mResult = result;
         mAverage = average;
+        mUserName = userName;
+        mTooShared = tooShared;
     }
 
-    public double getmAverage(){ return mAverage; }
+    public String getmTooShared(){ return mTooShared; }
 
-    public void setmAverage(double average){ mAverage = average; }
+    public void setmTooShared(String tooShared){ mTooShared = tooShared; }
+
+    public String getmUserName(){ return mUserName; }
+
+    public void setmUserName(String userName){ mUserName = userName; }
+
+    public long getmAverage(){ return mAverage; }
+
+    public void setmAverage(long average){ mAverage = average; }
 
     public long getmResult(){ return mResult; }
 
@@ -135,6 +153,12 @@ public class Post {
         result.put("image", mImage);
         result.put("user", mUser);
         result.put("id", mId);
+
+        if(mResult != 0)
+            result.put("result",mResult);
+
+        if(mAverage != 0)
+            result.put("average", mResult);
 
         if(!this.mDuration.equals(""))
             result.put("duration", mDuration);

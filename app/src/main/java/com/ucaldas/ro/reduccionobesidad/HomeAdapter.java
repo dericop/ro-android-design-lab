@@ -56,8 +56,8 @@ public class HomeAdapter extends ArrayAdapter<Post> {
         // Setup
         Glide.with(getContext()).load(post.getmImage()).into(avatar);
         name.setText(post.getmName());
-        title.setText(post.getmUser());
-        otherUser.setText("");
+        title.setText(post.getmUserName());
+        otherUser.setText(post.getmTooShared());
 
         long result = post.getmResult();
         Log.v("DB", result+"");
@@ -93,8 +93,12 @@ public class HomeAdapter extends ArrayAdapter<Post> {
                 replyIntent.putExtra("id", post.getmId());
                 replyIntent.putExtra("image", post.getmImage());
                 replyIntent.putExtra("name", post.getmName());
-                mContext.startActivity(replyIntent);
+                replyIntent.putExtra("type", post.getmCategory());
 
+                Log.v("DBP", post.getmResult()+"");
+                replyIntent.putExtra("result", (int)post.getmResult());
+                replyIntent.putExtra("average", (int)post.getmAverage());
+                mContext.startActivity(replyIntent);
             }
         });
 

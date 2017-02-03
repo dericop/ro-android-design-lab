@@ -57,7 +57,7 @@
                             <LinearLayout
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
-                                android:background="@drawable/circle_bad"
+                                android:background="@drawable/circle_good"
                                 android:backgroundTint="#8ec549"
                                 android:id="@+id/sim_circle_box_1">
 
@@ -126,7 +126,7 @@
                             <LinearLayout
                                 android:layout_width="60dp"
                                 android:layout_height="60dp"
-                                android:background="@drawable/circle_bad"
+                                android:background="@drawable/circle_medium"
                                 android:backgroundTint="#faaf4c"
                                 android:id="@+id/sim_circle_box_2">
 

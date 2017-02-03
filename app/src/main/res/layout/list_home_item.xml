@@ -154,7 +154,6 @@
                             android:layout_width="30dp"
                             android:layout_height="30dp"
                             android:background="@drawable/ic_action_reply"
-                            android:backgroundTint="#a7a9ac"
                             android:layout_gravity="center"
                             android:layout_marginRight="30dp"/>
 

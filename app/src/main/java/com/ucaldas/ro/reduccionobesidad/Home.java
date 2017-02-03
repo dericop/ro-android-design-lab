@@ -62,6 +62,7 @@ public class Home extends ListFragment {
     final AtomicInteger dataLoadersCounter = new AtomicInteger();
     boolean isTheFirstLoad = true;
     DatabaseReference mDatabase = null;
+    DatabaseReference uDatabase = null;
     HomeAdapter mPostAdapter= null;
     Button btn_new_posts = null;
 
@@ -198,57 +199,101 @@ public class Home extends ListFragment {
 
         mListView.setAdapter(firebaseListAdapter);*/
 
-
-        mDatabase.addChildEventListener(new ChildEventListener() {
+        mDatabase.child("user-posts").limitToLast(5).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
-                HashMap<String, Object> map = (HashMap)dataSnapshot.getValue();
+                final HashMap<String, Object> postMap = (HashMap)dataSnapshot.getValue();
 
-                String name = (String)map.get("name");
-                String frecuency =(String) map.get("frecuency");
-                String category = (String)map.get("category");
-                String image = (String)map.get("image");
-                String user = (String)map.get("user");
-                String id = (String)map.get("id");
+                final String name = (String)postMap.get("name");
+                final String frecuency =(String) postMap.get("frecuency");
+                final String category = (String)postMap.get("category");
+                final String image = (String)postMap.get("image");
+                final String user = (String)postMap.get("user");
+                final String id = (String)postMap.get("id");
 
-                long result = 0;
-                if(map.get("result") != null){
-                    result = (long)map.get("result");
-                    Log.v("DB", result+":result");
-                }
+                mDatabase.child("users").child(user).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        HashMap<String, Object> map = (HashMap)dataSnapshot.getValue();
+                        final String userName = (String)map.get("mUserName");
 
-                double average = 0.0;
-                if(map.get("average") != null){
-                    try {
-                        average = (double)map.get("average");
-                    }catch (NumberFormatException ex){
+                        if(postMap.get("last_share") != null){
+                            final String lastShare = (String)postMap.get("last_share");
+
+                            mDatabase.child("users").child(lastShare).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                    HashMap<String, Object> tooSharedMap = (HashMap) dataSnapshot.getValue();
+                                    String tooSharedName = (String) tooSharedMap.get("mUserName");
+
+                                    long result = 0;
+                                    if(postMap.get("result") != null){
+                                        result = (long)postMap.get("result");
+                                        Log.v("DB", result+":result");
+                                    }
+
+                                    long average = 0;
+                                    if(postMap.get("average") != null){
+                                        try {
+                                            average = (long)postMap.get("average");
+                                        }catch (NumberFormatException ex){
+
+                                        }
+                                    }
+
+                                    if(postMap.get("duration") != null){
+                                        String duration = (String)postMap.get("duration");
+                                        mPostList.addFirst(new Post(id, name, category, frecuency, image, duration, user, result, average, userName, tooSharedName));
+                                    }else{
+                                        mPostList.addFirst(new Post(id, name, category, frecuency, image, user, result, average, userName, tooSharedName));
+                                    }
+
+                                    reloadData();
+
+
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+
+                        }else{
+                            long result = 0;
+                            if(postMap.get("result") != null){
+                                result = (long)postMap.get("result");
+                                Log.v("DB", result+":result");
+                            }
+
+                            long average = 0;
+                            if(postMap.get("average") != null){
+                                try {
+                                    average = (long)postMap.get("average");
+                                }catch (NumberFormatException ex){
+
+                                }
+                            }
+
+                            if(postMap.get("duration") != null){
+                                String duration = (String)postMap.get("duration");
+                                mPostList.addFirst(new Post(id, name, category, frecuency, image, duration, user, result, average, userName, ""));
+                            }else{
+                                mPostList.addFirst(new Post(id, name, category, frecuency, image, user, result, average, userName, ""));
+                            }
+
+                            reloadData();
+                        }
 
                     }
 
-                }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
 
-                if(map.get("duration") != null){
-                    String duration = (String)map.get("duration");
-                    mPostList.addFirst(new Post(id, name, category, frecuency, image, duration, user, result, average));
-                }else{
-                    mPostList.addFirst(new Post(id, name, category, frecuency, image, user, result, average));
-                }
-
-
-                if(isTheFirstLoad){
-                    isTheFirstLoad = false;
-                }
-
-
-                if(isTheFirstLoad)
-                    btn_new_posts.setVisibility(View.INVISIBLE);
-                else
-                    btn_new_posts.setVisibility(View.VISIBLE);
-
-                mPostAdapter.notifyDataSetChanged();
-                mSwipeRefreshing.setRefreshing(false);
-
+                    }
+                });
             }
 
             @Override
@@ -260,46 +305,83 @@ public class Home extends ListFragment {
                 String category = (String)map.get("category");
                 String image = (String)map.get("image");
                 String user = (String)map.get("user");
-                String id = (String)map.get("id");
+                final String id = (String)map.get("id");
 
                 long result = 0;
                 if(map.get("result") != null){
                     result = (long)map.get("result");
                     Log.v("DB", result+":result");
                 }
+                final long resultData = result;
 
-                double average = 0.0;
+                long average = 0;
                 if(map.get("average") != null){
                     try {
-                        average = (double)map.get("average");
+                        average = (long)map.get("average");
                     }catch (NumberFormatException ex){
 
                     }
 
                 }
 
-                //if(map.get("duration") != null){
-                //String duration = (String)map.get("duration");
-                //Post newPost = new Post(id, name, category, frecuency, image, duration, user, result, average);
+                final long averageData = average;
 
-                for (int i=0; i<mPostList.size(); i++){
-                    if(mPostList.get(i).getmId().equals(id)){
-                        mPostList.get(i).setmResult(result);
-                        mPostList.get(i).setmAverage(average);
+                String tooShare = "";
+                if(map.get("last_share") != null){
 
-                        Log.v("DBO", "Encontrado");
+                    tooShare = (String) map.get("last_share");
+                    mDatabase.child("users").child(tooShare).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            HashMap<String, Object> tooSharedMap = (HashMap) dataSnapshot.getValue();
+                            String tooSharedName = (String) tooSharedMap.get("mUserName");
+
+                            for (int i=0; i<mPostList.size(); i++){
+                                if(mPostList.get(i).getmId().equals(id)){
+                                    mPostList.get(i).setmResult(resultData);
+                                    mPostList.get(i).setmAverage(averageData);
+                                    mPostList.get(i).setmTooShared(tooSharedName);
+
+                                    /*mPostList.get(i).setmId(id);
+                                    mPostList.get(i).setmName(name);
+                                    mPostList.get(i).setmCategory(category);
+                                    mPostList.get(i).setmCategory(category);*/
+                                }
+                            }
+
+                            //}
+
+                            mPostAdapter.notifyDataSetChanged();
+                            mSwipeRefreshing.setRefreshing(false);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+
+                }else{
+                    for (int i=0; i<mPostList.size(); i++){
+                        if(mPostList.get(i).getmId().equals(id)){
+                            mPostList.get(i).setmResult(result);
+                            mPostList.get(i).setmAverage(average);
 
                         /*mPostList.get(i).setmId(id);
                         mPostList.get(i).setmName(name);
                         mPostList.get(i).setmCategory(category);
                         mPostList.get(i).setmCategory(category);*/
+                        }
                     }
+
+                    //}
+
+                    mPostAdapter.notifyDataSetChanged();
+                    mSwipeRefreshing.setRefreshing(false);
+
                 }
 
-                //}
 
-                mPostAdapter.notifyDataSetChanged();
-                mSwipeRefreshing.setRefreshing(false);
             }
 
             @Override
@@ -317,6 +399,21 @@ public class Home extends ListFragment {
 
             }
         });
+    }
+
+    private void reloadData(){
+        if(isTheFirstLoad){
+            isTheFirstLoad = false;
+        }
+
+
+        if(isTheFirstLoad)
+            btn_new_posts.setVisibility(View.INVISIBLE);
+        else
+            btn_new_posts.setVisibility(View.VISIBLE);
+
+        mPostAdapter.notifyDataSetChanged();
+        mSwipeRefreshing.setRefreshing(false);
     }
 
     @Override
@@ -338,8 +435,7 @@ public class Home extends ListFragment {
 
 
             mSwipeRefreshing.setRefreshing(true);
-            mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl("https://reduccion-de-obesidad-7414c.firebaseio.com/user-posts");
-            mDatabase.limitToLast(10);
+            mDatabase = FirebaseDatabase.getInstance().getReference();
 
             mListView.setAdapter(mPostAdapter);
 

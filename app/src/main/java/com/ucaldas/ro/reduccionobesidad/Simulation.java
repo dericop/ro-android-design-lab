@@ -163,112 +163,111 @@ public class Simulation extends Fragment {
 
                     double totalAverage = 0;
                     Map<String, HashMap> data = (HashMap) dataSnapshot.getValue();
-                    Log.v("Foods", data.toString());
+                    if(data != null){
+                        for(String key: data.keySet()){
 
-                    for(String key: data.keySet()){
+                            Map<String, Object> post = data.get(key);
 
-                        Map<String, Object> post = data.get(key);
-
-                        //String activityType = post.get("category")+"";
-                        //foodsCategories.contains(activityType) &&
-                        if(post.get("result") != null){
-                            long result = (long)post.get("result");
-                            if(result == 3){
-                                countOfHealthy.incrementAndGet();
-                            }else if(result == 2){
-                                countOfMedium.incrementAndGet();
-                            }else{
-                                countOfBad.incrementAndGet();
-                            }
-
-                            if(post.get("average") != null) {
-                                try {
-                                    totalAverage += (Double) post.get("average");
-                                }catch (NumberFormatException ex){
-                                    totalAverage += 0.0;
+                            //String activityType = post.get("category")+"";
+                            //foodsCategories.contains(activityType) &&
+                            if(post.get("result") != null){
+                                long result = (long)post.get("result");
+                                if(result == 3){
+                                    countOfHealthy.incrementAndGet();
+                                }else if(result == 2){
+                                    countOfMedium.incrementAndGet();
+                                }else{
+                                    countOfBad.incrementAndGet();
                                 }
 
+                                if(post.get("average") != null) {
+                                    try {
+                                        totalAverage += (long) post.get("average");
+                                    }catch (NumberFormatException ex){
+                                        totalAverage += 0.0;
+                                    }
+
+                                }
                             }
                         }
+
+                        //Lógica para la sección superior de la interface
+
+                        healthyHabits.setText(countOfHealthy.get()+"");
+                        mediumHabits.setText(countOfMedium.get()+"");
+                        badHabits.setText(countOfBad.get()+"");
+
+                        ViewGroup.LayoutParams circleBox1Params = sim_circle_box_1.getLayoutParams();
+                        ViewGroup.LayoutParams circleBox2Params = sim_circle_box_2.getLayoutParams();
+                        ViewGroup.LayoutParams circleBox3Params = sim_circle_box_3.getLayoutParams();
+
+                        int newSizeBox1 = countOfHealthy.get();
+                        int newSizeBox2 = countOfMedium.get();
+                        int newSizeBox3 = countOfBad.get();
+
+                        LinkedList orderedList = new LinkedList();
+                        orderedList.push(newSizeBox1);
+                        orderedList.push(newSizeBox2);
+                        orderedList.push(newSizeBox3);
+
+                        Collections.sort(orderedList);
+
+                        //Ubicación del tamaño para el componente 1
+                        if(orderedList.indexOf(newSizeBox1) == 2){
+                            newSizeBox1 = 80;
+
+                        } else if(orderedList.indexOf(newSizeBox1) == 1)
+                            newSizeBox1 = 60;
+                        else
+                            newSizeBox1 = 40;
+
+                        //Ubicación del tamaño para el componente 2
+                        if(orderedList.indexOf(newSizeBox2) == 2){
+                            newSizeBox2 = 80;
+
+                        } else if(orderedList.indexOf(newSizeBox2) == 1)
+                            newSizeBox2 = 60;
+                        else
+                            newSizeBox2 = 40;
+
+                        //Ubicación del tamaño para el componente 3
+                        if(orderedList.indexOf(newSizeBox3) == 2){
+                            newSizeBox3 = 80;
+
+                        }else if(orderedList.indexOf(newSizeBox3) == 1)
+                            newSizeBox3 = 60;
+                        else
+                            newSizeBox3 = 40;
+
+                        if(getActivity() != null){
+                            healthyHabits.setTextSize((newSizeBox1 * 14)/40);
+                            mediumHabits.setTextSize((newSizeBox2 * 14)/40);
+                            badHabits.setTextSize((newSizeBox3 * 14)/40);
+
+
+                            circleBox1Params.width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, newSizeBox1, getResources().getDisplayMetrics());
+                            circleBox1Params.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, newSizeBox1, getResources().getDisplayMetrics());;
+                            sim_circle_box_1.setLayoutParams(circleBox1Params);
+
+                            circleBox2Params.width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, newSizeBox2, getResources().getDisplayMetrics());
+                            circleBox2Params.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, newSizeBox2, getResources().getDisplayMetrics());
+                            sim_circle_box_2.setLayoutParams(circleBox2Params);
+
+                            circleBox3Params.width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, newSizeBox3, getResources().getDisplayMetrics());
+                            circleBox3Params.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, newSizeBox3, getResources().getDisplayMetrics());
+                            sim_circle_box_3.setLayoutParams(circleBox3Params);
+
+
+                            totalAverage /= (countOfHealthy.get() + countOfMedium.get() + countOfBad.get());
+                            paintLevel(totalAverage, view);
+
+                        }
+
+
+                        countOfHealthy.set(0);
+                        countOfMedium.set(0);
+                        countOfBad.set(0);
                     }
-
-                    //Lógica para la sección superior de la interface
-
-                    healthyHabits.setText(countOfHealthy.get()+"");
-                    mediumHabits.setText(countOfMedium.get()+"");
-                    badHabits.setText(countOfBad.get()+"");
-
-                    ViewGroup.LayoutParams circleBox1Params = sim_circle_box_1.getLayoutParams();
-                    ViewGroup.LayoutParams circleBox2Params = sim_circle_box_2.getLayoutParams();
-                    ViewGroup.LayoutParams circleBox3Params = sim_circle_box_3.getLayoutParams();
-
-                    int newSizeBox1 = countOfHealthy.get();
-                    int newSizeBox2 = countOfMedium.get();
-                    int newSizeBox3 = countOfBad.get();
-
-                    LinkedList orderedList = new LinkedList();
-                    orderedList.push(newSizeBox1);
-                    orderedList.push(newSizeBox2);
-                    orderedList.push(newSizeBox3);
-
-                    Collections.sort(orderedList);
-
-                    //Ubicación del tamaño para el componente 1
-                    if(orderedList.indexOf(newSizeBox1) == 2){
-                        newSizeBox1 = 80;
-
-                    } else if(orderedList.indexOf(newSizeBox1) == 1)
-                        newSizeBox1 = 60;
-                    else
-                        newSizeBox1 = 40;
-
-                    //Ubicación del tamaño para el componente 2
-                    if(orderedList.indexOf(newSizeBox2) == 2){
-                        newSizeBox2 = 80;
-
-                    } else if(orderedList.indexOf(newSizeBox2) == 1)
-                        newSizeBox2 = 60;
-                    else
-                        newSizeBox2 = 40;
-
-                    //Ubicación del tamaño para el componente 3
-                    if(orderedList.indexOf(newSizeBox3) == 2){
-                        newSizeBox3 = 80;
-
-                    }else if(orderedList.indexOf(newSizeBox3) == 1)
-                        newSizeBox3 = 60;
-                    else
-                        newSizeBox3 = 40;
-
-                    if(getActivity() != null){
-                        healthyHabits.setTextSize((newSizeBox1 * 14)/40);
-                        mediumHabits.setTextSize((newSizeBox2 * 14)/40);
-                        badHabits.setTextSize((newSizeBox3 * 14)/40);
-
-
-                        circleBox1Params.width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, newSizeBox1, getResources().getDisplayMetrics());
-                        circleBox1Params.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, newSizeBox1, getResources().getDisplayMetrics());;
-                        sim_circle_box_1.setLayoutParams(circleBox1Params);
-
-                        circleBox2Params.width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, newSizeBox2, getResources().getDisplayMetrics());
-                        circleBox2Params.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, newSizeBox2, getResources().getDisplayMetrics());
-                        sim_circle_box_2.setLayoutParams(circleBox2Params);
-
-                        circleBox3Params.width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, newSizeBox3, getResources().getDisplayMetrics());
-                        circleBox3Params.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, newSizeBox3, getResources().getDisplayMetrics());
-                        sim_circle_box_3.setLayoutParams(circleBox3Params);
-
-
-                        totalAverage /= (countOfHealthy.get() + countOfMedium.get() + countOfBad.get());
-                        paintLevel(totalAverage, view);
-
-                    }
-
-
-                    countOfHealthy.set(0);
-                    countOfMedium.set(0);
-                    countOfBad.set(0);
-
                 }
 
                 @Override

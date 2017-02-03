@@ -56,11 +56,14 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.ucaldas.ro.reduccionobesidad.R.id.imageView;
+import static java.util.Arrays.asList;
 
 public class AddPost extends AppCompatActivity{
 
@@ -82,7 +85,10 @@ public class AddPost extends AppCompatActivity{
     private ProgressDialog progress;
     final AppCompatActivity that = this; //Guardar el contexto para los menú de alerta.
     private String idForReply;
-    String imageForReply;
+    private String imageForReply;
+    private String typeForReply;
+    private long resultForReply;
+    private long averageForReply;
 
     private ArrayAdapter<CharSequence> categoryAdapter;
 
@@ -101,30 +107,43 @@ public class AddPost extends AppCompatActivity{
         getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
         );
+    }
 
+    private void showSpinnerDurationAndLoadData(){
+        Spinner spinnerDuration = (Spinner) findViewById(R.id.activity_duration);
+        TextView spinner_duration_label = (TextView) findViewById(R.id.spinner_duration_label);
+
+        loadAdapterWithActivityCategories();
+        spinnerDuration.setVisibility(View.VISIBLE);
+        spinner_duration_label.setVisibility(View.VISIBLE);
+        isActivity = true;
+    }
+
+    private void hideSpinnerDurationAndLoadData(){
+
+        Spinner spinnerDuration = (Spinner) findViewById(R.id.activity_duration);
+        TextView spinner_duration_label = (TextView) findViewById(R.id.spinner_duration_label);
+
+        loadAdapterWithFoodCategories();
+        spinnerDuration.setVisibility(View.INVISIBLE);
+        spinner_duration_label.setVisibility(View.INVISIBLE);
+        isActivity = false;
     }
 
     public void onRadioButtonClicked(View view) {
         // Is the button now checked?
         boolean checked = ((RadioButton) view).isChecked();
-        Spinner spinnerDuration = (Spinner) findViewById(R.id.activity_duration);
-        TextView spinner_duration_label = (TextView) findViewById(R.id.spinner_duration_label);
+
 
         switch(view.getId()) {
             case R.id.radio_activity:
                 if (checked){
-                    loadAdapterWithActivityCategories();
-                    spinnerDuration.setVisibility(View.VISIBLE);
-                    spinner_duration_label.setVisibility(View.VISIBLE);
-                    isActivity = true;
+                    showSpinnerDurationAndLoadData();
                 }
                 break;
             case R.id.radio_food:
                 if (checked){
-                    loadAdapterWithFoodCategories();
-                    spinnerDuration.setVisibility(View.INVISIBLE);
-                    spinner_duration_label.setVisibility(View.INVISIBLE);
-                    isActivity = false;
+                    hideSpinnerDurationAndLoadData();
                 }
                 break;
         }
@@ -148,6 +167,8 @@ public class AddPost extends AppCompatActivity{
         * Asigna el origen de la creación de esta vista
         * Inicializa los datos con respecto al origen
         * */
+        //Creación del spinner de categorias
+        categorySpinner = (Spinner) findViewById(R.id.category_spinner);
         prev = (ImageView) findViewById(R.id.imagePreview);
         SOURCE = getIntent().getStringExtra("source"); //Obtiene el origen
         isActivity = true; //Inicialmente se configura el post como una publicación de actividad
@@ -156,6 +177,11 @@ public class AddPost extends AppCompatActivity{
             imageForReply = getIntent().getStringExtra("image");
             String name = getIntent().getStringExtra("name");
             idForReply = getIntent().getStringExtra("id");
+            typeForReply = getIntent().getStringExtra("type");
+            resultForReply = getIntent().getIntExtra("result", 0);
+
+            Log.v("DBP", resultForReply+"");
+            averageForReply = getIntent().getIntExtra("average",0);
 
             TextView txt_name = (TextView) findViewById(R.id.textInputEditText);
             txt_name.setEnabled(false);
@@ -163,6 +189,17 @@ public class AddPost extends AppCompatActivity{
 
             RadioButton radioActivity = (RadioButton) findViewById(R.id.radio_activity);
             RadioButton radioFood = (RadioButton) findViewById(R.id.radio_food);
+
+            List foodList = Arrays.asList(getResources().getStringArray(R.array.new_post_food_categories));
+
+            if(foodList.contains(typeForReply)){
+                radioFood.setChecked(true);
+                hideSpinnerDurationAndLoadData();
+            }else{
+                radioActivity.setSelected(true);
+                showSpinnerDurationAndLoadData();
+            }
+
             radioActivity.setEnabled(false);
             radioFood.setEnabled(false);
 
@@ -175,9 +212,9 @@ public class AddPost extends AppCompatActivity{
             dispatchGaleryPicture();
         }
 
-        //Creación del spinner de categorias
-        categorySpinner = (Spinner) findViewById(R.id.category_spinner);
-        loadAdapterWithActivityCategories();
+        if(!SOURCE.equals("reply"))
+            loadAdapterWithActivityCategories();
+
         categorySpinner.setAdapter(categoryAdapter);
 
         // Creación del spinner de frecuencias para un nuevo post
@@ -233,10 +270,10 @@ public class AddPost extends AppCompatActivity{
                 TextView activity_duration = (TextView) duration_view;
                 durationActivity = activity_duration.getText();
 
-                post = new Post(key, nameText.toString(), category.toString(), frecuency.toString(), downloadUrl+"", durationActivity.toString(), mHome.user.getUid());
+                post = new Post(key, nameText.toString(), category.toString(), frecuency.toString(), downloadUrl+"", durationActivity.toString(), mHome.user.getUid(), resultForReply, averageForReply, "","");
             }
         }else{
-            post = new Post(key, nameText.toString(), category.toString(), frecuency.toString(), downloadUrl+"", mHome.user.getUid());
+            post = new Post(key, nameText.toString(), category.toString(), frecuency.toString(), downloadUrl+"", mHome.user.getUid(), resultForReply, averageForReply, "","");
         }
         return post;
     }
@@ -519,7 +556,11 @@ public class AddPost extends AppCompatActivity{
             final Uri imageUri = data.getData();
             final InputStream imageStream = getContentResolver().openInputStream(imageUri);
             final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-            imageView.setImageBitmap(selectedImage);
+
+            int nh = (int) ( selectedImage.getHeight() * (512.0 / selectedImage.getWidth()) );
+            Bitmap scaled = Bitmap.createScaledBitmap(selectedImage, 512, nh, true);
+
+            imageView.setImageBitmap(scaled);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
