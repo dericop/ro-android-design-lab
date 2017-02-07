@@ -73,22 +73,23 @@
                         android:orientation="horizontal"
                         android:layout_marginTop="5dp">
 
-                        <RadioButton android:id="@+id/radio_activity"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/add_radio_activity"
-                            android:checked="true"
-                            android:onClick="onRadioButtonClicked"
-                            android:layout_marginRight="30dp"/>
-
                         <RadioButton android:id="@+id/radio_food"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/add_radio_food"
                             android:onClick="onRadioButtonClicked"
-                            android:layout_marginLeft="30dp"
+                            android:layout_marginRight="30dp"
                             android:textAllCaps="false"
                             android:textSize="14sp" />
+
+                        <RadioButton android:id="@+id/radio_activity"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/add_radio_activity"
+                            android:onClick="onRadioButtonClicked"
+                            android:layout_marginLeft="30dp"/>
+
+
                     </RadioGroup>
 
                 </LinearLayout>

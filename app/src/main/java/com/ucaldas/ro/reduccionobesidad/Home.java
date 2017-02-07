@@ -112,7 +112,6 @@ public class Home extends ListFragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-
         /*FloatingActionButton fab = (FloatingActionButton) getContext().findViewById(R.id.btn_addPost);
 
         fab.setOnClickListener(new View.OnClickListener() {
@@ -199,7 +198,7 @@ public class Home extends ListFragment {
 
         mListView.setAdapter(firebaseListAdapter);*/
 
-        mDatabase.child("user-posts").limitToLast(5).addChildEventListener(new ChildEventListener() {
+        mDatabase.child("user-posts").limitToLast(30).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
@@ -211,12 +210,14 @@ public class Home extends ListFragment {
                 final String image = (String)postMap.get("image");
                 final String user = (String)postMap.get("user");
                 final String id = (String)postMap.get("id");
+                final AtomicInteger curElement = new AtomicInteger(0);
 
                 mDatabase.child("users").child(user).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         HashMap<String, Object> map = (HashMap)dataSnapshot.getValue();
                         final String userName = (String)map.get("mUserName");
+                        final String[] tooSharedCopy = {""};
 
                         if(postMap.get("last_share") != null){
                             final String lastShare = (String)postMap.get("last_share");
@@ -226,32 +227,14 @@ public class Home extends ListFragment {
                                 public void onDataChange(DataSnapshot dataSnapshot) {
 
                                     HashMap<String, Object> tooSharedMap = (HashMap) dataSnapshot.getValue();
-                                    String tooSharedName = (String) tooSharedMap.get("mUserName");
-
-                                    long result = 0;
-                                    if(postMap.get("result") != null){
-                                        result = (long)postMap.get("result");
-                                        Log.v("DB", result+":result");
-                                    }
-
-                                    long average = 0;
-                                    if(postMap.get("average") != null){
-                                        try {
-                                            average = (long)postMap.get("average");
-                                        }catch (NumberFormatException ex){
-
+                                    final String tooSharedName = (String) tooSharedMap.get("mUserName");
+                                    tooSharedCopy[0] = tooSharedName;
+                                    for (int i=0; i<mPostList.size();i++) {
+                                        if(mPostList.get(i).getmId().equals(id)){
+                                            mPostList.get(i).setmTooShared(tooSharedName);
                                         }
                                     }
-
-                                    if(postMap.get("duration") != null){
-                                        String duration = (String)postMap.get("duration");
-                                        mPostList.addFirst(new Post(id, name, category, frecuency, image, duration, user, result, average, userName, tooSharedName));
-                                    }else{
-                                        mPostList.addFirst(new Post(id, name, category, frecuency, image, user, result, average, userName, tooSharedName));
-                                    }
-
                                     reloadData();
-
 
                                 }
 
@@ -261,31 +244,42 @@ public class Home extends ListFragment {
                                 }
                             });
 
-                        }else{
-                            long result = 0;
-                            if(postMap.get("result") != null){
-                                result = (long)postMap.get("result");
-                                Log.v("DB", result+":result");
-                            }
-
-                            long average = 0;
-                            if(postMap.get("average") != null){
-                                try {
-                                    average = (long)postMap.get("average");
-                                }catch (NumberFormatException ex){
-
-                                }
-                            }
-
-                            if(postMap.get("duration") != null){
-                                String duration = (String)postMap.get("duration");
-                                mPostList.addFirst(new Post(id, name, category, frecuency, image, duration, user, result, average, userName, ""));
-                            }else{
-                                mPostList.addFirst(new Post(id, name, category, frecuency, image, user, result, average, userName, ""));
-                            }
-
-                            reloadData();
                         }
+
+                        long result = 0;
+                        if(postMap.get("result") != null){
+                            result = (long)postMap.get("result");
+                            Log.v("DB", result+":result");
+                        }
+
+                        long average = 0;
+                        if(postMap.get("average") != null){
+                            try {
+                                average = (long)postMap.get("average");
+                            }catch (NumberFormatException ex){
+
+                            }
+                        }
+
+                        if(postMap.get("duration") != null){
+                            String duration = (String)postMap.get("duration");
+
+                            if(!tooSharedCopy[0].equals(""))
+                                mPostList.addFirst(new Post(id, name, category, frecuency, image, duration, user, result, average, userName, ""));
+                            else
+                                mPostList.addFirst(new Post(id, name, category, frecuency, image, duration, user, result, average, userName, tooSharedCopy[0]));
+
+                        }else{
+
+                            if(!tooSharedCopy[0].equals(""))
+                                mPostList.addFirst(new Post(id, name, category, frecuency, image, user, result, average, userName, ""));
+                            else
+                                mPostList.addFirst( new Post(id, name, category, frecuency, image, user, result, average, userName, tooSharedCopy[0]));
+
+                        }
+
+                        reloadData();
+
 
                     }
 

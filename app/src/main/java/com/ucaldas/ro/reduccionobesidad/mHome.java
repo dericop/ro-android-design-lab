@@ -1,5 +1,6 @@
 package com.ucaldas.ro.reduccionobesidad;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,6 +16,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +34,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.getbase.floatingactionbutton.AddFloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
@@ -46,6 +49,8 @@ public class mHome extends AppCompatActivity
     private TabLayout tabLayout;
     private ViewPager viewPager;
 
+    private static Context context;
+
     /* Atributos para el control de usuarios */
     static FirebaseUser user;
 
@@ -58,6 +63,18 @@ public class mHome extends AppCompatActivity
         addListenerToFloatButton();
         configureNavigationView();
         initViewPager();
+
+        context = getApplicationContext();
+    }
+
+    public static Context getContext(){
+        return context;
+    }
+
+    @Override
+    public void onActivityReenter(int resultCode, Intent data) {
+        super.onActivityReenter(resultCode, data);
+
     }
 
     private void initViewPager(){

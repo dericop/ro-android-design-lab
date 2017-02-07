@@ -1,5 +1,6 @@
 package com.ucaldas.ro.reduccionobesidad;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -39,6 +40,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -65,12 +67,13 @@ import java.util.Map;
 import static com.ucaldas.ro.reduccionobesidad.R.id.imageView;
 import static java.util.Arrays.asList;
 
-public class AddPost extends AppCompatActivity{
+public class AddPost extends AppCompatActivity {
 
     static final int REQUEST_IMAGE_CAPTURE = 1; //Bandera para verificar en los resultados de actividad si se ha tomado una foto.
     static final int RESULT_LOAD_IMAGE = 2; //Bandera para verificar en los resultados de actividad si se ha cargado una foto de la galería
     private String SOURCE = ""; //Indica el origen de un llamado, con el objetivo de reutilizar la vista.
     private boolean isActivity;
+    private boolean radioButtonIsClicked = false;
 
     //Datos que el usuario va a ingresar para la publiación
     private Spinner frecuencySpinner;
@@ -109,7 +112,7 @@ public class AddPost extends AppCompatActivity{
         );
     }
 
-    private void showSpinnerDurationAndLoadData(){
+    private void showSpinnerDurationAndLoadData() {
         Spinner spinnerDuration = (Spinner) findViewById(R.id.activity_duration);
         TextView spinner_duration_label = (TextView) findViewById(R.id.spinner_duration_label);
 
@@ -119,7 +122,7 @@ public class AddPost extends AppCompatActivity{
         isActivity = true;
     }
 
-    private void hideSpinnerDurationAndLoadData(){
+    private void hideSpinnerDurationAndLoadData() {
 
         Spinner spinnerDuration = (Spinner) findViewById(R.id.activity_duration);
         TextView spinner_duration_label = (TextView) findViewById(R.id.spinner_duration_label);
@@ -133,16 +136,16 @@ public class AddPost extends AppCompatActivity{
     public void onRadioButtonClicked(View view) {
         // Is the button now checked?
         boolean checked = ((RadioButton) view).isChecked();
+        radioButtonIsClicked = true;
 
-
-        switch(view.getId()) {
+        switch (view.getId()) {
             case R.id.radio_activity:
-                if (checked){
+                if (checked) {
                     showSpinnerDurationAndLoadData();
                 }
                 break;
             case R.id.radio_food:
-                if (checked){
+                if (checked) {
                     hideSpinnerDurationAndLoadData();
                 }
                 break;
@@ -152,12 +155,12 @@ public class AddPost extends AppCompatActivity{
 
     }
 
-    private void loadAdapterWithActivityCategories(){
+    private void loadAdapterWithActivityCategories() {
         categoryAdapter = ArrayAdapter.createFromResource(this,
                 R.array.new_post_activity_categories, android.R.layout.simple_spinner_dropdown_item); //Cargar con las categorias de actividades
     }
 
-    private void loadAdapterWithFoodCategories(){
+    private void loadAdapterWithFoodCategories() {
         categoryAdapter = ArrayAdapter.createFromResource(this,
                 R.array.new_post_food_categories, android.R.layout.simple_spinner_dropdown_item); //Cargar con las categorias de alimentos
     }
@@ -171,17 +174,19 @@ public class AddPost extends AppCompatActivity{
         categorySpinner = (Spinner) findViewById(R.id.category_spinner);
         prev = (ImageView) findViewById(R.id.imagePreview);
         SOURCE = getIntent().getStringExtra("source"); //Obtiene el origen
-        isActivity = true; //Inicialmente se configura el post como una publicación de actividad
+        //isActivity = true; //Inicialmente se configura el post como una publicación de actividad
 
-        if(SOURCE.equals("reply")){
+        if (SOURCE.equals("reply")) {
+            radioButtonIsClicked = true;
             imageForReply = getIntent().getStringExtra("image");
             String name = getIntent().getStringExtra("name");
             idForReply = getIntent().getStringExtra("id");
             typeForReply = getIntent().getStringExtra("type");
             resultForReply = getIntent().getIntExtra("result", 0);
 
-            Log.v("DBP", resultForReply+"");
-            averageForReply = getIntent().getIntExtra("average",0);
+
+            Log.v("DBP", resultForReply + "");
+            averageForReply = getIntent().getIntExtra("average", 0);
 
             TextView txt_name = (TextView) findViewById(R.id.textInputEditText);
             txt_name.setEnabled(false);
@@ -192,10 +197,10 @@ public class AddPost extends AppCompatActivity{
 
             List foodList = Arrays.asList(getResources().getStringArray(R.array.new_post_food_categories));
 
-            if(foodList.contains(typeForReply)){
+            if (foodList.contains(typeForReply)) {
                 radioFood.setChecked(true);
                 hideSpinnerDurationAndLoadData();
-            }else{
+            } else {
                 radioActivity.setSelected(true);
                 showSpinnerDurationAndLoadData();
             }
@@ -206,13 +211,13 @@ public class AddPost extends AppCompatActivity{
             Glide.with(this).load(imageForReply).into(prev);
 
 
-        }else if (SOURCE.equals("camera")) { //¿El origen es de foto?
+        } else if (SOURCE.equals("camera")) { //¿El origen es de foto?
             dispatchTakePictureIntent();
         } else { // ¿El origen es de galería?
             dispatchGaleryPicture();
         }
 
-        if(!SOURCE.equals("reply"))
+        if (!SOURCE.equals("reply"))
             loadAdapterWithActivityCategories();
 
         categorySpinner.setAdapter(categoryAdapter);
@@ -252,7 +257,6 @@ public class AddPost extends AppCompatActivity{
         setSupportActionBar(toolbar);
 
 
-
         addSaveEventListener();
 
         changeStatusBarColor();
@@ -261,19 +265,21 @@ public class AddPost extends AppCompatActivity{
 
     }
 
-    private Post getPostData(String key, String downloadUrl){
+
+
+    private Post getPostData(String key, String downloadUrl) {
         Post post = null;
-        if(isActivity){
+        if (isActivity) {
             View duration_view = durationSpinner.getSelectedView();
             if (duration_view != null && duration_view instanceof TextView) {
                 CharSequence durationActivity = "";
                 TextView activity_duration = (TextView) duration_view;
                 durationActivity = activity_duration.getText();
 
-                post = new Post(key, nameText.toString(), category.toString(), frecuency.toString(), downloadUrl+"", durationActivity.toString(), mHome.user.getUid(), resultForReply, averageForReply, "","");
+                post = new Post(key, nameText.toString(), category.toString(), frecuency.toString(), downloadUrl + "", durationActivity.toString(), mHome.user.getUid(), resultForReply, averageForReply, "", "");
             }
-        }else{
-            post = new Post(key, nameText.toString(), category.toString(), frecuency.toString(), downloadUrl+"", mHome.user.getUid(), resultForReply, averageForReply, "","");
+        } else {
+            post = new Post(key, nameText.toString(), category.toString(), frecuency.toString(), downloadUrl + "", mHome.user.getUid(), resultForReply, averageForReply, "", "");
         }
         return post;
     }
@@ -293,11 +299,11 @@ public class AddPost extends AppCompatActivity{
                 if (mHome.user != null) {
                     if (userDataIsOK()) {
 
-                        if(SOURCE.equals("reply")){
+                        if (SOURCE.equals("reply")) {
                             progress = ProgressDialog.show(that, "Compartiendo Publicación...",
                                     "Espera un momento", true);
 
-                            if(isOnline()){
+                            if (isOnline()) {
                                 DatabaseReference datRef = FirebaseDatabase.getInstance().getReference();
                                 String dataKey = datRef.child("user-data").push().getKey();
 
@@ -307,12 +313,11 @@ public class AddPost extends AppCompatActivity{
                                 Log.v("db", idForReply);
 
                                 Map<String, Object> mapForUpdate = new HashMap<>();
-                                mapForUpdate.put("/user-posts/"+idForReply+"/"+"last_share", mHome.user.getUid());
-                                mapForUpdate.put("/user-data/"+mHome.user.getUid()+"/"+dataKey, mapForItems);
+                                mapForUpdate.put("/user-posts/" + idForReply + "/" + "last_share", mHome.user.getUid());
+                                mapForUpdate.put("/user-data/" + mHome.user.getUid() + "/" + dataKey, mapForItems);
 
 
                                 //mapForUpdate.put("user-data/"+mHome.user.getUid()+"/", );
-
 
                                 datRef.updateChildren(mapForUpdate).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
@@ -323,15 +328,13 @@ public class AddPost extends AppCompatActivity{
                                 });
 
 
-
-                            }else{
+                            } else {
                                 Snackbar.make(getCurrentFocus(), "Revise su conexión a internet e intentelo más tarde", 2000).show();
                                 progress.dismiss();
                             }
 
 
-
-                        }else{
+                        } else {
 
                             progress = ProgressDialog.show(that, "Agregando Publicación...",
                                     "Espera un momento", true);
@@ -349,11 +352,11 @@ public class AddPost extends AppCompatActivity{
 
 
                             Calendar cal = Calendar.getInstance();
-                            String date = cal.get(Calendar.YEAR) +"" + cal.get(Calendar.MONTH) +""+ cal.get(Calendar.DAY_OF_MONTH)+"" + cal.get(Calendar.HOUR)+"" + cal.get(Calendar.MINUTE)+"" + cal.get(Calendar.SECOND)+"";
+                            String date = cal.get(Calendar.YEAR) + "" + cal.get(Calendar.MONTH) + "" + cal.get(Calendar.DAY_OF_MONTH) + "" + cal.get(Calendar.HOUR) + "" + cal.get(Calendar.MINUTE) + "" + cal.get(Calendar.SECOND) + "";
 
-                            StorageReference imagesRef = storageRef.child("images/"+mHome.user.getUid()+ "/" + date);
+                            StorageReference imagesRef = storageRef.child("images/" + mHome.user.getUid() + "/" + date);
 
-                            if(isOnline()){
+                            if (isOnline()) {
                                 UploadTask uploadTask = imagesRef.putBytes(data);
                                 uploadTask.addOnFailureListener(new OnFailureListener() {
                                     @Override
@@ -378,14 +381,14 @@ public class AddPost extends AppCompatActivity{
 
                                         Post post = getPostData(key, downloadUrl.toString());
 
-                                        if(post != null){
+                                        if (post != null) {
                                             Map<String, Object> postValues = post.toMap();
 
 
                                             Map<String, Object> childUpdates = new HashMap<>();
                                             //addSaveEventListener();
                                             childUpdates.put("/user-posts/" + key, postValues);
-                                            childUpdates.put("/user-data/"+mHome.user.getUid()+"/"+dataKey, postValues);
+                                            childUpdates.put("/user-data/" + mHome.user.getUid() + "/" + dataKey, postValues);
 
                                             OnCompleteListener saveListener = new OnCompleteListener() {
                                                 @Override
@@ -407,11 +410,10 @@ public class AddPost extends AppCompatActivity{
 
                                     }
                                 });
-                            }else{
+                            } else {
                                 Snackbar.make(getCurrentFocus(), "Revise su conexión a internet e intentelo más tarde", 2000).show();
                                 progress.dismiss();
                             }
-
 
 
                         }
@@ -424,6 +426,7 @@ public class AddPost extends AppCompatActivity{
         });
     }
 
+
     public boolean isOnline() {
         ConnectivityManager cm =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -432,16 +435,20 @@ public class AddPost extends AppCompatActivity{
     }
 
     private boolean userDataIsOK() {
-        if (nameIsOK() && categoryIsOk() && frecuencyIsOk()) {
+        if (radioButtonIsClicked) {
+            if (nameIsOK() && categoryIsOk() && frecuencyIsOk()) {
 
-            if (imageIsOk()) {
-                return true;
+                if (imageIsOk()) {
+                    return true;
+                } else {
+                    Snackbar.make(getCurrentFocus(), "Es necesario que adjunte una imagen.", 4000).show();
+                }
+
             } else {
-                Snackbar.make(getCurrentFocus(), "Es necesario que adjunte una imagen.", 4000).show();
+                Snackbar.make(getCurrentFocus(), "Verifique la información ingresada.", 4000).show();
             }
-
-        } else {
-            Snackbar.make(getCurrentFocus(), "Verifique la información ingresada.", 4000).show();
+        }else{
+            Snackbar.make(getCurrentFocus(), "Seleccione el tipo de publicación (actividad o alimento)", 4000).show();
         }
 
         return false;
@@ -533,6 +540,12 @@ public class AddPost extends AppCompatActivity{
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         /*
         * Este método es llamado cuando se obtiene un resultado de otra vista, ej: tomar foto, adjuntar foto de galería
@@ -545,7 +558,7 @@ public class AddPost extends AppCompatActivity{
                 loadImageResultInImageView(prev, data);
             }
 
-        }else{
+        } else {
             finish();
         }
     }
@@ -557,7 +570,7 @@ public class AddPost extends AppCompatActivity{
             final InputStream imageStream = getContentResolver().openInputStream(imageUri);
             final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
 
-            int nh = (int) ( selectedImage.getHeight() * (512.0 / selectedImage.getWidth()) );
+            int nh = (int) (selectedImage.getHeight() * (512.0 / selectedImage.getWidth()));
             Bitmap scaled = Bitmap.createScaledBitmap(selectedImage, 512, nh, true);
 
             imageView.setImageBitmap(scaled);
