@@ -152,7 +152,7 @@ public class LoginActivity extends AppCompatActivity implements
                 // Google Sign In failed, update UI appropriately
                 // ...
                 //progress.dismiss();
-                Snackbar.make(getCurrentFocus(), "Revise su conexión a internet e intentelo más tarde", 2000).show();
+                //Snackbar.make(getCurrentFocus(), "Revise su conexión a internet e intentelo más tarde", 2000).show();
                 handleSignInResult(result);
             }
         }

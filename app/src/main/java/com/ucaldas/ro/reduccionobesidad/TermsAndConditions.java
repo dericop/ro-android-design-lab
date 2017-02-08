@@ -19,7 +19,7 @@ public class TermsAndConditions extends AppCompatActivity {
         btnAgree.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                finish();
             }
         });
 
