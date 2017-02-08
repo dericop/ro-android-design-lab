@@ -50,6 +50,7 @@ public class HomeAdapter extends ArrayAdapter<Post> {
         TextView otherUser = (TextView) convertView.findViewById(R.id.txt_too);
         LinearLayout resultItem = (LinearLayout) convertView.findViewById(R.id.result_item);
         TextView txtAverage = (TextView) convertView.findViewById(R.id.txt_average_data);
+        TextView lbl_too = (TextView) convertView.findViewById(R.id.lbl_too);
 
         final Post post = getItem(position);
 
@@ -58,6 +59,12 @@ public class HomeAdapter extends ArrayAdapter<Post> {
         name.setText(post.getmName());
         title.setText(post.getmUserName());
         otherUser.setText(post.getmTooShared());
+
+        if(post.getmTooShared().equals("")){
+            lbl_too.setVisibility(View.INVISIBLE);
+        }else{
+            lbl_too.setVisibility(View.VISIBLE);
+        }
 
         long result = post.getmResult();
         Log.v("DB", result+"");

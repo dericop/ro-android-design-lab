@@ -6,6 +6,7 @@ import android.database.DataSetObserver;
 import android.net.Uri;
 import android.nfc.FormatException;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -121,6 +122,7 @@ public class Home extends ListFragment {
                         .setAction("Action", null).show();
             }
         });*/
+
     }
 
     @Override
@@ -450,6 +452,14 @@ public class Home extends ListFragment {
                     btn_new_posts.setVisibility(View.INVISIBLE);
                 }
             });
+
+           mSwipeRefreshing.setOnChildScrollUpCallback(new SwipeRefreshLayout.OnChildScrollUpCallback() {
+               @Override
+               public boolean canChildScrollUp(SwipeRefreshLayout parent, @Nullable View child) {
+                   btn_new_posts.setVisibility(View.INVISIBLE);
+                   return true;
+               }
+           });
         }
 
         /*RecyclerView postList = (RecyclerView) view.findViewById(android.R.id.list);

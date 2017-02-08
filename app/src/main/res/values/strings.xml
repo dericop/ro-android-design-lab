@@ -296,6 +296,51 @@
     <string name="sim_hab_little_healthy">Hábitos poco saludables</string>
     <string name="sim_hab_non_healthy">Hábitos no saludables</string>
     <string name="sim_weight_message">Nivel de peso según los hábitos que tienes</string>
+    <string name="title_activity_terms_and_conditions">Términos y Condiciones</string>
 
+    <!-- String relacionados con los términos y condiciones -->
+    <string name="terms_title">Términos y Condiciones</string>
+    <string name="terms_subtitle">Uso de aplicaciones del Laboratorio de Diseño Estratégico de la Universidad de Caldas
+        Por favor, lea con atención los términos y condiciones.</string>
+    <string name="terms_paragraph1">AL registrarse en esta aplicación móvil usted ESTÁ DE ACUERDO CON LOS TÉRMINOS Y CONDICIONES para el uso de las aplicaciones
+        del Laboratorio de Diseño Estratégico de la Universidad de Caldas. Note que no aceptar estos términos, impedirá que pueda hacer uso de la aplicación.</string>
+    <string name="terms_subtitle_paragraph2">1. Servicios Ofrecidos</string>
+    <string name="terms_paragraph2">1.1 Estos términos aplican para regular el uso de la aplicación móvil ofrecida por el Laboratorio de Diseño Estratégico de la Universidad de Caldas
+        a sus usuarios, es decir, permitir compartir información sobre los hábitos (alimenticios y de actividades) por parte
+        de los usuarios registrados. 1.2 La aplicación móvil ofrecida por el Laboratorio de Diseño Estratégico de la Universidad de
+        Caldas consiste en acercar a usuarios a través de una red social específica del área de la salud, donde se comparten hábitos
+        alimenticios y actividades realizadas cotidianamente con el fin de ser visualizado y valorado por profesionales de la salud. 1.3 Se aclara al usuario - el cual se declara
+        consciente - que el servicio ofrecido por el Laboratorio de Diseño Estratégico de la Universidad de Caldas está relacionado sólo como espacio para compartir imágenes y comentarios
+        personales de hábitos sin incluir asesorías directas con expertos profesionales en salud, nutrición y actividades físicas, siendo estos tres aspectos responsabilidad integral del usuario,
+        a quien deberán ser direccionados cualquier reclamo acerca de problemas derivados de la información compartida en la red móvil.</string>
+    <string name="terms_subtitle_paragraph3">2. Registro</string>
+    <string name="terms_paragraph3">2.1 El usuario, para utilizar los servicios arriba descritos, deberá tener la capacidad jurídica para actuar civilmente y deberá necesariamente entregar la información
+        exigida por el registro, asumiendo integralmente la responsabilidad (incluso civil y criminal) por la falta de veracidad en la información ingresada en el registro, que podrá ser verificado en cualquier
+        momento por el Laboratorio de Diseño Estratégico de la Universidad de Caldas. 2.1.1 En caso de ingresar información incorrecta, falsa o no confirmada, así como existir la negativa de corregirla o enviar
+        documentación que comprueba la corrección, CoRus y CoCono se reservan el derecho de no concluir el registro en curso o, inclusive, bloquear el registro ya existente, impidiendo al usuario utilizar los
+        servicios hasta que, a criterio del Laboratorio de Diseño Estratégico de la Universidad de Caldas, la situación de anomalía sea regularizada. El Laboratorio de Diseño Estratégico de la Universidad de
+        Caldas se reserva el derecho de impedir la tentativa deliberada de eludir las reglas aquí descritas, obligatorias para todos los usuarios. El Laboratorio de Diseño Estratégico de la Universidad de Caldas
+        también actuará de la misma forma en caso de que verifique incumplimiento de parte del usuario en cualquier obligación prevista en el presente acuerdo de términos de uso. 2.2 Una vez efectuado con éxito el registro,
+        el usuario tendrá acceso a los servicios mediante login y contraseña, datos que se compromete a no divulgar a terceros, haciendo suya la responsabilidad exclusiva de cualquier contenido compartido con el uso de su login y contraseña.</string>
+    <string name="terms_subtitle_paragraph4">3. Obligaciones del Usuario</string>
+    <string name="terms_paragraph4">3.1 Una vez realizado el registro del usuario, este se obliga a no divulgar a terceros el login y contraseña de acceso, ni permitir el uso de tales informaciones por parte de terceros, responsabilizándose por las
+        consecuencias del uso de login y contraseña de su titularidad. 3.2 Es obligación del usuario proveer información de registro totalmente verídica y exacta, responsabilizándose exclusiva e integralmente (en todas las áreas jurídicas) por todo el
+        contenido informado en el registro, manteniendo actualizada y confirmada la dirección para entrega de los productos solicitados. </string>
+    <string name="terms_subtitle_paragraph5">4. Obligaciones del Laboratorio de Diseño Estratégico de la Universidad de Caldas</string>
+    <string name="terms_paragraph5">4.1 La aplicación móvil del Laboratorio de Diseño Estratégico de la Universidad de Caldas permite que los usuarios debidamente registrados compartan imágenes desde sus dispositivos móviles, desde publicaciones realizadas
+        por otros usuarios y desde sus dispositivos móviles. 4.2 Proteger a través de servidores de almacenamiento o cualquier otro medio magnético de alta seguridad, la confidencialidad de toda la información y registro relacionado con los usuarios. Sin embargo,
+        no responderá por la reparación de los daños que puedan derivarse de la aprehensión o cooptación de datos por parte de terceros que accedan a esta información de manera no autorizada, rompiendo los sistemas de seguridad establecidos.</string>
+    <string name="terms_subtitle_paragraph6">5. Modificaciones de estos términos</string>
+    <string name="terms_paragraph6">5.1 Estas condiciones de uso, podrán en cualquier momento, ser modificadas en su contenido o parte de él para ajustes e inserciones, todas ellas encaminadas a mejorar los servicios prestados. 5.2 Las nuevas condiciones serán
+        efectivas tan pronto como sean publicadas en la aplicación móvil, siendo posible para que el usuario manifieste oposición a cualquiera de los términos modificados, debiendo expresar de manera escrita a través del correo electrónico lab.strategic.design@gmail.com
+        lo que generará la cancelación de su registro.</string>
+    <string name="terms_subtitle_paragraph7">6. Canal de comunicación</string>
+    <string name="terms_paragraph7">6.1 La comunicación entre el Laboratorio de Diseño Estratégico de la Universidad de Caldas y el usuario, se puede realizar por medio del correo electrónico especificado en el punto “5.1”, el usuario debe mantener en su información de registro
+        el email por medio del cual se enviarán las comunicaciones dirigidas a este por parte de Laboratorio de Diseño Estratégico de la Universidad de Caldas, desde luego aplicándose la validez jurídica y efectividad de ese medio electrónico de intercambio de comunicación.</string>
+    <string name="terms_subtitle_paragraph8">7. ACEPTACIÓN DE TÉRMINOS DE USO</string>
+    <string name="terms_paragraph8">7.1 El usuario declara haber leído, entendido y aceptado todas las reglas, condiciones y obligaciones establecidas en los presentes términos de uso.</string>
+    <string name="terms_subtitle_paragraph9">8. Jurisdicción de Elección</string>
+    <string name="terms_paragraph9">8.1 Las partes eligen como competente para resolver las controversias que puedan surgir de la interpretación y ejecución de estos términos al Departamento de Diseño Visual de la Universidad de Caldas.Última actualización: 31 de enero de 2017.</string>
+    <string name="btn_agree">Acepto</string>
 
 </resources>
