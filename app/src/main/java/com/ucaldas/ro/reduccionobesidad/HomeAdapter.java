@@ -37,10 +37,19 @@ public class HomeAdapter extends ArrayAdapter<Post> {
 
         // ¿Existe el view actual?
         if (null == convertView) {
-            convertView = inflater.inflate(
-                    R.layout.list_home_item,
-                    parent,
-                    false);
+
+            if(WelcomeActivity.CURRENT_APP_VERSION.equals("R")){
+                convertView = inflater.inflate(
+                        R.layout.list_home_item_reflexive,
+                        parent,
+                        false);
+            }else{
+                convertView = inflater.inflate(
+                        R.layout.list_home_item,
+                        parent,
+                        false);
+            }
+
         }
 
         // Referencias UI.
@@ -69,24 +78,29 @@ public class HomeAdapter extends ArrayAdapter<Post> {
         long result = post.getmResult();
         Log.v("DB", result+"");
         if(result == 0){
-            txtAverage.setVisibility(View.INVISIBLE);
-            resultItem.setBackgroundDrawable(getContext().getResources().getDrawable(R.drawable.circle_clock));
+            if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
+                txtAverage.setVisibility(View.INVISIBLE);
+                resultItem.setBackgroundDrawable(getContext().getResources().getDrawable(R.drawable.circle_clock));
+            }
 
         }else{
-            txtAverage.setVisibility(View.VISIBLE);
-            txtAverage.setText(post.getmAverage()+"");
+            if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
+                txtAverage.setVisibility(View.VISIBLE);
+                txtAverage.setText(post.getmAverage()+"");
 
-            switch ((int)result){
-                case 1:
-                    resultItem.setBackgroundDrawable(getContext().getResources().getDrawable(R.drawable.circle_bad));
-                    break;
-                case 2:
-                    resultItem.setBackgroundDrawable(getContext().getResources().getDrawable(R.drawable.circle_medium));
-                    break;
-                case 3:
-                    resultItem.setBackgroundDrawable(getContext().getResources().getDrawable(R.drawable.circle_good));
-                    break;
+                switch ((int)result){
+                    case 1:
+                        resultItem.setBackgroundDrawable(getContext().getResources().getDrawable(R.drawable.circle_bad));
+                        break;
+                    case 2:
+                        resultItem.setBackgroundDrawable(getContext().getResources().getDrawable(R.drawable.circle_medium));
+                        break;
+                    case 3:
+                        resultItem.setBackgroundDrawable(getContext().getResources().getDrawable(R.drawable.circle_good));
+                        break;
+                }
             }
+
         }
 
 

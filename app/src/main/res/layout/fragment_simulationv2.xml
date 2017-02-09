@@ -25,7 +25,9 @@
                     android:layout_height="wrap_content"
                     android:text="Alimentos"
                     android:gravity="start"
-                    android:layout_marginLeft="16dp"
+                    android:textColor="#a6a8ab"
+                    android:layout_marginLeft="13dp"
+                    android:textStyle="bold"
                     />
 
                 <TextView
@@ -33,16 +35,18 @@
                     android:layout_height="wrap_content"
                     android:text="% General"
                     android:gravity="end"
-                    android:layout_marginRight="16dp"/>
+                    android:textColor="#a6a8ab"
+                    android:textStyle="bold"
+                    android:layout_marginRight="13dp"/>
 
             </RelativeLayout>
-            
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="#c7c8ca"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
                 android:layout_marginTop="2dp"/>
 
             <LinearLayout
@@ -62,7 +66,7 @@
                     <!-- Componente de la izquierda -->
                     <LinearLayout
                         android:layout_width="0dp"
-                        android:layout_height="110dp"
+                        android:layout_height="135dp"
                         android:layout_weight=".85"
                         android:layout_marginRight="5dp"
                         android:background="@drawable/home_item_shadow"
@@ -85,7 +89,7 @@
                                 android:layout_height="18dp"
                                 android:background="@drawable/border_radius"
                                 android:backgroundTint="#f05a29"
-                                android:id="@+id/categoryBox">
+                                android:id="@+id/categoryBox1">
 
                                 <TextView
                                     android:layout_width="match_parent"
@@ -94,7 +98,7 @@
                                     android:textAlignment="center"
                                     android:textSize="12sp"
                                     android:textColor="#fff"
-                                    android:paddingTop="2dp" />
+                                    android:paddingTop="1dp" />
 
                             </LinearLayout>
                             <!-- título -->
@@ -120,37 +124,237 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:orientation="horizontal">
+                            android:orientation="vertical">
 
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_weight="0.20"
-                                android:layout_height="wrap_content"
-                                android:text="Bajo"
-                                android:layout_gravity="end"
-                                android:textAlignment="textEnd" />
-
+                            <!-- Representación de una sóla línea-->
                             <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_weight="0.60"
-                                android:layout_height="10dp"
-                                android:layout_marginLeft="10dp"
-                                android:layout_marginRight="10dp"
-                                android:background="#e9e9e9">
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginTop="2dp">
 
-                                <View
+                                <TextView
                                     android:layout_width="0dp"
-                                    android:layout_height="match_parent"
-                                    android:background="#a8a8a8"/>
+                                    android:layout_weight="0.25"
+                                    android:layout_height="wrap_content"
+                                    android:text="Bajo"
+                                    android:layout_gravity="end"
+                                    android:textSize="11dp"
+                                    android:paddingTop="3dp"
+                                    android:textAlignment="textEnd"
+                                    android:textStyle="italic"/>
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_weight="0.65"
+                                    android:layout_height="12dp"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginRight="10dp"
+                                    android:layout_marginTop="3dp"
+                                    android:background="#e9e9e9">
+
+                                    <View
+                                        android:layout_width="25dp"
+                                        android:layout_height="9dp"
+                                        android:layout_marginTop="1.5dp"
+                                        android:background="#f05a29"/>
+
+                                </LinearLayout>
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="2"
+                                    android:textSize="11dp"
+                                    android:paddingTop="2dp"
+                                    android:layout_weight="0.1"
+                                    android:textColor="#f05a29"/>
+
 
                             </LinearLayout>
-
-                            <TextView
-                                android:layout_width="0dp"
+                            <!-- Representación de una sóla línea-->
+                            <LinearLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="2"
-                                android:layout_weight="0.2"/>
+                                android:orientation="horizontal"
+                                android:layout_marginTop="2dp">
 
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_weight="0.25"
+                                    android:layout_height="wrap_content"
+                                    android:text="Medio Bajo"
+                                    android:layout_gravity="end"
+                                    android:textSize="11dp"
+                                    android:paddingTop="3dp"
+                                    android:textAlignment="textEnd"
+                                    android:textStyle="italic"/>
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_weight="0.65"
+                                    android:layout_height="12dp"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginRight="10dp"
+                                    android:layout_marginTop="3dp"
+                                    android:background="#e9e9e9">
+
+                                    <View
+                                        android:layout_width="25dp"
+                                        android:layout_height="9dp"
+                                        android:layout_marginTop="1.5dp"
+                                        android:background="#f05a29"/>
+
+                                </LinearLayout>
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="2"
+                                    android:textSize="11dp"
+                                    android:paddingTop="2dp"
+                                    android:layout_weight="0.1"
+                                    android:textColor="#f05a29"/>
+
+
+                            </LinearLayout>
+                            <!-- Representación de una sóla línea-->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginTop="2dp">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_weight="0.25"
+                                    android:layout_height="wrap_content"
+                                    android:text="Medio"
+                                    android:layout_gravity="end"
+                                    android:textSize="11dp"
+                                    android:paddingTop="3dp"
+                                    android:textStyle="italic"
+                                    android:textAlignment="textEnd" />
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_weight="0.65"
+                                    android:layout_height="12dp"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginRight="10dp"
+                                    android:layout_marginTop="3dp"
+                                    android:background="#e9e9e9">
+
+                                    <View
+                                        android:layout_width="25dp"
+                                        android:layout_height="9dp"
+                                        android:layout_marginTop="1.5dp"
+                                        android:background="#f05a29"/>
+
+                                </LinearLayout>
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="2"
+                                    android:textSize="11dp"
+                                    android:paddingTop="2dp"
+                                    android:layout_weight="0.1"
+                                    android:textColor="#f05a29"/>
+
+
+                            </LinearLayout>
+                            <!-- Representación de una sóla línea-->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginTop="2dp">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_weight="0.25"
+                                    android:layout_height="wrap_content"
+                                    android:text="Medio Alto"
+                                    android:layout_gravity="end"
+                                    android:textSize="11dp"
+                                    android:paddingTop="3dp"
+                                    android:textAlignment="textEnd"
+                                    android:textStyle="italic"/>
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_weight="0.65"
+                                    android:layout_height="12dp"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginRight="10dp"
+                                    android:layout_marginTop="3dp"
+                                    android:background="#e9e9e9">
+
+                                    <View
+                                        android:layout_width="100dp"
+                                        android:layout_height="9dp"
+                                        android:layout_marginTop="1.5dp"
+                                        android:background="#f05a29"/>
+
+                                </LinearLayout>
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="10"
+                                    android:textSize="11dp"
+                                    android:paddingTop="2dp"
+                                    android:layout_weight="0.1"
+                                    android:textColor="#f05a29"/>
+
+
+                            </LinearLayout>
+                            <!-- Representación de una sóla línea-->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginTop="2dp">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_weight="0.25"
+                                    android:layout_height="wrap_content"
+                                    android:text="Alto"
+                                    android:layout_gravity="end"
+                                    android:textSize="11dp"
+                                    android:paddingTop="3dp"
+                                    android:textAlignment="textEnd"
+                                    android:textStyle="italic"/>
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_weight="0.65"
+                                    android:layout_height="12dp"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginRight="10dp"
+                                    android:layout_marginTop="3dp"
+                                    android:background="#e9e9e9">
+
+                                    <View
+                                        android:layout_width="0dp"
+                                        android:layout_height="9dp"
+                                        android:layout_marginTop="1.5dp"
+                                        android:background="#f05a29"/>
+
+                                </LinearLayout>
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="0"
+                                    android:textSize="11dp"
+                                    android:paddingTop="2dp"
+                                    android:layout_weight="0.1"/>
+
+
+                            </LinearLayout>
 
                         </LinearLayout>
 
@@ -164,15 +368,1385 @@
                         android:layout_height="70dp"
                         android:layout_weight="0.25"
                         android:background="@drawable/home_item_shadow"
-                        android:layout_marginTop="40dp"></LinearLayout>
+                        android:layout_marginTop="65dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="10%"
+                            android:textSize="29dp"
+                            android:textAlignment="center"
+                            android:gravity="center_vertical"
+                            android:textStyle="bold"
+                            android:textColor="#f05a29"
+                            />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="7dp">
+
+                    <!-- Componente de la izquierda -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="135dp"
+                        android:layout_weight=".85"
+                        android:layout_marginRight="5dp"
+                        android:background="@drawable/home_item_shadow"
+                        android:orientation="vertical">
+
+
+                        <!-- Titulo superior -->
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="20dp"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginLeft="4dp"
+                            android:layout_marginRight="4dp"
+                            android:layout_marginBottom="4dp">
+
+                            <!--ícono izquierda-->
+                            <LinearLayout
+                                android:layout_width="25dp"
+                                android:layout_height="18dp"
+                                android:background="@drawable/border_radius"
+                                android:backgroundTint="#f05a29"
+                                android:id="@+id/categoryBox2">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:text="AA"
+                                    android:textAlignment="center"
+                                    android:textSize="12sp"
+                                    android:textColor="#fff"
+                                    android:paddingTop="1dp" />
+
+                            </LinearLayout>
+                            <!-- título -->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Azúcares añadidos"
+                                android:textSize="12sp"
+                                android:layout_marginLeft="30dp"
+                                android:layout_marginTop="2dp"/>
+                            <!-- ícono derecha-->
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:background="@drawable/ic_action_more_info"
+                                android:backgroundTint="#d0d2d3"
+                                android:layout_alignParentRight="true"/>
+
+
+                        </RelativeLayout>
+
+                        <!-- histograma -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+
+                            <!-- Representación de una sóla línea-->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginTop="2dp">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_weight="0.25"
+                                    android:layout_height="wrap_content"
+                                    android:text="Bajo"
+                                    android:layout_gravity="end"
+                                    android:textSize="11dp"
+                                    android:paddingTop="3dp"
+                                    android:textAlignment="textEnd"
+                                    android:textStyle="italic"/>
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_weight="0.65"
+                                    android:layout_height="12dp"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginRight="10dp"
+                                    android:layout_marginTop="3dp"
+                                    android:background="#e9e9e9">
+
+                                    <View
+                                        android:layout_width="25dp"
+                                        android:layout_height="9dp"
+                                        android:layout_marginTop="1.5dp"
+                                        android:background="#f05a29"/>
+
+                                </LinearLayout>
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="2"
+                                    android:textSize="11dp"
+                                    android:paddingTop="2dp"
+                                    android:layout_weight="0.1"
+                                    android:textColor="#f05a29"/>
+
+
+                            </LinearLayout>
+                            <!-- Representación de una sóla línea-->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginTop="2dp">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_weight="0.25"
+                                    android:layout_height="wrap_content"
+                                    android:text="Medio Bajo"
+                                    android:layout_gravity="end"
+                                    android:textSize="11dp"
+                                    android:paddingTop="3dp"
+                                    android:textAlignment="textEnd"
+                                    android:textStyle="italic"/>
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_weight="0.65"
+                                    android:layout_height="12dp"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginRight="10dp"
+                                    android:layout_marginTop="3dp"
+                                    android:background="#e9e9e9">
+
+                                    <View
+                                        android:layout_width="25dp"
+                                        android:layout_height="9dp"
+                                        android:layout_marginTop="1.5dp"
+                                        android:background="#f05a29"/>
+
+                                </LinearLayout>
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="2"
+                                    android:textSize="11dp"
+                                    android:paddingTop="2dp"
+                                    android:layout_weight="0.1"
+                                    android:textColor="#f05a29"/>
+
+
+                            </LinearLayout>
+                            <!-- Representación de una sóla línea-->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginTop="2dp">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_weight="0.25"
+                                    android:layout_height="wrap_content"
+                                    android:text="Medio"
+                                    android:layout_gravity="end"
+                                    android:textSize="11dp"
+                                    android:paddingTop="3dp"
+                                    android:textStyle="italic"
+                                    android:textAlignment="textEnd" />
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_weight="0.65"
+                                    android:layout_height="12dp"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginRight="10dp"
+                                    android:layout_marginTop="3dp"
+                                    android:background="#e9e9e9">
+
+                                    <View
+                                        android:layout_width="25dp"
+                                        android:layout_height="9dp"
+                                        android:layout_marginTop="1.5dp"
+                                        android:background="#f05a29"/>
+
+                                </LinearLayout>
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="2"
+                                    android:textSize="11dp"
+                                    android:paddingTop="2dp"
+                                    android:layout_weight="0.1"
+                                    android:textColor="#f05a29"/>
+
+
+                            </LinearLayout>
+                            <!-- Representación de una sóla línea-->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginTop="2dp">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_weight="0.25"
+                                    android:layout_height="wrap_content"
+                                    android:text="Medio Alto"
+                                    android:layout_gravity="end"
+                                    android:textSize="11dp"
+                                    android:paddingTop="3dp"
+                                    android:textAlignment="textEnd"
+                                    android:textStyle="italic"/>
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_weight="0.65"
+                                    android:layout_height="12dp"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginRight="10dp"
+                                    android:layout_marginTop="3dp"
+                                    android:background="#e9e9e9">
+
+                                    <View
+                                        android:layout_width="100dp"
+                                        android:layout_height="9dp"
+                                        android:layout_marginTop="1.5dp"
+                                        android:background="#f05a29"/>
+
+                                </LinearLayout>
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="10"
+                                    android:textSize="11dp"
+                                    android:paddingTop="2dp"
+                                    android:layout_weight="0.1"
+                                    android:textColor="#f05a29"/>
+
+
+                            </LinearLayout>
+                            <!-- Representación de una sóla línea-->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginTop="2dp">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_weight="0.25"
+                                    android:layout_height="wrap_content"
+                                    android:text="Alto"
+                                    android:layout_gravity="end"
+                                    android:textSize="11dp"
+                                    android:paddingTop="3dp"
+                                    android:textAlignment="textEnd"
+                                    android:textStyle="italic"/>
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_weight="0.65"
+                                    android:layout_height="12dp"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginRight="10dp"
+                                    android:layout_marginTop="3dp"
+                                    android:background="#e9e9e9">
+
+                                    <View
+                                        android:layout_width="0dp"
+                                        android:layout_height="9dp"
+                                        android:layout_marginTop="1.5dp"
+                                        android:background="#f05a29"/>
+
+                                </LinearLayout>
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="0"
+                                    android:textSize="11dp"
+                                    android:paddingTop="2dp"
+                                    android:layout_weight="0.1"/>
+
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+
+
+                    </LinearLayout>
+
+                    <!-- Componente de la derecha -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="70dp"
+                        android:layout_weight="0.25"
+                        android:background="@drawable/home_item_shadow"
+                        android:layout_marginTop="65dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="10%"
+                            android:textSize="29dp"
+                            android:textAlignment="center"
+                            android:gravity="center_vertical"
+                            android:textStyle="bold"
+                            android:textColor="#f05a29"
+                            />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="7dp">
+
+                    <!-- Componente de la izquierda -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="135dp"
+                        android:layout_weight=".85"
+                        android:layout_marginRight="5dp"
+                        android:background="@drawable/home_item_shadow"
+                        android:orientation="vertical">
+
+
+                        <!-- Titulo superior -->
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="20dp"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginLeft="4dp"
+                            android:layout_marginRight="4dp"
+                            android:layout_marginBottom="4dp">
+
+                            <!--ícono izquierda-->
+                            <LinearLayout
+                                android:layout_width="25dp"
+                                android:layout_height="18dp"
+                                android:background="@drawable/border_radius"
+                                android:backgroundTint="#f05a29"
+                                android:id="@+id/categoryBox3">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:text="GS"
+                                    android:textAlignment="center"
+                                    android:textSize="12sp"
+                                    android:textColor="#fff"
+                                    android:paddingTop="1dp" />
+
+                            </LinearLayout>
+                            <!-- título -->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Grasas Saturadas"
+                                android:textSize="12sp"
+                                android:layout_marginLeft="30dp"
+                                android:layout_marginTop="2dp"/>
+                            <!-- ícono derecha-->
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:background="@drawable/ic_action_more_info"
+                                android:backgroundTint="#d0d2d3"
+                                android:layout_alignParentRight="true"/>
+
+
+                        </RelativeLayout>
+
+                        <!-- histograma -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+
+                            <!-- Representación de una sóla línea-->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginTop="2dp">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_weight="0.25"
+                                    android:layout_height="wrap_content"
+                                    android:text="Bajo"
+                                    android:layout_gravity="end"
+                                    android:textSize="11dp"
+                                    android:paddingTop="3dp"
+                                    android:textAlignment="textEnd"
+                                    android:textStyle="italic"/>
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_weight="0.65"
+                                    android:layout_height="12dp"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginRight="10dp"
+                                    android:layout_marginTop="3dp"
+                                    android:background="#e9e9e9">
+
+                                    <View
+                                        android:layout_width="25dp"
+                                        android:layout_height="9dp"
+                                        android:layout_marginTop="1.5dp"
+                                        android:background="#f05a29"/>
+
+                                </LinearLayout>
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="2"
+                                    android:textSize="11dp"
+                                    android:paddingTop="2dp"
+                                    android:layout_weight="0.1"
+                                    android:textColor="#f05a29"/>
+
+
+                            </LinearLayout>
+                            <!-- Representación de una sóla línea-->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginTop="2dp">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_weight="0.25"
+                                    android:layout_height="wrap_content"
+                                    android:text="Medio Bajo"
+                                    android:layout_gravity="end"
+                                    android:textSize="11dp"
+                                    android:paddingTop="3dp"
+                                    android:textAlignment="textEnd"
+                                    android:textStyle="italic"/>
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_weight="0.65"
+                                    android:layout_height="12dp"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginRight="10dp"
+                                    android:layout_marginTop="3dp"
+                                    android:background="#e9e9e9">
+
+                                    <View
+                                        android:layout_width="25dp"
+                                        android:layout_height="9dp"
+                                        android:layout_marginTop="1.5dp"
+                                        android:background="#f05a29"/>
+
+                                </LinearLayout>
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="2"
+                                    android:textSize="11dp"
+                                    android:paddingTop="2dp"
+                                    android:layout_weight="0.1"
+                                    android:textColor="#f05a29"/>
+
+
+                            </LinearLayout>
+                            <!-- Representación de una sóla línea-->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginTop="2dp">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_weight="0.25"
+                                    android:layout_height="wrap_content"
+                                    android:text="Medio"
+                                    android:layout_gravity="end"
+                                    android:textSize="11dp"
+                                    android:paddingTop="3dp"
+                                    android:textStyle="italic"
+                                    android:textAlignment="textEnd" />
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_weight="0.65"
+                                    android:layout_height="12dp"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginRight="10dp"
+                                    android:layout_marginTop="3dp"
+                                    android:background="#e9e9e9">
+
+                                    <View
+                                        android:layout_width="25dp"
+                                        android:layout_height="9dp"
+                                        android:layout_marginTop="1.5dp"
+                                        android:background="#f05a29"/>
+
+                                </LinearLayout>
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="2"
+                                    android:textSize="11dp"
+                                    android:paddingTop="2dp"
+                                    android:layout_weight="0.1"
+                                    android:textColor="#f05a29"/>
+
+
+                            </LinearLayout>
+                            <!-- Representación de una sóla línea-->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginTop="2dp">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_weight="0.25"
+                                    android:layout_height="wrap_content"
+                                    android:text="Medio Alto"
+                                    android:layout_gravity="end"
+                                    android:textSize="11dp"
+                                    android:paddingTop="3dp"
+                                    android:textAlignment="textEnd"
+                                    android:textStyle="italic"/>
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_weight="0.65"
+                                    android:layout_height="12dp"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginRight="10dp"
+                                    android:layout_marginTop="3dp"
+                                    android:background="#e9e9e9">
+
+                                    <View
+                                        android:layout_width="100dp"
+                                        android:layout_height="9dp"
+                                        android:layout_marginTop="1.5dp"
+                                        android:background="#f05a29"/>
+
+                                </LinearLayout>
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="10"
+                                    android:textSize="11dp"
+                                    android:paddingTop="2dp"
+                                    android:layout_weight="0.1"
+                                    android:textColor="#f05a29"/>
+
+
+                            </LinearLayout>
+                            <!-- Representación de una sóla línea-->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginTop="2dp">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_weight="0.25"
+                                    android:layout_height="wrap_content"
+                                    android:text="Alto"
+                                    android:layout_gravity="end"
+                                    android:textSize="11dp"
+                                    android:paddingTop="3dp"
+                                    android:textAlignment="textEnd"
+                                    android:textStyle="italic"/>
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_weight="0.65"
+                                    android:layout_height="12dp"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginRight="10dp"
+                                    android:layout_marginTop="3dp"
+                                    android:background="#e9e9e9">
+
+                                    <View
+                                        android:layout_width="0dp"
+                                        android:layout_height="9dp"
+                                        android:layout_marginTop="1.5dp"
+                                        android:background="#f05a29"/>
+
+                                </LinearLayout>
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="0"
+                                    android:textSize="11dp"
+                                    android:paddingTop="2dp"
+                                    android:layout_weight="0.1"/>
+
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+
+
+                    </LinearLayout>
+
+                    <!-- Componente de la derecha -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="70dp"
+                        android:layout_weight="0.25"
+                        android:background="@drawable/home_item_shadow"
+                        android:layout_marginTop="65dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="10%"
+                            android:textSize="29dp"
+                            android:textAlignment="center"
+                            android:gravity="center_vertical"
+                            android:textStyle="bold"
+                            android:textColor="#f05a29"
+                            />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="7dp">
+
+                    <!-- Componente de la izquierda -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="135dp"
+                        android:layout_weight=".85"
+                        android:layout_marginRight="5dp"
+                        android:background="@drawable/home_item_shadow"
+                        android:orientation="vertical">
+
+
+                        <!-- Titulo superior -->
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="20dp"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginLeft="4dp"
+                            android:layout_marginRight="4dp"
+                            android:layout_marginBottom="4dp">
+
+                            <!--ícono izquierda-->
+                            <LinearLayout
+                                android:layout_width="25dp"
+                                android:layout_height="18dp"
+                                android:background="@drawable/border_radius"
+                                android:backgroundTint="#f05a29"
+                                android:id="@+id/categoryBox4">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:text="CH"
+                                    android:textAlignment="center"
+                                    android:textSize="12sp"
+                                    android:textColor="#fff"
+                                    android:paddingTop="1dp" />
+
+                            </LinearLayout>
+                            <!-- título -->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Carbohidratos"
+                                android:textSize="12sp"
+                                android:layout_marginLeft="30dp"
+                                android:layout_marginTop="2dp"/>
+                            <!-- ícono derecha-->
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:background="@drawable/ic_action_more_info"
+                                android:backgroundTint="#d0d2d3"
+                                android:layout_alignParentRight="true"/>
+
+
+                        </RelativeLayout>
+
+                        <!-- histograma -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+
+                            <!-- Representación de una sóla línea-->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginTop="2dp">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_weight="0.25"
+                                    android:layout_height="wrap_content"
+                                    android:text="Bajo"
+                                    android:layout_gravity="end"
+                                    android:textSize="11dp"
+                                    android:paddingTop="3dp"
+                                    android:textAlignment="textEnd"
+                                    android:textStyle="italic"/>
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_weight="0.65"
+                                    android:layout_height="12dp"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginRight="10dp"
+                                    android:layout_marginTop="3dp"
+                                    android:background="#e9e9e9">
+
+                                    <View
+                                        android:layout_width="25dp"
+                                        android:layout_height="9dp"
+                                        android:layout_marginTop="1.5dp"
+                                        android:background="#f05a29"/>
+
+                                </LinearLayout>
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="2"
+                                    android:textSize="11dp"
+                                    android:paddingTop="2dp"
+                                    android:layout_weight="0.1"
+                                    android:textColor="#f05a29"/>
+
+
+                            </LinearLayout>
+                            <!-- Representación de una sóla línea-->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginTop="2dp">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_weight="0.25"
+                                    android:layout_height="wrap_content"
+                                    android:text="Medio Bajo"
+                                    android:layout_gravity="end"
+                                    android:textSize="11dp"
+                                    android:paddingTop="3dp"
+                                    android:textAlignment="textEnd"
+                                    android:textStyle="italic"/>
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_weight="0.65"
+                                    android:layout_height="12dp"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginRight="10dp"
+                                    android:layout_marginTop="3dp"
+                                    android:background="#e9e9e9">
+
+                                    <View
+                                        android:layout_width="25dp"
+                                        android:layout_height="9dp"
+                                        android:layout_marginTop="1.5dp"
+                                        android:background="#f05a29"/>
+
+                                </LinearLayout>
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="2"
+                                    android:textSize="11dp"
+                                    android:paddingTop="2dp"
+                                    android:layout_weight="0.1"
+                                    android:textColor="#f05a29"/>
+
+
+                            </LinearLayout>
+                            <!-- Representación de una sóla línea-->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginTop="2dp">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_weight="0.25"
+                                    android:layout_height="wrap_content"
+                                    android:text="Medio"
+                                    android:layout_gravity="end"
+                                    android:textSize="11dp"
+                                    android:paddingTop="3dp"
+                                    android:textStyle="italic"
+                                    android:textAlignment="textEnd" />
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_weight="0.65"
+                                    android:layout_height="12dp"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginRight="10dp"
+                                    android:layout_marginTop="3dp"
+                                    android:background="#e9e9e9">
+
+                                    <View
+                                        android:layout_width="25dp"
+                                        android:layout_height="9dp"
+                                        android:layout_marginTop="1.5dp"
+                                        android:background="#f05a29"/>
+
+                                </LinearLayout>
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="2"
+                                    android:textSize="11dp"
+                                    android:paddingTop="2dp"
+                                    android:layout_weight="0.1"
+                                    android:textColor="#f05a29"/>
+
+
+                            </LinearLayout>
+                            <!-- Representación de una sóla línea-->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginTop="2dp">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_weight="0.25"
+                                    android:layout_height="wrap_content"
+                                    android:text="Medio Alto"
+                                    android:layout_gravity="end"
+                                    android:textSize="11dp"
+                                    android:paddingTop="3dp"
+                                    android:textAlignment="textEnd"
+                                    android:textStyle="italic"/>
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_weight="0.65"
+                                    android:layout_height="12dp"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginRight="10dp"
+                                    android:layout_marginTop="3dp"
+                                    android:background="#e9e9e9">
+
+                                    <View
+                                        android:layout_width="100dp"
+                                        android:layout_height="9dp"
+                                        android:layout_marginTop="1.5dp"
+                                        android:background="#f05a29"/>
+
+                                </LinearLayout>
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="10"
+                                    android:textSize="11dp"
+                                    android:paddingTop="2dp"
+                                    android:layout_weight="0.1"
+                                    android:textColor="#f05a29"/>
+
+
+                            </LinearLayout>
+                            <!-- Representación de una sóla línea-->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginTop="2dp">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_weight="0.25"
+                                    android:layout_height="wrap_content"
+                                    android:text="Alto"
+                                    android:layout_gravity="end"
+                                    android:textSize="11dp"
+                                    android:paddingTop="3dp"
+                                    android:textAlignment="textEnd"
+                                    android:textStyle="italic"/>
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_weight="0.65"
+                                    android:layout_height="12dp"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginRight="10dp"
+                                    android:layout_marginTop="3dp"
+                                    android:background="#e9e9e9">
+
+                                    <View
+                                        android:layout_width="0dp"
+                                        android:layout_height="9dp"
+                                        android:layout_marginTop="1.5dp"
+                                        android:background="#f05a29"/>
+
+                                </LinearLayout>
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="0"
+                                    android:textSize="11dp"
+                                    android:paddingTop="2dp"
+                                    android:layout_weight="0.1"/>
+
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+
+
+                    </LinearLayout>
+
+                    <!-- Componente de la derecha -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="70dp"
+                        android:layout_weight="0.25"
+                        android:background="@drawable/home_item_shadow"
+                        android:layout_marginTop="65dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="10%"
+                            android:textSize="29dp"
+                            android:textAlignment="center"
+                            android:gravity="center_vertical"
+                            android:textStyle="bold"
+                            android:textColor="#f05a29"
+                            />
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
 
+            </LinearLayout>
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="12dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Actividades"
+                    android:gravity="start"
+                    android:textColor="#a6a8ab"
+                    android:layout_marginLeft="13dp"
+                    android:textStyle="bold"
+                    />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="% General"
+                    android:gravity="end"
+                    android:textColor="#a6a8ab"
+                    android:textStyle="bold"
+                    android:layout_marginRight="13dp"/>
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#c7c8ca"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
+                android:layout_marginTop="2dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
+                android:orientation="vertical">
+
+                <!-- Sección de fichas -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="7dp"
+                    android:layout_marginBottom="60dp">
+
+                    <!-- Componente de la izquierda -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="135dp"
+                        android:layout_weight=".85"
+                        android:layout_marginRight="5dp"
+                        android:background="@drawable/home_item_shadow"
+                        android:orientation="vertical">
+
+
+                        <!-- Titulo superior -->
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="20dp"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginLeft="4dp"
+                            android:layout_marginRight="4dp"
+                            android:layout_marginBottom="4dp">
+
+                            <!--ícono izquierda-->
+                            <LinearLayout
+                                android:layout_width="25dp"
+                                android:layout_height="18dp"
+                                android:background="@drawable/border_radius"
+                                android:backgroundTint="#00adee"
+                                android:id="@+id/categoryBoxActivity">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:text="AF"
+                                    android:textAlignment="center"
+                                    android:textSize="12sp"
+                                    android:textColor="#fff"
+                                    android:paddingTop="1dp" />
+
+                            </LinearLayout>
+                            <!-- título -->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Procesados Industrialmente"
+                                android:textSize="12sp"
+                                android:layout_marginLeft="30dp"
+                                android:layout_marginTop="2dp"/>
+                            <!-- ícono derecha-->
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:background="@drawable/ic_action_more_info"
+                                android:backgroundTint="#d0d2d3"
+                                android:layout_alignParentRight="true"/>
+
+
+                        </RelativeLayout>
+
+                        <!-- histograma -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+
+                            <!-- Representación de una sóla línea-->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginTop="2dp">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_weight="0.25"
+                                    android:layout_height="wrap_content"
+                                    android:text="Bajo"
+                                    android:layout_gravity="end"
+                                    android:textSize="11dp"
+                                    android:paddingTop="3dp"
+                                    android:textAlignment="textEnd"
+                                    android:textStyle="italic"/>
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_weight="0.65"
+                                    android:layout_height="12dp"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginRight="10dp"
+                                    android:layout_marginTop="3dp"
+                                    android:background="#e9e9e9">
+
+                                    <View
+                                        android:layout_width="25dp"
+                                        android:layout_height="9dp"
+                                        android:layout_marginTop="1.5dp"
+                                        android:background="#00adee"/>
+
+                                </LinearLayout>
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="2"
+                                    android:textSize="11dp"
+                                    android:paddingTop="2dp"
+                                    android:layout_weight="0.1"
+                                    android:textColor="#f05a29"/>
+
+
+                            </LinearLayout>
+                            <!-- Representación de una sóla línea-->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginTop="2dp">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_weight="0.25"
+                                    android:layout_height="wrap_content"
+                                    android:text="Medio Bajo"
+                                    android:layout_gravity="end"
+                                    android:textSize="11dp"
+                                    android:paddingTop="3dp"
+                                    android:textAlignment="textEnd"
+                                    android:textStyle="italic"/>
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_weight="0.65"
+                                    android:layout_height="12dp"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginRight="10dp"
+                                    android:layout_marginTop="3dp"
+                                    android:background="#e9e9e9">
+
+                                    <View
+                                        android:layout_width="25dp"
+                                        android:layout_height="9dp"
+                                        android:layout_marginTop="1.5dp"
+                                        android:background="#00adee"/>
+
+                                </LinearLayout>
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="2"
+                                    android:textSize="11dp"
+                                    android:paddingTop="2dp"
+                                    android:layout_weight="0.1"
+                                    android:textColor="#f05a29"/>
+
+
+                            </LinearLayout>
+                            <!-- Representación de una sóla línea-->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginTop="2dp">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_weight="0.25"
+                                    android:layout_height="wrap_content"
+                                    android:text="Medio"
+                                    android:layout_gravity="end"
+                                    android:textSize="11dp"
+                                    android:paddingTop="3dp"
+                                    android:textStyle="italic"
+                                    android:textAlignment="textEnd" />
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_weight="0.65"
+                                    android:layout_height="12dp"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginRight="10dp"
+                                    android:layout_marginTop="3dp"
+                                    android:background="#e9e9e9">
+
+                                    <View
+                                        android:layout_width="25dp"
+                                        android:layout_height="9dp"
+                                        android:layout_marginTop="1.5dp"
+                                        android:background="#00adee"/>
+
+                                </LinearLayout>
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="2"
+                                    android:textSize="11dp"
+                                    android:paddingTop="2dp"
+                                    android:layout_weight="0.1"
+                                    android:textColor="#f05a29"/>
+
+
+                            </LinearLayout>
+                            <!-- Representación de una sóla línea-->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginTop="2dp">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_weight="0.25"
+                                    android:layout_height="wrap_content"
+                                    android:text="Medio Alto"
+                                    android:layout_gravity="end"
+                                    android:textSize="11dp"
+                                    android:paddingTop="3dp"
+                                    android:textAlignment="textEnd"
+                                    android:textStyle="italic"/>
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_weight="0.65"
+                                    android:layout_height="12dp"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginRight="10dp"
+                                    android:layout_marginTop="3dp"
+                                    android:background="#e9e9e9">
+
+                                    <View
+                                        android:layout_width="100dp"
+                                        android:layout_height="9dp"
+                                        android:layout_marginTop="1.5dp"
+                                        android:background="#00adee"/>
+
+                                </LinearLayout>
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="10"
+                                    android:textSize="11dp"
+                                    android:paddingTop="2dp"
+                                    android:layout_weight="0.1"
+                                    android:textColor="#f05a29"/>
+
+
+                            </LinearLayout>
+                            <!-- Representación de una sóla línea-->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginTop="2dp">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_weight="0.25"
+                                    android:layout_height="wrap_content"
+                                    android:text="Alto"
+                                    android:layout_gravity="end"
+                                    android:textSize="11dp"
+                                    android:paddingTop="3dp"
+                                    android:textAlignment="textEnd"
+                                    android:textStyle="italic"/>
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_weight="0.65"
+                                    android:layout_height="12dp"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginRight="10dp"
+                                    android:layout_marginTop="3dp"
+                                    android:background="#e9e9e9">
+
+                                    <View
+                                        android:layout_width="0dp"
+                                        android:layout_height="9dp"
+                                        android:layout_marginTop="1.5dp"
+                                        android:background="#f05a29"/>
+
+                                </LinearLayout>
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="0"
+                                    android:textSize="11dp"
+                                    android:paddingTop="2dp"
+                                    android:layout_weight="0.1"/>
+
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+
+
+                    </LinearLayout>
+
+                    <!-- Componente de la derecha -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="70dp"
+                        android:layout_weight="0.25"
+                        android:background="@drawable/home_item_shadow"
+                        android:layout_marginTop="65dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="10%"
+                            android:textSize="29dp"
+                            android:textAlignment="center"
+                            android:gravity="center_vertical"
+                            android:textStyle="bold"
+                            android:textColor="#00adee"
+                            />
+
+                    </LinearLayout>
+
+                </LinearLayout>
 
 
             </LinearLayout>
+
 
 
 

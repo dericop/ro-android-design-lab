@@ -29,6 +29,7 @@ public class WelcomeActivity extends AppCompatActivity {
     private Button btnSkip, btnNext;
     private PrefManager prefManager;
 
+    public static String CURRENT_APP_VERSION = "R"; //Existen dos opciones "A", "R"
 
 
     @Override
