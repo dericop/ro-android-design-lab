@@ -22,7 +22,7 @@
             android:orientation="vertical">
 
             <ImageView
-                android:layout_width="@dimen/img_width_height"
+                android:layout_width="120dp"
                 android:layout_height="@dimen/img_width_height"
                 android:src="@drawable/ic_brand"
                 android:tint="#607d8b"/>

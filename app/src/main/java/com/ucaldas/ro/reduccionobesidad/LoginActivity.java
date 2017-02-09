@@ -39,20 +39,31 @@ public class LoginActivity extends AppCompatActivity implements
     private FirebaseAuth.AuthStateListener mAuthListener;
     private static final int RC_SIGN_IN = 9001;
     private ProgressDialog progress;
+    private boolean buttonAgreeIsOK;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        SignInButton signInButton = (SignInButton) findViewById(R.id.sign_in_button);
+        buttonAgreeIsOK = false;
+
+        final SignInButton signInButton = (SignInButton) findViewById(R.id.sign_in_button);
+        signInButton.setEnabled(false);
         signInButton.setSize(SignInButton.SIZE_WIDE);
 
         TextView btnConditions = (TextView) findViewById(R.id.btn_conditions);
         btnConditions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+            if(buttonAgreeIsOK){
+                buttonAgreeIsOK = false;
+                signInButton.setEnabled(false);
+            }else{
+                buttonAgreeIsOK = true;
+                signInButton.setEnabled(true);
                 startActivity(new Intent(getBaseContext(), TermsAndConditions.class));
+            }
             }
         });
 

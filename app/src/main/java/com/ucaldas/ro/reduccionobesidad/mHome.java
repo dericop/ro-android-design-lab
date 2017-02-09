@@ -50,6 +50,7 @@ public class mHome extends AppCompatActivity
     private ViewPager viewPager;
 
     private static Context context;
+    private static String CURRENT_APP_VERSION = "A"; //Existen dos opciones "A", "R"
 
     /* Atributos para el control de usuarios */
     static FirebaseUser user;
@@ -167,7 +168,12 @@ public class mHome extends AppCompatActivity
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new Home(), "Inicio");
         adapter.addFragment(new MyItems(), "Mis Items");
-        adapter.addFragment(new Simulation(), "Simulación");
+
+        if(mHome.CURRENT_APP_VERSION.equals("R"))
+            adapter.addFragment(new Simulation(), "Simulación");
+        else
+            adapter.addFragment(new Simulationv2(), "Simulación");
+
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(2);
 
