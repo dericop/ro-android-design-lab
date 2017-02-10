@@ -5,7 +5,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="150dp"
         android:layout_marginLeft="2dp"
         android:layout_marginRight="2dp"
         android:layout_marginTop="2dp"
@@ -29,32 +29,23 @@
                     android:scaleType="center"
                     android:id="@+id/thumbnail"/>
 
-                <LinearLayout
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:background="@drawable/circle_bad"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginLeft="4dp"
-                    android:gravity="left"
-                    android:id="@+id/result_item">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:textAlignment="center"
-                        android:textSize="20dp"
-                        android:text="3"
-                        android:gravity="center"
-                        android:layout_marginTop="-2dp"
-                        android:layout_marginLeft="2dp"
-                        android:textColor="#fff"
-                        android:id="@+id/txt_average_data"/>
-
-                </LinearLayout>
-
-
             </RelativeLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorAccent">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Sedentario"
+                android:layout_gravity="center"
+                android:textAlignment="center"
+                android:textColor="#fff"
+                android:textSize="11dp"/>
 
         </LinearLayout>
 
@@ -65,7 +56,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="hola"
+                android:text=""
                 android:maxLines="1"
                 android:textColor="#999a9a"
                 android:textSize="12dp"

@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -27,7 +28,7 @@ public class HomeAdapter extends ArrayAdapter<Post> {
     public HomeAdapter(Context context, List<Post> objects) {
         super(context, 0, objects);
         this.mContext = context;
-    }
+    }  
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -35,14 +36,27 @@ public class HomeAdapter extends ArrayAdapter<Post> {
         LayoutInflater inflater = (LayoutInflater) getContext()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
+        final Post post = getItem(position);
+
         // ¿Existe el view actual?
         if (null == convertView) {
 
             if(WelcomeActivity.CURRENT_APP_VERSION.equals("R")){
-                convertView = inflater.inflate(
-                        R.layout.list_home_item_reflexive,
-                        parent,
-                        false);
+
+                List foodList = Arrays.asList(mContext.getResources().getStringArray(R.array.new_post_food_categories));
+
+                if(foodList.contains(post.getmCategory())){
+                    convertView = inflater.inflate(
+                            R.layout.list_home_item_reflexive,
+                            parent,
+                            false);
+                }else{
+                    convertView = inflater.inflate(
+                            R.layout.list_home_item_reflexive_activity,
+                            parent,
+                            false);
+                }
+
             }else{
                 convertView = inflater.inflate(
                         R.layout.list_home_item,
@@ -61,7 +75,6 @@ public class HomeAdapter extends ArrayAdapter<Post> {
         TextView txtAverage = (TextView) convertView.findViewById(R.id.txt_average_data);
         TextView lbl_too = (TextView) convertView.findViewById(R.id.lbl_too);
 
-        final Post post = getItem(position);
 
         // Setup
         Glide.with(getContext()).load(post.getmImage()).into(avatar);

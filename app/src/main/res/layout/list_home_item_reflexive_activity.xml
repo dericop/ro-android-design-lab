@@ -33,92 +33,23 @@
                 android:background="@color/colorPrimary"
                 android:scaleType="centerCrop"/>
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+            <LinearLayout
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:background="@color/colorAccent"
                 android:layout_marginLeft="10dp"
-                android:layout_marginRight="16dp">
+                android:layout_marginTop="10dp">
 
-                <LinearLayout
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="4dp">
+                    android:text="Sedentario"
+                    android:textColor="#fff"
+                    android:textSize="17sp"
+                    android:layout_gravity="center"
+                    android:textAlignment="center"/>
 
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_weight="0.25"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/border_radius_home_cal"
-                        android:layout_marginBottom="4dp"
-                        android:layout_marginRight="4dp">
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="10dp"
-                            android:background="@drawable/border_radius_items_progress"
-                            android:layout_gravity="bottom"
-                            android:layout_marginLeft="1dp"
-                            android:layout_marginRight="1dp"/>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_weight="0.25"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/border_radius_home_cal"
-                        android:layout_marginBottom="4dp"
-                        android:layout_marginRight="4dp">
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="20dp"
-                            android:background="@drawable/border_radius_items_progress"
-                            android:layout_gravity="bottom"
-                            android:layout_marginLeft="1dp"
-                            android:layout_marginRight="1dp"/>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_weight="0.25"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/border_radius_home_cal"
-                        android:layout_marginBottom="4dp"
-                        android:layout_marginRight="4dp">
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="10dp"
-                            android:background="@drawable/border_radius_items_progress"
-                            android:layout_gravity="bottom"
-                            android:layout_marginLeft="1dp"
-                            android:layout_marginRight="1dp"/>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_weight="0.25"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/border_radius_home_cal"
-                        android:layout_marginBottom="4dp">
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="30dp"
-                            android:background="@drawable/border_radius_items_progress"
-                            android:layout_marginLeft="1dp"
-                            android:layout_marginRight="1dp"
-                            android:layout_gravity="bottom"/>
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-            </RelativeLayout>
+            </LinearLayout>
 
         </LinearLayout>
 

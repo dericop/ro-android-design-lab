@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#44494e</color>
 
     <color name="colorAccent">#00adee</color>
-    <!--<color name="colorReflexiveAccent">#00adee</color> -->
+    <!--<color name="colorAccent">#f6931e</color> -->
     <color name="textColorPrimary">#FFFFFF</color>
     <color name="windowBackground">#FFFFFF</color>
     <color name="navigationBarColor">#000000</color>

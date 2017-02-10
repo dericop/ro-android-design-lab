@@ -31,7 +31,6 @@ public class WelcomeActivity extends AppCompatActivity {
 
     public static String CURRENT_APP_VERSION = "R"; //Existen dos opciones "A", "R"
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
