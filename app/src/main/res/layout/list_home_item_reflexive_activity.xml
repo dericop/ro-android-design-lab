@@ -35,19 +35,21 @@
 
             <LinearLayout
                 android:layout_width="120dp"
-                android:layout_height="wrap_content"
+                android:layout_height="20dp"
                 android:background="@color/colorAccent"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="10dp"
+                android:id="@+id/container_txt_activity_result">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="Sedentario"
                     android:textColor="#fff"
-                    android:textSize="17sp"
+                    android:textSize="12sp"
                     android:layout_gravity="center"
-                    android:textAlignment="center"/>
+                    android:textAlignment="center"
+                    android:id="@+id/txt_activity_result"/>
 
             </LinearLayout>
 

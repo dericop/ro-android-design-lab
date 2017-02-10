@@ -28,7 +28,7 @@ public class HomeAdapter extends ArrayAdapter<Post> {
     public HomeAdapter(Context context, List<Post> objects) {
         super(context, 0, objects);
         this.mContext = context;
-    }  
+    }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -38,32 +38,31 @@ public class HomeAdapter extends ArrayAdapter<Post> {
 
         final Post post = getItem(position);
 
+        Log.v("DBT", post.getmCategory());
         // ¿Existe el view actual?
-        if (null == convertView) {
+        //if (null == convertView) {
+        List foodList = Arrays.asList(mContext.getResources().getStringArray(R.array.new_post_food_categories));
 
-            if(WelcomeActivity.CURRENT_APP_VERSION.equals("R")){
+        if(WelcomeActivity.CURRENT_APP_VERSION.equals("R")){
 
-                List foodList = Arrays.asList(mContext.getResources().getStringArray(R.array.new_post_food_categories));
 
-                if(foodList.contains(post.getmCategory())){
-                    convertView = inflater.inflate(
-                            R.layout.list_home_item_reflexive,
-                            parent,
-                            false);
-                }else{
-                    convertView = inflater.inflate(
-                            R.layout.list_home_item_reflexive_activity,
-                            parent,
-                            false);
-                }
-
+            if(foodList.contains(post.getmCategory())){
+                convertView = inflater.inflate(
+                        R.layout.list_home_item_reflexive,
+                        parent,
+                        false);
             }else{
                 convertView = inflater.inflate(
-                        R.layout.list_home_item,
+                        R.layout.list_home_item_reflexive_activity,
                         parent,
                         false);
             }
 
+        }else{
+            convertView = inflater.inflate(
+                    R.layout.list_home_item,
+                    parent,
+                    false);
         }
 
         // Referencias UI.
@@ -74,6 +73,8 @@ public class HomeAdapter extends ArrayAdapter<Post> {
         LinearLayout resultItem = (LinearLayout) convertView.findViewById(R.id.result_item);
         TextView txtAverage = (TextView) convertView.findViewById(R.id.txt_average_data);
         TextView lbl_too = (TextView) convertView.findViewById(R.id.lbl_too);
+        TextView txtActivityResult = (TextView) convertView.findViewById(R.id.txt_activity_result);
+        LinearLayout containerActivityResult = (LinearLayout) convertView.findViewById(R.id.container_txt_activity_result);
 
 
         // Setup
@@ -94,6 +95,11 @@ public class HomeAdapter extends ArrayAdapter<Post> {
             if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
                 txtAverage.setVisibility(View.INVISIBLE);
                 resultItem.setBackgroundDrawable(getContext().getResources().getDrawable(R.drawable.circle_clock));
+            }else{
+                if(!foodList.contains(post.getmCategory())){
+                    txtActivityResult.setText("Pendiente");
+                    containerActivityResult.setBackgroundColor(mContext.getResources().getColor(R.color.activity_wait_color));
+                }
             }
 
         }else{
@@ -112,6 +118,27 @@ public class HomeAdapter extends ArrayAdapter<Post> {
                         resultItem.setBackgroundDrawable(getContext().getResources().getDrawable(R.drawable.circle_good));
                         break;
                 }
+            }else{
+                if(!foodList.contains(post.getmCategory())){
+                    containerActivityResult.setBackgroundColor(mContext.getResources().getColor(R.color.colorAccent));
+                    int intResult = (int)post.getmAverage();
+
+                    if(intResult == 1){
+                        txtActivityResult.setText("Sedentario");
+                    }else if(intResult>1 && intResult<3){
+                        txtActivityResult.setText("Bajo");
+                    }else if(intResult>=3 && intResult<=4){
+                        txtActivityResult.setText("Medio Bajo");
+                    }else if(intResult>4 && intResult<=6){
+                        txtActivityResult.setText("Medio");
+                    }else if(intResult>6 && intResult<=8){
+                        txtActivityResult.setText("Medio Alto");
+                    }else if(intResult>8 && intResult<=10){
+                        txtActivityResult.setText("Alto");
+                    }
+
+                }
+
             }
 
         }

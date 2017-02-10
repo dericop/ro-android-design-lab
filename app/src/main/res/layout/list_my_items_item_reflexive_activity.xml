@@ -36,7 +36,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorAccent">
+            android:background="@color/colorAccent"
+            android:id="@+id/container_txt_activity_result">
 
             <TextView
                 android:layout_width="match_parent"
@@ -45,7 +46,8 @@
                 android:layout_gravity="center"
                 android:textAlignment="center"
                 android:textColor="#fff"
-                android:textSize="11dp"/>
+                android:textSize="11dp"
+                android:id="@+id/txt_activity_result"/>
 
         </LinearLayout>
 

@@ -62,6 +62,7 @@
     <color name="obesity_1">#ee4136</color>
     <color name="overweight">#faaf40</color>
     <color name="normal_weight">#8cc53f</color>
+    <color name="activity_wait_color">#e5e6e7</color>
 
 
 </resources>

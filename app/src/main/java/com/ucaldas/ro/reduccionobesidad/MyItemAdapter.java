@@ -57,14 +57,15 @@ public class MyItemAdapter extends BaseAdapter {
 
             // Lead actual.
             Post post = getItem(i);
+            List foodList = Arrays.asList(mContext.getResources().getStringArray(R.array.new_post_food_categories));
 
             if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
 
                 convertView = inflater.inflate(R.layout.list_my_items_item, null);
             }else{
 
-                List foodList = Arrays.asList(mContext.getResources().getStringArray(R.array.new_post_food_categories));
-                List activityList = Arrays.asList(mContext.getResources().getStringArray(R.array.new_post_activity_categories));
+
+
                 if(foodList.contains(post.getmCategory())){
                     convertView = inflater.inflate(R.layout.list_my_items_item_reflexive, null);
                 }else{
@@ -77,6 +78,8 @@ public class MyItemAdapter extends BaseAdapter {
             TextView name = (TextView) convertView.findViewById(R.id.title);
             LinearLayout resultItem = (LinearLayout) convertView.findViewById(R.id.result_item);
             TextView txtAverage = (TextView) convertView.findViewById(R.id.txt_average_data);
+            TextView txtActivityResult = (TextView) convertView.findViewById(R.id.txt_activity_result);
+            LinearLayout containerActivityResult = (LinearLayout) convertView.findViewById(R.id.container_txt_activity_result);
 
 
             // Setup
@@ -88,6 +91,11 @@ public class MyItemAdapter extends BaseAdapter {
                 if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
                     txtAverage.setVisibility(View.INVISIBLE);
                     resultItem.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.circle_clock));
+                }else{
+                    if(!foodList.contains(post.getmCategory())){
+                        txtActivityResult.setText("Pendiente");
+                        containerActivityResult.setBackgroundColor(mContext.getResources().getColor(R.color.activity_wait_color));
+                    }
                 }
 
             }else{
@@ -106,6 +114,28 @@ public class MyItemAdapter extends BaseAdapter {
                             resultItem.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.circle_good));
                             break;
                     }
+                }else{
+
+                    if(!foodList.contains(post.getmCategory())){
+                        containerActivityResult.setBackgroundColor(mContext.getResources().getColor(R.color.colorAccent));
+                        int intResult = (int)result;
+
+                        if(intResult == 1){
+                            txtActivityResult.setText("Sedentario");
+                        }else if(intResult>1 && intResult<3){
+                            txtActivityResult.setText("Bajo");
+                        }else if(intResult>=3 && intResult<=4){
+                            txtActivityResult.setText("Medio Bajo");
+                        }else if(intResult>4 && intResult<=6){
+                            txtActivityResult.setText("Medio");
+                        }else if(intResult>6 && intResult<=8){
+                            txtActivityResult.setText("Medio Alto");
+                        }else if(intResult>8 && intResult<=10){
+                            txtActivityResult.setText("Alto");
+                        }
+
+                    }
+
                 }
             }
 
