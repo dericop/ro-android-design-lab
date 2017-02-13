@@ -150,7 +150,7 @@ public class MyItemAdapter extends BaseAdapter {
                             int graphicalHeight = (percentage*relativeLayoutHeight) / 100;
 
                             ViewGroup.LayoutParams piParams = piContainer.getLayoutParams();
-                            piParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, graphicalHeight, mContext.getResources().getDisplayMetrics());;
+                            piParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, graphicalHeight, mContext.getResources().getDisplayMetrics());
                             piContainer.setLayoutParams(piParams);
                         }
 
@@ -170,7 +170,7 @@ public class MyItemAdapter extends BaseAdapter {
 
                             ViewGroup.LayoutParams gsParams = gsContainer.getLayoutParams();
                             gsParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, graphicalHeight, mContext.getResources().getDisplayMetrics());
-                            aaContainer.setLayoutParams(gsParams);
+                            gsContainer.setLayoutParams(gsParams);
                         }
 
                         if(post.getmCh() != 0){
@@ -179,7 +179,7 @@ public class MyItemAdapter extends BaseAdapter {
                             int graphicalHeight = (percentage*relativeLayoutHeight)/ 100;
                             ViewGroup.LayoutParams chParams = chContainer.getLayoutParams();
                             chParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, graphicalHeight, mContext.getResources().getDisplayMetrics());
-                            aaContainer.setLayoutParams(chParams);
+                            chContainer.setLayoutParams(chParams);
                         }
 
                     }

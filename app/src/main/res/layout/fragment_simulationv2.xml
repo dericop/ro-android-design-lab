@@ -87,8 +87,7 @@
                             <LinearLayout
                                 android:layout_width="25dp"
                                 android:layout_height="18dp"
-                                android:background="@drawable/border_radius"
-                                android:backgroundTint="#f05a29"
+                                android:background="@drawable/border_radius_items_progress"
                                 android:id="@+id/categoryBox1">
 
                                 <TextView
@@ -169,7 +168,8 @@
                                     android:textSize="11dp"
                                     android:paddingTop="2dp"
                                     android:layout_weight="0.1"
-                                    android:textColor="#f05a29"/>
+                                    android:textColor="#f05a29"
+                                    android:id="@+id/pi_bottom_data"/>
 
 
                             </LinearLayout>
@@ -216,7 +216,8 @@
                                     android:textSize="11dp"
                                     android:paddingTop="2dp"
                                     android:layout_weight="0.1"
-                                    android:textColor="#f05a29"/>
+                                    android:textColor="#f05a29"
+                                    android:id="@+id/pi_bottom_medium_data"/>
 
 
                             </LinearLayout>
@@ -263,7 +264,8 @@
                                     android:textSize="11dp"
                                     android:paddingTop="2dp"
                                     android:layout_weight="0.1"
-                                    android:textColor="#f05a29"/>
+                                    android:textColor="#f05a29"
+                                    android:id="@+id/pi_medim_data"/>
 
 
                             </LinearLayout>
@@ -310,7 +312,8 @@
                                     android:textSize="11dp"
                                     android:paddingTop="2dp"
                                     android:layout_weight="0.1"
-                                    android:textColor="#f05a29"/>
+                                    android:textColor="#f05a29"
+                                    android:id="@+id/pi_medium_top_data"/>
 
 
                             </LinearLayout>
@@ -356,8 +359,8 @@
                                     android:text="0"
                                     android:textSize="11dp"
                                     android:paddingTop="2dp"
-                                    android:layout_weight="0.1"/>
-
+                                    android:layout_weight="0.1"
+                                    android:id="@+id/pi_top_data"/>
 
                             </LinearLayout>
 
@@ -384,6 +387,7 @@
                             android:gravity="center_vertical"
                             android:textStyle="bold"
                             android:textColor="#f05a29"
+                            android:id="@+id/pi_percentage"
                             />
 
                     </LinearLayout>
@@ -420,8 +424,7 @@
                             <LinearLayout
                                 android:layout_width="25dp"
                                 android:layout_height="18dp"
-                                android:background="@drawable/border_radius"
-                                android:backgroundTint="#f05a29"
+                                android:background="@drawable/border_radius_items_progress"
                                 android:id="@+id/categoryBox2">
 
                                 <TextView
@@ -502,7 +505,8 @@
                                     android:textSize="11dp"
                                     android:paddingTop="2dp"
                                     android:layout_weight="0.1"
-                                    android:textColor="#f05a29"/>
+                                    android:textColor="#f05a29"
+                                    android:id="@+id/aa_bottom_data"/>
 
 
                             </LinearLayout>
@@ -549,7 +553,8 @@
                                     android:textSize="11dp"
                                     android:paddingTop="2dp"
                                     android:layout_weight="0.1"
-                                    android:textColor="#f05a29"/>
+                                    android:textColor="#f05a29"
+                                    android:id="@+id/aa_bottom_medium_data" />
 
 
                             </LinearLayout>
@@ -717,6 +722,7 @@
                             android:gravity="center_vertical"
                             android:textStyle="bold"
                             android:textColor="#f05a29"
+                            android:id="@+id/aa_percentage"
                             />
 
                     </LinearLayout>
@@ -753,8 +759,7 @@
                             <LinearLayout
                                 android:layout_width="25dp"
                                 android:layout_height="18dp"
-                                android:background="@drawable/border_radius"
-                                android:backgroundTint="#f05a29"
+                                android:background="@drawable/border_radius_items_progress"
                                 android:id="@+id/categoryBox3">
 
                                 <TextView
@@ -1049,7 +1054,8 @@
                             android:textAlignment="center"
                             android:gravity="center_vertical"
                             android:textStyle="bold"
-                            android:textColor="#f05a29" />
+                            android:textColor="#f05a29"
+                            android:id="@+id/gs_percentage" />
 
                     </LinearLayout>
 
@@ -1085,8 +1091,7 @@
                             <LinearLayout
                                 android:layout_width="25dp"
                                 android:layout_height="18dp"
-                                android:background="@drawable/border_radius"
-                                android:backgroundTint="#f05a29"
+                                android:background="@drawable/border_radius_items_progress"
                                 android:id="@+id/categoryBox4">
 
                                 <TextView
@@ -1382,6 +1387,7 @@
                             android:gravity="center_vertical"
                             android:textStyle="bold"
                             android:textColor="#f05a29"
+                            android:id="@+id/ch_percentage"
                             />
 
                     </LinearLayout>
@@ -1465,8 +1471,7 @@
                             <LinearLayout
                                 android:layout_width="25dp"
                                 android:layout_height="18dp"
-                                android:background="@drawable/border_radius"
-                                android:backgroundTint="#00adee"
+                                android:background="@drawable/border_radius_items_blue"
                                 android:id="@+id/categoryBoxActivity">
 
                                 <TextView
@@ -1815,6 +1820,7 @@
                             android:gravity="center_vertical"
                             android:textStyle="bold"
                             android:textColor="#00adee"
+                            android:id="@+id/af_percentage"
                             />
 
                     </LinearLayout>

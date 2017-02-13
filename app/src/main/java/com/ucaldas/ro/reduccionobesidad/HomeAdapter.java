@@ -172,7 +172,7 @@ public class HomeAdapter extends ArrayAdapter<Post> {
 
                         ViewGroup.LayoutParams gsParams = gsContainer.getLayoutParams();
                         gsParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, graphicalHeight, mContext.getResources().getDisplayMetrics());
-                        aaContainer.setLayoutParams(gsParams);
+                        gsContainer.setLayoutParams(gsParams);
                     }
 
                     if(post.getmCh() != 0){
@@ -181,7 +181,7 @@ public class HomeAdapter extends ArrayAdapter<Post> {
                         int graphicalHeight = (percentage*relativeLayoutHeight)/ 100;
                         ViewGroup.LayoutParams chParams = chContainer.getLayoutParams();
                         chParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, graphicalHeight, mContext.getResources().getDisplayMetrics());
-                        aaContainer.setLayoutParams(chParams);
+                        chContainer.setLayoutParams(chParams);
                     }
 
                 }
