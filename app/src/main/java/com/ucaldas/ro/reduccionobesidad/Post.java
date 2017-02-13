@@ -28,6 +28,10 @@ public class Post {
     private long mResult;
     private String mUserName;
     private String mTooShared;
+    private double mPi;
+    private double mAa;
+    private double mGs;
+    private double mCh;
 
     public Post(){
 
@@ -145,6 +149,22 @@ public class Post {
 
     public String getmUser(){ return mUser; }
 
+    public double getmPi() {return mPi;}
+
+    public void setmPi(double mPi) {this.mPi = mPi;}
+
+    public double getmAa() {return mAa;}
+
+    public void setmAa(double mAa) {this.mAa = mAa;}
+
+    public double getmGs() {return mGs;}
+
+    public void setmGs(double mGs) {this.mGs = mGs;}
+
+    public double getmCh() {return mCh;}
+
+    public void setmCh(double mCh) {this.mCh = mCh;}
+
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
         result.put("name", mName);
@@ -162,6 +182,18 @@ public class Post {
 
         if(!this.mDuration.equals(""))
             result.put("duration", mDuration);
+
+        if(this.mPi != 0)
+            result.put("pi", mPi);
+
+        if(this.mPi != 0)
+            result.put("aa", mAa);
+
+        if(this.mPi != 0)
+            result.put("gs", mGs);
+
+        if(this.mPi != 0)
+            result.put("ch", mCh);
 
         return result;
     }

@@ -37,8 +37,10 @@ import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -221,6 +223,8 @@ public class Home extends ListFragment {
                         final String userName = (String)map.get("mUserName");
                         final String[] tooSharedCopy = {""};
 
+                        List foodList = Arrays.asList(getResources().getStringArray(R.array.new_post_food_categories));
+
                         if(postMap.get("last_share") != null){
                             final String lastShare = (String)postMap.get("last_share");
 
@@ -263,26 +267,34 @@ public class Home extends ListFragment {
                             }
                         }
 
+                        Post post = null;
                         if(postMap.get("duration") != null){
                             String duration = (String)postMap.get("duration");
 
                             if(!tooSharedCopy[0].equals(""))
-                                mPostList.addFirst(new Post(id, name, category, frecuency, image, duration, user, result, average, userName, ""));
+                                post = new Post(id, name, category, frecuency, image, duration, user, result, average, userName, "");
                             else
-                                mPostList.addFirst(new Post(id, name, category, frecuency, image, duration, user, result, average, userName, tooSharedCopy[0]));
+                                post = new Post(id, name, category, frecuency, image, duration, user, result, average, userName, tooSharedCopy[0]);
 
                         }else{
 
                             if(!tooSharedCopy[0].equals(""))
-                                mPostList.addFirst(new Post(id, name, category, frecuency, image, user, result, average, userName, ""));
+                                post = new Post(id, name, category, frecuency, image, user, result, average, userName, "");
                             else
-                                mPostList.addFirst( new Post(id, name, category, frecuency, image, user, result, average, userName, tooSharedCopy[0]));
+                                post = new Post(id, name, category, frecuency, image, user, result, average, userName, tooSharedCopy[0]);
+                        }
+
+                        if(postMap.get("r_pi") != null && postMap.get("r_aa")!=null && postMap.get("r_gs")!=null && postMap.get("r_ch") != null){
+
+                            post.setmPi(Double.parseDouble(postMap.get("r_pi")+""));
+                            post.setmAa(Double.parseDouble(postMap.get("r_aa")+""));
+                            post.setmGs(Double.parseDouble(postMap.get("r_gs")+""));
+                            post.setmCh(Double.parseDouble(postMap.get("r_ch")+""));
 
                         }
 
+                        mPostList.addFirst(post);
                         reloadData();
-
-
                     }
 
                     @Override

@@ -2,6 +2,7 @@ package com.ucaldas.ro.reduccionobesidad;
 
 import android.content.Context;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -132,6 +133,53 @@ public class MyItemAdapter extends BaseAdapter {
                             txtActivityResult.setText("Medio Alto");
                         }else if(intResult>8 && intResult<=10){
                             txtActivityResult.setText("Alto");
+                        }
+
+                    }else{
+                        View piContainer = (View) convertView.findViewById(R.id.piContainer);
+                        View aaContainer = (View) convertView.findViewById(R.id.aaContainer);
+                        View gsContainer = (View) convertView.findViewById(R.id.gsContainer);
+                        View chContainer = (View) convertView.findViewById(R.id.chContainer);
+
+
+                        int maxCalificationForPI = 10;
+                        int relativeLayoutHeight = 50;
+
+                        if(post.getmPi() != 0){
+                            int percentage = (int)(post.getmPi()*100)/maxCalificationForPI;
+                            int graphicalHeight = (percentage*relativeLayoutHeight) / 100;
+
+                            ViewGroup.LayoutParams piParams = piContainer.getLayoutParams();
+                            piParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, graphicalHeight, mContext.getResources().getDisplayMetrics());;
+                            piContainer.setLayoutParams(piParams);
+                        }
+
+                        int maxCalificationForOthers = 3;
+                        if(post.getmAa() != 0){
+                            int percentage = (int)(post.getmAa()*100)/maxCalificationForOthers;
+                            int graphicalHeight = (percentage*relativeLayoutHeight)/ 100;
+
+                            ViewGroup.LayoutParams aaParams = aaContainer.getLayoutParams();
+                            aaParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, graphicalHeight, mContext.getResources().getDisplayMetrics());
+                            aaContainer.setLayoutParams(aaParams);
+                        }
+
+                        if(post.getmGs() != 0){
+                            int percentage = (int)(post.getmGs()*100)/maxCalificationForOthers;
+                            int graphicalHeight = (percentage*relativeLayoutHeight)/ 100;
+
+                            ViewGroup.LayoutParams gsParams = gsContainer.getLayoutParams();
+                            gsParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, graphicalHeight, mContext.getResources().getDisplayMetrics());
+                            aaContainer.setLayoutParams(gsParams);
+                        }
+
+                        if(post.getmCh() != 0){
+
+                            int percentage = (int)(post.getmCh()*100)/maxCalificationForOthers;
+                            int graphicalHeight = (percentage*relativeLayoutHeight)/ 100;
+                            ViewGroup.LayoutParams chParams = chContainer.getLayoutParams();
+                            chParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, graphicalHeight, mContext.getResources().getDisplayMetrics());
+                            aaContainer.setLayoutParams(chParams);
                         }
 
                     }

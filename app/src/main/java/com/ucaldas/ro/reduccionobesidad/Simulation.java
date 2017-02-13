@@ -290,46 +290,8 @@ public class Simulation extends Fragment {
         restartDefaultView(overweight_container);
         restartDefaultView(normal_weight_container);
 
-        if(average!=0 && average < 2){
-            Log.v("DBO", "Obeso severo");
-            severe_obesity_container.getChildAt(0).setBackgroundColor(getResources().getColor(R.color.severe_obesity));
-            severe_obesity_container.getChildAt(1).setBackgroundColor(getResources().getColor(R.color.severe_obesity));
-            severe_obesity_container.getChildAt(2).setBackgroundColor(getResources().getColor(R.color.severe_obesity));
+        if(average!=0 && average <= 2){
 
-            humanContainer.setBackgroundColor(getResources().getColor(R.color.severe_obesity));
-            humanImageView.setBackgroundDrawable(getResources().getDrawable(R.drawable.silueta_humano_6));
-
-        }else if(average >= 2 && average <4){
-            Log.v("DBO", "Obeso 2");
-
-            obesity_level_2_container.getChildAt(0).setBackgroundColor(getResources().getColor(R.color.obesity_2));
-            obesity_level_2_container.getChildAt(1).setBackgroundColor(getResources().getColor(R.color.obesity_2));
-            obesity_level_2_container.getChildAt(2).setBackgroundColor(getResources().getColor(R.color.obesity_2));
-
-            humanContainer.setBackgroundColor(getResources().getColor(R.color.obesity_2));
-            humanImageView.setBackgroundDrawable(getResources().getDrawable(R.drawable.silueta_humano_5));
-
-
-        }else if(average >=4 && average <6){
-            Log.v("DBO", "Obeso 1");
-
-            obesity_level_1_container.getChildAt(0).setBackgroundColor(getResources().getColor(R.color.obesity_1));
-            obesity_level_1_container.getChildAt(1).setBackgroundColor(getResources().getColor(R.color.obesity_1));
-            obesity_level_1_container.getChildAt(2).setBackgroundColor(getResources().getColor(R.color.obesity_1));
-
-            humanContainer.setBackgroundColor(getResources().getColor(R.color.obesity_1));
-            humanImageView.setBackgroundDrawable(getResources().getDrawable(R.drawable.silueta_humano_4));
-        }else if(average >= 6 && average <8){
-
-            overweight_container.getChildAt(0).setBackgroundColor(getResources().getColor(R.color.overweight));
-            overweight_container.getChildAt(1).setBackgroundColor(getResources().getColor(R.color.overweight));
-            overweight_container.getChildAt(2).setBackgroundColor(getResources().getColor(R.color.overweight));
-
-            humanContainer.setBackgroundColor(getResources().getColor(R.color.overweight));
-            humanImageView.setBackgroundDrawable(getResources().getDrawable(R.drawable.silueta_humano_3));
-            Log.v("DBO", "Sobrepeso");
-
-        }else if(average >= 8){
             Log.v("DBO", "Peso normal");
             normal_weight_container.getChildAt(0).setBackgroundColor(getResources().getColor(R.color.normal_weight));
             normal_weight_container.getChildAt(1).setBackgroundColor(getResources().getColor(R.color.normal_weight));
@@ -338,6 +300,46 @@ public class Simulation extends Fragment {
             humanContainer.setBackgroundColor(getResources().getColor(R.color.normal_weight));
             humanImageView.setBackgroundDrawable(getResources().getDrawable(R.drawable.silueta_humano_2));
 
+        }else if(average >= 3 && average <=4){
+
+            overweight_container.getChildAt(0).setBackgroundColor(getResources().getColor(R.color.overweight));
+            overweight_container.getChildAt(1).setBackgroundColor(getResources().getColor(R.color.overweight));
+            overweight_container.getChildAt(2).setBackgroundColor(getResources().getColor(R.color.overweight));
+
+            humanContainer.setBackgroundColor(getResources().getColor(R.color.overweight));
+            humanImageView.setBackgroundDrawable(getResources().getDrawable(R.drawable.silueta_humano_3));
+            Log.v("DBO", "Obesidad II");
+
+
+        }else if(average >=5 && average <=6){
+            Log.v("DBO", "Obesidad I");
+
+            obesity_level_1_container.getChildAt(0).setBackgroundColor(getResources().getColor(R.color.obesity_1));
+            obesity_level_1_container.getChildAt(1).setBackgroundColor(getResources().getColor(R.color.obesity_1));
+            obesity_level_1_container.getChildAt(2).setBackgroundColor(getResources().getColor(R.color.obesity_1));
+
+            humanContainer.setBackgroundColor(getResources().getColor(R.color.obesity_1));
+            humanImageView.setBackgroundDrawable(getResources().getDrawable(R.drawable.silueta_humano_4));
+
+        }else if(average >= 7 && average <= 8){
+
+            Log.v("DBO", "Soprepeso");
+
+            obesity_level_2_container.getChildAt(0).setBackgroundColor(getResources().getColor(R.color.obesity_2));
+            obesity_level_2_container.getChildAt(1).setBackgroundColor(getResources().getColor(R.color.obesity_2));
+            obesity_level_2_container.getChildAt(2).setBackgroundColor(getResources().getColor(R.color.obesity_2));
+
+            humanContainer.setBackgroundColor(getResources().getColor(R.color.obesity_2));
+            humanImageView.setBackgroundDrawable(getResources().getDrawable(R.drawable.silueta_humano_5));
+
+        }else if(average > 8){
+            Log.v("DBO", "Obesidad severa");
+            severe_obesity_container.getChildAt(0).setBackgroundColor(getResources().getColor(R.color.severe_obesity));
+            severe_obesity_container.getChildAt(1).setBackgroundColor(getResources().getColor(R.color.severe_obesity));
+            severe_obesity_container.getChildAt(2).setBackgroundColor(getResources().getColor(R.color.severe_obesity));
+
+            humanContainer.setBackgroundColor(getResources().getColor(R.color.severe_obesity));
+            humanImageView.setBackgroundDrawable(getResources().getDrawable(R.drawable.silueta_humano_6));
         }
     }
 

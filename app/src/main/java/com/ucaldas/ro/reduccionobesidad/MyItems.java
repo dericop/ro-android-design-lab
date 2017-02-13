@@ -115,17 +115,27 @@ public class MyItems extends Fragment {
                                 average = (long)values.get("average");
                             }
 
+                            Post post = null;
                             if(values.get("duration") != null){
-                                Log.v("DB", result+":result");
+
                                 String duration = (String)values.get("duration");
-                                myItems.add(new Post(id, name, category, frecuency, image, duration, user, result, average, "", ""));
+                                post = new Post(id, name, category, frecuency, image, duration, user, result, average, "", "");
+
                             }else{
-                                myItems.add(new Post(id, name, category, frecuency, image, user, result, average, "",""));
+                                post = new Post(id, name, category, frecuency, image, user, result, average, "","");
                             }
 
+                            if(values.get("r_pi") != null && values.get("r_aa")!=null && values.get("r_gs")!=null && values.get("r_ch") != null){
+
+                                post.setmPi(Double.parseDouble(values.get("r_pi")+""));
+                                post.setmAa(Double.parseDouble(values.get("r_aa")+""));
+                                post.setmGs(Double.parseDouble(values.get("r_gs")+""));
+                                post.setmCh(Double.parseDouble(values.get("r_ch")+""));
+                            }
+
+                            myItems.add(post);
                             itemAdapter.notifyDataSetChanged();
                             grid_items.setAdapter(itemAdapter);
-
                         }
                     }
                 }
