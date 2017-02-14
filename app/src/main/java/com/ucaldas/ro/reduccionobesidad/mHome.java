@@ -194,7 +194,12 @@ public class mHome extends AppCompatActivity
         tabLayout.getTabAt(1).setCustomView(tabTwo);
 
         TextView tabThree = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
-        tabThree.setText("Simulación");
+
+        if(WelcomeActivity.CURRENT_APP_VERSION.equals("R"))
+            tabThree.setText("Reporte");
+        else
+            tabThree.setText("Simulación");
+
         tabThree.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_action_simulation, 0, 0);
         tabLayout.getTabAt(2).setCustomView(tabThree);
     }

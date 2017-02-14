@@ -360,7 +360,8 @@
                                     android:textSize="11dp"
                                     android:paddingTop="2dp"
                                     android:layout_weight="0.1"
-                                    android:id="@+id/pi_top_data"/>
+                                    android:id="@+id/pi_top_data"
+                                    android:textColor="#f05a29"/>
 
                             </LinearLayout>
 
@@ -554,7 +555,7 @@
                                     android:paddingTop="2dp"
                                     android:layout_weight="0.1"
                                     android:textColor="#f05a29"
-                                    android:id="@+id/aa_bottom_medium_data" />
+                                    android:id="@+id/aa_bottom_medium_data"/>
 
 
                             </LinearLayout>
@@ -601,7 +602,8 @@
                                     android:textSize="11dp"
                                     android:paddingTop="2dp"
                                     android:layout_weight="0.1"
-                                    android:textColor="#f05a29"/>
+                                    android:textColor="#f05a29"
+                                    android:id="@+id/aa_medium_data"/>
 
 
                             </LinearLayout>
@@ -648,7 +650,8 @@
                                     android:textSize="11dp"
                                     android:paddingTop="2dp"
                                     android:layout_weight="0.1"
-                                    android:textColor="#f05a29"/>
+                                    android:textColor="#f05a29"
+                                    android:id="@+id/aa_medium_top_data"/>
 
 
                             </LinearLayout>
@@ -694,7 +697,9 @@
                                     android:text="0"
                                     android:textSize="11dp"
                                     android:paddingTop="2dp"
-                                    android:layout_weight="0.1"/>
+                                    android:layout_weight="0.1"
+                                    android:id="@+id/aa_top_data"
+                                    android:textColor="#f05a29"/>
 
 
                             </LinearLayout>
@@ -840,7 +845,9 @@
                                     android:textSize="11dp"
                                     android:paddingTop="2dp"
                                     android:layout_weight="0.1"
-                                    android:textColor="#f05a29"/>
+                                    android:textColor="#f05a29"
+                                    android:id="@+id/gs_bottom_data"
+                                    />
 
 
                             </LinearLayout>
@@ -887,7 +894,8 @@
                                     android:textSize="11dp"
                                     android:paddingTop="2dp"
                                     android:layout_weight="0.1"
-                                    android:textColor="#f05a29"/>
+                                    android:textColor="#f05a29"
+                                    android:id="@+id/gs_bottom_medium_data"/>
 
 
                             </LinearLayout>
@@ -934,7 +942,8 @@
                                     android:textSize="11dp"
                                     android:paddingTop="2dp"
                                     android:layout_weight="0.1"
-                                    android:textColor="#f05a29"/>
+                                    android:textColor="#f05a29"
+                                    android:id="@+id/gs_medium_data"/>
 
 
                             </LinearLayout>
@@ -981,7 +990,8 @@
                                     android:textSize="11dp"
                                     android:paddingTop="2dp"
                                     android:layout_weight="0.1"
-                                    android:textColor="#f05a29"/>
+                                    android:textColor="#f05a29"
+                                    android:id="@+id/gs_medium_top_data"/>
 
 
                             </LinearLayout>
@@ -1028,7 +1038,8 @@
                                     android:textSize="11dp"
                                     android:paddingTop="2dp"
                                     android:layout_weight="0.1"
-                                    android:textColor="#f05a29"/>
+                                    android:textColor="#f05a29"
+                                    android:id="@+id/gs_top_data"/>
 
 
                             </LinearLayout>
@@ -1172,7 +1183,8 @@
                                     android:textSize="11dp"
                                     android:paddingTop="2dp"
                                     android:layout_weight="0.1"
-                                    android:textColor="#f05a29"/>
+                                    android:textColor="#f05a29"
+                                    android:id="@+id/ch_bottom_data" />
 
 
                             </LinearLayout>
@@ -1219,7 +1231,8 @@
                                     android:textSize="11dp"
                                     android:paddingTop="2dp"
                                     android:layout_weight="0.1"
-                                    android:textColor="#f05a29"/>
+                                    android:textColor="#f05a29"
+                                    android:id="@+id/ch_bottom_medium_data"/>
 
 
                             </LinearLayout>
@@ -1266,7 +1279,8 @@
                                     android:textSize="11dp"
                                     android:paddingTop="2dp"
                                     android:layout_weight="0.1"
-                                    android:textColor="#f05a29"/>
+                                    android:textColor="#f05a29"
+                                    android:id="@+id/ch_medium_data" />
 
 
                             </LinearLayout>
@@ -1313,7 +1327,8 @@
                                     android:textSize="11dp"
                                     android:paddingTop="2dp"
                                     android:layout_weight="0.1"
-                                    android:textColor="#f05a29"/>
+                                    android:textColor="#f05a29"
+                                    android:id="@+id/ch_medium_top_data"/>
 
 
                             </LinearLayout>
@@ -1359,7 +1374,9 @@
                                     android:text="0"
                                     android:textSize="11dp"
                                     android:paddingTop="2dp"
-                                    android:layout_weight="0.1"/>
+                                    android:layout_weight="0.1"
+                                    android:id="@+id/ch_top_data"
+                                    android:textColor="#f05a29"/>
 
 
                             </LinearLayout>
@@ -1556,7 +1573,8 @@
                                     android:textSize="11dp"
                                     android:paddingTop="2dp"
                                     android:layout_weight="0.1"
-                                    android:textColor="#00adee"/>
+                                    android:textColor="#00adee"
+                                    android:id="@+id/af_sed_data"/>
 
 
                             </LinearLayout>
@@ -1604,7 +1622,7 @@
                                     android:paddingTop="2dp"
                                     android:layout_weight="0.1"
                                     android:textColor="#00adee"
-                                    android:id="@+id/textView4" />
+                                    android:id="@+id/af_bottom_data"/>
 
 
                             </LinearLayout>
@@ -1651,7 +1669,8 @@
                                     android:textSize="11dp"
                                     android:paddingTop="2dp"
                                     android:layout_weight="0.1"
-                                    android:textColor="#00adee"/>
+                                    android:textColor="#00adee"
+                                    android:id="@+id/af_bottom_medium_data"/>
 
 
                             </LinearLayout>
@@ -1698,7 +1717,8 @@
                                     android:textSize="11dp"
                                     android:paddingTop="2dp"
                                     android:layout_weight="0.1"
-                                    android:textColor="#00adee"/>
+                                    android:textColor="#00adee"
+                                    android:id="@+id/af_medium_data" />
 
 
                             </LinearLayout>
@@ -1745,7 +1765,8 @@
                                     android:textSize="11dp"
                                     android:textColor="#00adee"
                                     android:paddingTop="2dp"
-                                    android:layout_weight="0.1"/>
+                                    android:layout_weight="0.1"
+                                    android:id="@+id/af_medium_top_data"/>
 
 
                             </LinearLayout>
@@ -1792,7 +1813,9 @@
                                     android:text="0"
                                     android:textSize="11dp"
                                     android:paddingTop="2dp"
-                                    android:layout_weight="0.1"/>
+                                    android:layout_weight="0.1"
+                                    android:id="@+id/af_top_data"
+                                    android:textColor="#00adee"/>
 
 
                             </LinearLayout>

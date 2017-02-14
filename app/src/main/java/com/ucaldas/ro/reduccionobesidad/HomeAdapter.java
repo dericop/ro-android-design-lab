@@ -152,7 +152,7 @@ public class HomeAdapter extends ArrayAdapter<Post> {
                         int graphicalHeight = (percentage*relativeLayoutHeight) / 100;
 
                         ViewGroup.LayoutParams piParams = piContainer.getLayoutParams();
-                        piParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, graphicalHeight, mContext.getResources().getDisplayMetrics());;
+                        piParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, graphicalHeight, mContext.getResources().getDisplayMetrics());
                         piContainer.setLayoutParams(piParams);
                     }
 
@@ -187,7 +187,6 @@ public class HomeAdapter extends ArrayAdapter<Post> {
                 }
 
             }
-
         }
 
 
