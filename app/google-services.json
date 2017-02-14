@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:610665651722:android:d453b2217289093f",
         "android_client_info": {
-          "package_name": "com.ucaldas.ro.reduccionobesidad"
+          "package_name": "com.ucaldas.ro.reduccionobesidad.corus"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "610665651722-13nnhacofa62br96tqeag8kr1jm5g9vc.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.ucaldas.ro.reduccionobesidad",
+            "package_name": "com.ucaldas.ro.reduccionobesidad.corus",
             "certificate_hash": "D194FBF5CE69C1F5E81DE9D46F03B347EB6F09E4"
           }
         },
