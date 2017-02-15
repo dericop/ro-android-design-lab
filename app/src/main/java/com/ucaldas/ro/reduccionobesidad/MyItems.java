@@ -84,8 +84,13 @@ public class MyItems extends Fragment {
 
         Log.v("view", "test view");
 
+        DatabaseReference firebaseDatabase = null;
         if(mHome.user != null){
-            DatabaseReference firebaseDatabase = FirebaseDatabase.getInstance().getReference().child("user-data").child(mHome.user.getUid());
+            if(WelcomeActivity.CURRENT_APP_VERSION.equals("A"))
+                firebaseDatabase = FirebaseDatabase.getInstance().getReference().child("user-data").child(mHome.user.getUid());
+            else
+                firebaseDatabase = FirebaseDatabase.getInstance().getReference().child("user-data-reflexive").child(mHome.user.getUid());
+
             firebaseDatabase.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {

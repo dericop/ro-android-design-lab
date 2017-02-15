@@ -310,7 +310,11 @@ public class AddPost extends AppCompatActivity {
 
                             if (isOnline()) {
                                 DatabaseReference datRef = FirebaseDatabase.getInstance().getReference();
-                                String dataKey = datRef.child("user-data").push().getKey();
+                                String dataKey = "";
+                                if(WelcomeActivity.CURRENT_APP_VERSION.equals("A"))
+                                    dataKey = datRef.child("user-data").push().getKey();
+                                else
+                                    dataKey = datRef.child("user-data-reflexive").push().getKey();
 
                                 Post post = getPostData(idForReply, imageForReply);
                                 Map<String, Object> mapForItems = post.toMap();
@@ -381,8 +385,16 @@ public class AddPost extends AppCompatActivity {
                                         Log.v("ST", downloadUrl + "");
 
                                         DatabaseReference database = FirebaseDatabase.getInstance().getReference();
-                                        String key = database.child("user-posts").push().getKey();
-                                        String dataKey = database.child("user-data").push().getKey();
+                                        String key = "";
+                                        String dataKey = "";
+
+                                        if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
+                                            key = database.child("user-posts").push().getKey();
+                                            dataKey = database.child("user-data").push().getKey();
+                                        }else{
+                                            key = database.child("user-posts-reflexive").push().getKey();
+                                            dataKey = database.child("user-data-reflexive").push().getKey();
+                                        }
 
                                         Post post = getPostData(key, downloadUrl.toString());
 
@@ -391,8 +403,15 @@ public class AddPost extends AppCompatActivity {
 
                                             Map<String, Object> childUpdates = new HashMap<>();
                                             //addSaveEventListener();
-                                            childUpdates.put("/user-posts/" + key, postValues);
-                                            childUpdates.put("/user-data/" + mHome.user.getUid() + "/" + dataKey, postValues);
+
+                                            if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
+                                                childUpdates.put("/user-posts/" + key, postValues);
+                                                childUpdates.put("/user-data/" + mHome.user.getUid() + "/" + dataKey, postValues);
+                                            }else{
+                                                childUpdates.put("/user-posts-reflexive/" + key, postValues);
+                                                childUpdates.put("/user-data-reflexive/" + mHome.user.getUid() + "/" + dataKey, postValues);
+                                            }
+
 
                                             OnCompleteListener saveListener = new OnCompleteListener() {
                                                 @Override

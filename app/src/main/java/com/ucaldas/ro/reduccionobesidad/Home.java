@@ -201,8 +201,14 @@ public class Home extends ListFragment {
         });
 
         mListView.setAdapter(firebaseListAdapter);*/
+        DatabaseReference mDatabaseTemp = null;
+        if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
+            mDatabaseTemp = mDatabase.child("user-posts");
+        }else{
+            mDatabaseTemp = mDatabase.child("user-posts-reflexive");
+        }
 
-        mDatabase.child("user-posts").limitToLast(30).addChildEventListener(new ChildEventListener() {
+        mDatabaseTemp.limitToLast(30).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
@@ -216,7 +222,15 @@ public class Home extends ListFragment {
                 final String id = (String)postMap.get("id");
                 final AtomicInteger curElement = new AtomicInteger(0);
 
-                mDatabase.child("users").child(user).addListenerForSingleValueEvent(new ValueEventListener() {
+                DatabaseReference mDatabaseTemp2 = null;
+                if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
+                    mDatabaseTemp2 = mDatabase.child("users");
+                }else{
+                    mDatabaseTemp2 = mDatabase.child("users-reflexive");
+                }
+
+
+                mDatabaseTemp2.child(user).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         HashMap<String, Object> map = (HashMap)dataSnapshot.getValue();
@@ -228,7 +242,14 @@ public class Home extends ListFragment {
                         if(postMap.get("last_share") != null){
                             final String lastShare = (String)postMap.get("last_share");
 
-                            mDatabase.child("users").child(lastShare).addListenerForSingleValueEvent(new ValueEventListener() {
+                            DatabaseReference mDatabaseTemp2 = null;
+                            if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
+                                mDatabaseTemp2 = mDatabase.child("users");
+                            }else{
+                                mDatabaseTemp2 = mDatabase.child("users-reflexive");
+                            }
+
+                            mDatabaseTemp2.child(lastShare).addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -337,8 +358,15 @@ public class Home extends ListFragment {
                 String tooShare = "";
                 if(map.get("last_share") != null){
 
+                    DatabaseReference mDatabaseTemp2 = null;
+                    if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
+                        mDatabaseTemp2 = mDatabase.child("users");
+                    }else{
+                        mDatabaseTemp2 = mDatabase.child("users-reflexive");
+                    }
+
                     tooShare = (String) map.get("last_share");
-                    mDatabase.child("users").child(tooShare).addListenerForSingleValueEvent(new ValueEventListener() {
+                    mDatabaseTemp2.child(tooShare).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             HashMap<String, Object> tooSharedMap = (HashMap) dataSnapshot.getValue();

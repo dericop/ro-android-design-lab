@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -29,7 +30,7 @@ public class WelcomeActivity extends AppCompatActivity {
     private Button btnSkip, btnNext;
     private PrefManager prefManager;
 
-    public static String CURRENT_APP_VERSION = "A"; //Existen dos opciones "A", "R"
+    public static String CURRENT_APP_VERSION = "R"; //Existen dos opciones "A", "R"
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +96,7 @@ public class WelcomeActivity extends AppCompatActivity {
                 }
             }
         });
+
 
     }
 

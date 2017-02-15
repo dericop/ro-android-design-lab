@@ -9,6 +9,12 @@ android {
             storeFile file('/home/user/keystores/corus.jks')
             storePassword 'lab.strategic.app'
         }
+        CoCono {
+            keyAlias 'cocono'
+            keyPassword 'lab.cocono.strategic2017'
+            storeFile file('/Users/disenoestrategico/keystores/cocono.jks')
+            storePassword 'lab.strategic.app'
+        }
     }
     compileSdkVersion 25
     buildToolsVersion "25.0.1"
@@ -25,11 +31,10 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.CoRus
-            applicationIdSuffix '.corus'
+            signingConfig signingConfigs.CoCono
+            applicationIdSuffix '.cocono'
         }
         debug {
-
         }
     }
     productFlavors {
@@ -40,7 +45,14 @@ android {
             testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
             versionCode 1
             versionName '1.0'
-            versionNameSuffix 'corus'
+        }
+        cocono {
+            minSdkVersion 15
+            applicationId 'com.ucaldas.ro.reduccionobesidad'
+            signingConfig signingConfigs.CoCono
+            targetSdkVersion 25
+            versionCode 1
+            versionName '1.0'
         }
     }
 }

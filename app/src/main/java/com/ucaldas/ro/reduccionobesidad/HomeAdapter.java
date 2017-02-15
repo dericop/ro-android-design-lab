@@ -104,8 +104,8 @@ public class HomeAdapter extends ArrayAdapter<Post> {
 
         }else{
             if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
-                txtAverage.setVisibility(View.VISIBLE);
-                txtAverage.setText(post.getmAverage()+"");
+                //txtAverage.setVisibility(View.VISIBLE);
+                //txtAverage.setText(post.getmAverage()+"");
 
                 switch ((int)result){
                     case 1:

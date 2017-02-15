@@ -119,7 +119,7 @@ public class Simulationv2 extends Fragment {
         final View piTop = (View) view.findViewById(R.id.pi_top);
 
         //Texto de PI
-        final TextView piPercentage = (TextView) view.findViewById(R.id.pi_percentage);
+        //final TextView piPercentage = (TextView) view.findViewById(R.id.pi_percentage);
         final TextView piBottomData = (TextView) view.findViewById(R.id.pi_bottom_data);
         final TextView piBottomMediumData = (TextView) view.findViewById(R.id.pi_bottom_medium_data);
         final TextView piMediumData = (TextView) view.findViewById(R.id.pi_medim_data);
@@ -135,7 +135,7 @@ public class Simulationv2 extends Fragment {
         final View aaTop = (View) view.findViewById(R.id.aa_top);
 
         //Textos de AA
-        final TextView aaPercentage = (TextView) view.findViewById(R.id.aa_percentage);
+        //final TextView aaPercentage = (TextView) view.findViewById(R.id.aa_percentage);
         final TextView aaBottomData = (TextView) view.findViewById(R.id.aa_bottom_data);
         final TextView aaBottomMediumData = (TextView) view.findViewById(R.id.aa_bottom_medium_data);
         final TextView aaMediumData = (TextView) view.findViewById(R.id.aa_medium_data);
@@ -151,7 +151,7 @@ public class Simulationv2 extends Fragment {
         final View gsTop = (View) view.findViewById(R.id.gs_top);
 
         //Textos de GS
-        final TextView gsPercentage = (TextView) view.findViewById(R.id.gs_percentage);
+        //final TextView gsPercentage = (TextView) view.findViewById(R.id.gs_percentage);
         final TextView gsBottomData = (TextView) view.findViewById(R.id.gs_bottom_data);
         final TextView gsBottomMediumData = (TextView) view.findViewById(R.id.gs_bottom_medium_data);
         final TextView gsMediumData = (TextView) view.findViewById(R.id.gs_medium_data);
@@ -167,7 +167,7 @@ public class Simulationv2 extends Fragment {
         final View chTop = (View) view.findViewById(R.id.ch_top);
 
         //Textos de CH
-        final TextView chPercentage = (TextView) view.findViewById(R.id.ch_percentage);
+        //final TextView chPercentage = (TextView) view.findViewById(R.id.ch_percentage);
         final TextView chBottomData = (TextView) view.findViewById(R.id.ch_bottom_data);
         final TextView chBottomMediumData = (TextView) view.findViewById(R.id.ch_bottom_medium_data);
         final TextView chMediumData = (TextView) view.findViewById(R.id.ch_medium_data);
@@ -184,7 +184,7 @@ public class Simulationv2 extends Fragment {
         final View afTop = (View) view.findViewById(R.id.af_top);
 
         //Textos de AF
-        final TextView afPercentage = (TextView) view.findViewById(R.id.af_percentage);
+        //final TextView afPercentage = (TextView) view.findViewById(R.id.af_percentage);
         final TextView afSedData = (TextView) view.findViewById(R.id.af_sed_data);
         final TextView afBottomData = (TextView) view.findViewById(R.id.af_bottom_data);
         final TextView afBottomMediumData = (TextView) view.findViewById(R.id.af_bottom_medium_data);
@@ -196,7 +196,12 @@ public class Simulationv2 extends Fragment {
         if(mHome.user != null){
             final String[] foodsString = getResources().getStringArray(R.array.new_post_food_categories);
             final List<String> foodsCategories = Arrays.asList(foodsString);
-            DatabaseReference firebaseDatabase = FirebaseDatabase.getInstance().getReference().child("user-data").child(mHome.user.getUid());
+            DatabaseReference firebaseDatabase = null;
+
+            if(WelcomeActivity.CURRENT_APP_VERSION.equals("A"))
+                firebaseDatabase = FirebaseDatabase.getInstance().getReference().child("user-data").child(mHome.user.getUid());
+            else
+                firebaseDatabase = FirebaseDatabase.getInstance().getReference().child("user-data-reflexive").child(mHome.user.getUid());
 
             //Procesados industrialmente
             final AtomicInteger countOfPIb = new AtomicInteger(0);
@@ -351,8 +356,8 @@ public class Simulationv2 extends Fragment {
                         piTop.setLayoutParams(getWidthForBar(piTop, countOfPIa.get(), barMaxWidth, size));
 
                         //Actualización porcentaje PI
-                        int piTPercentage = ((countOfPIa.get()+countOfPIb.get()+countOfPIm.get()+countOfPIma.get()+countOfPImb.get())*100)/size;
-                        piPercentage.setText(piTPercentage+"%");
+                        /*int piTPercentage = ((countOfPIa.get()+countOfPIb.get()+countOfPIm.get()+countOfPIma.get()+countOfPImb.get())*100)/size;
+                        piPercentage.setText(piTPercentage+"%");*/
 
 
 
@@ -371,8 +376,8 @@ public class Simulationv2 extends Fragment {
                         aaTop.setLayoutParams(getWidthForBar(aaTop, countOfAAa.get(), barMaxWidth, size));
 
                         //Actualización porcentaje AA
-                        int aaTPercentage = ((countOfAAa.get()+countOfAAb.get()+countOfAAm.get()+countOfAAma.get()+countOfAAmb.get())*100)/size;
-                        aaPercentage.setText(aaTPercentage+"%");
+                        /*int aaTPercentage = ((countOfAAa.get()+countOfAAb.get()+countOfAAm.get()+countOfAAma.get()+countOfAAmb.get())*100)/size;
+                        aaPercentage.setText(aaTPercentage+"%");*/
 
 
                         //Actualización de los datos correspondientes a las barras GS
@@ -390,8 +395,8 @@ public class Simulationv2 extends Fragment {
                         gsTop.setLayoutParams(getWidthForBar(gsTop, countOfGSa.get(), barMaxWidth, size));
 
                         //Actualización porcentaje GS
-                        int gsTPercentage = ((countOfGSa.get()+countOfGSb.get()+countOfGSm.get()+countOfGSma.get()+countOfGSmb.get())*100)/size;
-                        gsPercentage.setText(gsTPercentage+"%");
+                        /*int gsTPercentage = ((countOfGSa.get()+countOfGSb.get()+countOfGSm.get()+countOfGSma.get()+countOfGSmb.get())*100)/size;
+                        gsPercentage.setText(gsTPercentage+"%");*/
 
 
                         //Actualización de los datos correspondientes a las barras CH
@@ -409,8 +414,8 @@ public class Simulationv2 extends Fragment {
                         chTop.setLayoutParams(getWidthForBar(chTop, countOfCHa.get(), barMaxWidth, size));
 
                         //Actualización porcentaje CH
-                        int chTPercentage = ((countOfCHa.get()+countOfCHb.get()+countOfCHm.get()+countOfCHma.get()+countOfCHmb.get())*100)/size;
-                        chPercentage.setText(chTPercentage+"%");
+                        /*int chTPercentage = ((countOfCHa.get()+countOfCHb.get()+countOfCHm.get()+countOfCHma.get()+countOfCHmb.get())*100)/size;
+                        chPercentage.setText(chTPercentage+"%");*/
 
 
                         //Actualización de los datos correspondientes a las barras AF
@@ -429,8 +434,8 @@ public class Simulationv2 extends Fragment {
                         afTop.setLayoutParams(getWidthForBar(afTop, countOfAFa.get(), barMaxWidth, size));
 
                         //Actualización porcentaje AF
-                        int afTPercentage = ((countOfAFs.get()+countOfAFa.get()+countOfAFb.get()+countOfAFm.get()+countOfAFma.get()+countOfAFmb.get())*100)/size;
-                        afPercentage.setText(afTPercentage+"%");
+                        /*int afTPercentage = ((countOfAFs.get()+countOfAFa.get()+countOfAFb.get()+countOfAFm.get()+countOfAFma.get()+countOfAFmb.get())*100)/size;
+                        afPercentage.setText(afTPercentage+"%");*/
 
 
                         //Inicialización de variables

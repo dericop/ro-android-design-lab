@@ -65,8 +65,6 @@ public class MyItemAdapter extends BaseAdapter {
                 convertView = inflater.inflate(R.layout.list_my_items_item, null);
             }else{
 
-
-
                 if(foodList.contains(post.getmCategory())){
                     convertView = inflater.inflate(R.layout.list_my_items_item_reflexive, null);
                 }else{
@@ -101,8 +99,8 @@ public class MyItemAdapter extends BaseAdapter {
 
             }else{
                 if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
-                    txtAverage.setVisibility(View.VISIBLE);
-                    txtAverage.setText(post.getmAverage()+"");
+                    //txtAverage.setVisibility(View.VISIBLE);
+                    //txtAverage.setText(post.getmAverage()+"");
 
                     switch ((int)result){
                         case 1:

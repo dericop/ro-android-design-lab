@@ -99,7 +99,11 @@ public class LoginActivity extends AppCompatActivity implements
                     //Almacenar el usuario que se ha logueado
                     AUser newUser = new AUser(user.getUid(), user.getDisplayName(), user.getEmail(), user.getPhotoUrl().toString());
                     DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-                    mDatabase.child("users").child(user.getUid()).setValue(newUser);
+
+                    if(WelcomeActivity.CURRENT_APP_VERSION.equals("A"))
+                        mDatabase.child("users").child(user.getUid()).setValue(newUser);
+                    else
+                        mDatabase.child("users-reflexive").child(user.getUid()).setValue(newUser);
 
                     startActivity(new Intent(getBaseContext(), mHome.class));
 
