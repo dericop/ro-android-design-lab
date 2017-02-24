@@ -181,45 +181,47 @@ public class AddPost extends AppCompatActivity {
         SOURCE = getIntent().getStringExtra("source"); //Obtiene el origen
         //isActivity = true; //Inicialmente se configura el post como una publicación de actividad
 
-        if (SOURCE.equals("reply")) {
-            radioButtonIsClicked = true;
-            imageForReply = getIntent().getStringExtra("image");
-            String name = getIntent().getStringExtra("name");
-            idForReply = getIntent().getStringExtra("id");
-            typeForReply = getIntent().getStringExtra("type");
-            resultForReply = getIntent().getIntExtra("result", 0);
+        switch(SOURCE){
+            case "reply":
+                radioButtonIsClicked = true;
+                imageForReply = getIntent().getStringExtra("image");
+                String name = getIntent().getStringExtra("name");
+                idForReply = getIntent().getStringExtra("id");
+                typeForReply = getIntent().getStringExtra("type");
+                resultForReply = getIntent().getIntExtra("result", 0);
 
 
-            Log.v("DBP", resultForReply + "");
-            averageForReply = getIntent().getIntExtra("average", 0);
+                Log.v("DBP", resultForReply + "");
+                averageForReply = getIntent().getIntExtra("average", 0);
 
-            TextView txt_name = (TextView) findViewById(R.id.textInputEditText);
-            txt_name.setEnabled(false);
-            txt_name.setText(name);
+                TextView txt_name = (TextView) findViewById(R.id.textInputEditText);
+                txt_name.setEnabled(false);
+                txt_name.setText(name);
 
-            RadioButton radioActivity = (RadioButton) findViewById(R.id.radio_activity);
-            RadioButton radioFood = (RadioButton) findViewById(R.id.radio_food);
+                RadioButton radioActivity = (RadioButton) findViewById(R.id.radio_activity);
+                RadioButton radioFood = (RadioButton) findViewById(R.id.radio_food);
 
-            List foodList = Arrays.asList(getResources().getStringArray(R.array.new_post_food_categories));
+                List foodList = Arrays.asList(getResources().getStringArray(R.array.new_post_food_categories));
 
-            if (foodList.contains(typeForReply)) {
-                radioFood.setChecked(true);
-                hideSpinnerDurationAndLoadData();
-            } else {
-                radioActivity.setSelected(true);
-                showSpinnerDurationAndLoadData();
-            }
+                if (foodList.contains(typeForReply)) {
+                    radioFood.setChecked(true);
+                    hideSpinnerDurationAndLoadData();
+                } else {
+                    radioActivity.setSelected(true);
+                    showSpinnerDurationAndLoadData();
+                }
 
-            radioActivity.setEnabled(false);
-            radioFood.setEnabled(false);
+                radioActivity.setEnabled(false);
+                radioFood.setEnabled(false);
 
-            Glide.with(this).load(imageForReply).into(prev);
-
-
-        } else if (SOURCE.equals("camera")) { //¿El origen es de foto?
-            dispatchTakePictureIntent();
-        } else { // ¿El origen es de galería?
-            dispatchGaleryPicture();
+                Glide.with(this).load(imageForReply).into(prev);
+                break;
+            case "camera":
+                dispatchTakePictureIntent();
+                break;
+            default:
+                dispatchGaleryPicture();
+                break;
         }
 
         if (!SOURCE.equals("reply"))
@@ -265,9 +267,10 @@ public class AddPost extends AppCompatActivity {
         addSaveEventListener();
 
         changeStatusBarColor();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-
+        if(getSupportActionBar() != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
     }
 
 
@@ -277,7 +280,7 @@ public class AddPost extends AppCompatActivity {
         if (isActivity) {
             View duration_view = durationSpinner.getSelectedView();
             if (duration_view != null && duration_view instanceof TextView) {
-                CharSequence durationActivity = "";
+                CharSequence durationActivity;
                 TextView activity_duration = (TextView) duration_view;
                 durationActivity = activity_duration.getText();
 
@@ -310,7 +313,7 @@ public class AddPost extends AppCompatActivity {
 
                             if (isOnline()) {
                                 DatabaseReference datRef = FirebaseDatabase.getInstance().getReference();
-                                String dataKey = "";
+                                String dataKey;
                                 if(WelcomeActivity.CURRENT_APP_VERSION.equals("A"))
                                     dataKey = datRef.child("user-data").push().getKey();
                                 else
@@ -322,9 +325,14 @@ public class AddPost extends AppCompatActivity {
                                 Log.v("db", idForReply);
 
                                 Map<String, Object> mapForUpdate = new HashMap<>();
-                                mapForUpdate.put("/user-posts/" + idForReply + "/" + "last_share", mHome.user.getUid());
-                                mapForUpdate.put("/user-data/" + mHome.user.getUid() + "/" + dataKey, mapForItems);
 
+                                if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
+                                    mapForUpdate.put("/user-posts/" + idForReply + "/" + "last_share", mHome.user.getUid());
+                                    mapForUpdate.put("/user-data/" + mHome.user.getUid() + "/" + dataKey, mapForItems);
+                                }else{
+                                    mapForUpdate.put("/user-posts-reflexive/" + idForReply + "/" + "last_share", mHome.user.getUid());
+                                    mapForUpdate.put("/user-data-reflexive/" + mHome.user.getUid() + "/" + dataKey, mapForItems);
+                                }
 
                                 //mapForUpdate.put("user-data/"+mHome.user.getUid()+"/", );
 
@@ -338,7 +346,9 @@ public class AddPost extends AppCompatActivity {
 
 
                             } else {
-                                Snackbar.make(getCurrentFocus(), "Revise su conexión a internet e intentelo más tarde", 2000).show();
+                                if(getCurrentFocus()!=null){
+                                    Snackbar.make(getCurrentFocus(), "Revise su conexión a internet e intentelo más tarde", 2000).show();
+                                }
                                 progress.dismiss();
                             }
 
@@ -372,7 +382,8 @@ public class AddPost extends AppCompatActivity {
                                     public void onFailure(@NonNull Exception exception) {
                                         // Handle unsuccessful uploads
                                         Log.v("Add", "Error");
-                                        Snackbar.make(getCurrentFocus(), "Revise su conexión a internet e intentelo más tarde", 2000).show();
+                                        if(getCurrentFocus() != null)
+                                            Snackbar.make(getCurrentFocus(), "Revise su conexión a internet e intentelo más tarde", 2000).show();
                                         progress.dismiss();
 
                                     }
@@ -385,8 +396,8 @@ public class AddPost extends AppCompatActivity {
                                         Log.v("ST", downloadUrl + "");
 
                                         DatabaseReference database = FirebaseDatabase.getInstance().getReference();
-                                        String key = "";
-                                        String dataKey = "";
+                                        String key;
+                                        String dataKey;
 
                                         if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
                                             key = database.child("user-posts").push().getKey();
@@ -395,7 +406,7 @@ public class AddPost extends AppCompatActivity {
                                             key = database.child("user-posts-reflexive").push().getKey();
                                             dataKey = database.child("user-data-reflexive").push().getKey();
                                         }
-
+                                        
                                         Post post = getPostData(key, downloadUrl.toString());
 
                                         if (post != null) {
@@ -424,7 +435,8 @@ public class AddPost extends AppCompatActivity {
                                                     } else {
                                                         Log.v("DB", task.getResult() + "");
                                                         progress.dismiss();
-                                                        Snackbar.make(getCurrentFocus(), "Revise su conexión a internet o intentelo más tarde", 2000).show();
+                                                        if(getCurrentFocus()!=null)
+                                                            Snackbar.make(getCurrentFocus(), "Revise su conexión a internet o intentelo más tarde", 2000).show();
                                                     }
                                                 }
                                             };
@@ -434,7 +446,8 @@ public class AddPost extends AppCompatActivity {
                                     }
                                 });
                             } else {
-                                Snackbar.make(getCurrentFocus(), "Revise su conexión a internet e intentelo más tarde", 2000).show();
+                                if(getCurrentFocus()!=null)
+                                    Snackbar.make(getCurrentFocus(), "Revise su conexión a internet e intentelo más tarde", 2000).show();
                                 progress.dismiss();
                             }
 
@@ -464,14 +477,17 @@ public class AddPost extends AppCompatActivity {
                 if (imageIsOk()) {
                     return true;
                 } else {
-                    Snackbar.make(getCurrentFocus(), "Es necesario que adjunte una imagen.", 4000).show();
+                    if(getCurrentFocus()!=null)
+                        Snackbar.make(getCurrentFocus(), "Es necesario que adjunte una imagen.", 4000).show();
                 }
 
             } else {
-                Snackbar.make(getCurrentFocus(), "Verifique la información ingresada.", 4000).show();
+                if(getCurrentFocus()!=null)
+                    Snackbar.make(getCurrentFocus(), "Verifique la información ingresada.", 4000).show();
             }
         }else{
-            Snackbar.make(getCurrentFocus(), "Seleccione el tipo de publicación (actividad o alimento)", 4000).show();
+            if(getCurrentFocus()!=null)
+                Snackbar.make(getCurrentFocus(), "Seleccione el tipo de publicación (actividad o alimento)", 4000).show();
         }
 
         return false;
@@ -518,34 +534,37 @@ public class AddPost extends AppCompatActivity {
 
         //Obtener el nombre ingresado
         EditText nameEditText = nameLayout.getEditText();
-        nameEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        if(nameEditText!=null){
+            nameEditText.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+                    nameLayout.setError("");
+                    nameLayout.setErrorEnabled(false);
+                }
+            });
+
+            nameText = nameEditText.getText();
+
+            if (nameText.toString().trim().equals("")) { //Nombre vacío
+                nameLayout.setError(getString(R.string.add_post_validate_name));
+            } else if ((nameText.length() > 60)) {//Nombre de longitud incorrecta
+                nameLayout.setError(getString(R.string.add_post_validate_name_length));
+            } else if (nameText.toString().contains("\n")) {//Nombre con saltos de linea
+                nameLayout.setError(getString(R.string.add_post_validate_line_breaks));
+            } else {
+                return true;
             }
 
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                nameLayout.setError("");
-                nameLayout.setErrorEnabled(false);
-            }
-        });
-
-        nameText = nameEditText.getText();
-
-        if (nameText.toString().trim().equals("")) { //Nombre vacío
-            nameLayout.setError(getString(R.string.add_post_validate_name));
-        } else if ((nameText.length() > 60)) {//Nombre de longitud incorrecta
-            nameLayout.setError(getString(R.string.add_post_validate_name_length));
-        } else if (nameText.toString().contains("\n")) {//Nombre con saltos de linea
-            nameLayout.setError(getString(R.string.add_post_validate_line_breaks));
-        } else {
-            return true;
         }
 
         return false;
@@ -668,7 +687,7 @@ public class AddPost extends AppCompatActivity {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
                 }
-                return;
+                break;
             }
 
             // other 'case' lines to check for other
