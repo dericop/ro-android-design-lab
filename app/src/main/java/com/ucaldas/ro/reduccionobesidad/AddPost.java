@@ -406,7 +406,7 @@ public class AddPost extends AppCompatActivity {
                                             key = database.child("user-posts-reflexive").push().getKey();
                                             dataKey = database.child("user-data-reflexive").push().getKey();
                                         }
-                                        
+
                                         Post post = getPostData(key, downloadUrl.toString());
 
                                         if (post != null) {

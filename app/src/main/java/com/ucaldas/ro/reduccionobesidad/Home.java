@@ -62,10 +62,8 @@ public class Home extends ListFragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private SwipeRefreshLayout mSwipeRefreshing;
-    final AtomicInteger dataLoadersCounter = new AtomicInteger();
     boolean isTheFirstLoad = true;
     DatabaseReference mDatabase = null;
-    DatabaseReference uDatabase = null;
     HomeAdapter mPostAdapter= null;
     Button btn_new_posts = null;
 
@@ -73,8 +71,6 @@ public class Home extends ListFragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
-    private OnFragmentInteractionListener mListener;
 
 
     private ListView mListView;
@@ -131,84 +127,19 @@ public class Home extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    /*@Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }*/
-
     private void refreshPostList(){
-        /*mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
 
-                int newCount = count.incrementAndGet();
-                mPostAdapter.add(new Post());
-                mPostAdapter.notifyDataSetChanged();
-
-                if(newCount == dataSnapshot.getChildrenCount()){
-                    mSwipeRefreshing.setRefreshing(false);
-                    count.set(0);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                mSwipeRefreshing.setRefreshing(false);
-            }
-
-        });*/
-
-        /*final FirebaseListAdapter<HashMap> firebaseListAdapter = new FirebaseListAdapter<HashMap>(
-                getActivity(),
-                HashMap.class,
-                R.layout.list_home_item,
-                mDatabase
-        ) {
-            @Override
-            protected void populateView(View v, HashMap model, int position) {
-
-            }
-
-            @Override
-            protected HashMap parseSnapshot(DataSnapshot snapshot) {
-                return (HashMap) snapshot.getValue();
-            }
-        };
-
-        firebaseListAdapter.registerDataSetObserver(new DataSetObserver() {
-            @Override
-            public void onChanged() {
-                super.onChanged();
-                mSwipeRefreshing.setRefreshing(false);
-            }
-        });
-
-        mListView.setAdapter(firebaseListAdapter);*/
-        DatabaseReference mDatabaseTemp = null;
+        DatabaseReference mDatabaseTemp;
         if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
             mDatabaseTemp = mDatabase.child("user-posts");
         }else{
             mDatabaseTemp = mDatabase.child("user-posts-reflexive");
         }
 
-        mDatabaseTemp.limitToLast(30).addChildEventListener(new ChildEventListener() {
+        mDatabaseTemp.orderByKey().limitToLast(30).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
@@ -220,15 +151,59 @@ public class Home extends ListFragment {
                 final String image = (String)postMap.get("image");
                 final String user = (String)postMap.get("user");
                 final String id = (String)postMap.get("id");
-                final AtomicInteger curElement = new AtomicInteger(0);
 
-                DatabaseReference mDatabaseTemp2 = null;
+                DatabaseReference mDatabaseTemp2;
                 if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
                     mDatabaseTemp2 = mDatabase.child("users");
                 }else{
                     mDatabaseTemp2 = mDatabase.child("users-reflexive");
                 }
 
+                Log.v("DATAPP", postMap.toString());
+
+                long result = 0;
+                if(postMap.get("result") != null){
+                    result = (long)postMap.get("result");
+                    Log.v("DB", result+":result");
+                }
+
+                long average = 0;
+                if(postMap.get("average") != null){
+                    try {
+                        average = (long)postMap.get("average");
+                    }catch (NumberFormatException ex){
+
+                    }
+                }
+
+                Post post;
+                if(postMap.get("duration") != null){
+                    String duration = (String)postMap.get("duration");
+
+                    //if(!tooSharedCopy[0].equals(""))
+                        post = new Post(id, name, category, frecuency, image, duration, user, result, average, "", "");
+                    /*else
+                        post = new Post(id, name, category, frecuency, image, duration, user, result, average, userName, tooSharedCopy[0]);*/
+
+                }else{
+
+                    //if(!tooSharedCopy[0].equals(""))
+                        post = new Post(id, name, category, frecuency, image, user, result, average, "", "");
+                    /*else
+                        post = new Post(id, name, category, frecuency, image, user, result, average, userName, tooSharedCopy[0]);*/
+                }
+
+                if(postMap.get("r_pi") != null && postMap.get("r_aa")!=null && postMap.get("r_gs")!=null && postMap.get("r_ch") != null){
+
+                    post.setmPi(Double.parseDouble(postMap.get("r_pi")+""));
+                    post.setmAa(Double.parseDouble(postMap.get("r_aa")+""));
+                    post.setmGs(Double.parseDouble(postMap.get("r_gs")+""));
+                    post.setmCh(Double.parseDouble(postMap.get("r_ch")+""));
+
+                }
+                Log.v("Data", post.toString());
+                mPostList.addFirst(post);
+                reloadData();
 
                 mDatabaseTemp2.child(user).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -237,7 +212,7 @@ public class Home extends ListFragment {
                         final String userName = (String)map.get("mUserName");
                         final String[] tooSharedCopy = {""};
 
-                        List foodList = Arrays.asList(getResources().getStringArray(R.array.new_post_food_categories));
+                        Log.v("dataPP", name);
 
                         if(postMap.get("last_share") != null){
                             final String lastShare = (String)postMap.get("last_share");
@@ -259,6 +234,7 @@ public class Home extends ListFragment {
                                     for (int i=0; i<mPostList.size();i++) {
                                         if(mPostList.get(i).getmId().equals(id)){
                                             mPostList.get(i).setmTooShared(tooSharedName);
+                                            Log.v("dataPP", "Si paso");
                                         }
                                     }
                                     reloadData();
@@ -273,49 +249,7 @@ public class Home extends ListFragment {
 
                         }
 
-                        long result = 0;
-                        if(postMap.get("result") != null){
-                            result = (long)postMap.get("result");
-                            Log.v("DB", result+":result");
-                        }
 
-                        long average = 0;
-                        if(postMap.get("average") != null){
-                            try {
-                                average = (long)postMap.get("average");
-                            }catch (NumberFormatException ex){
-
-                            }
-                        }
-
-                        Post post = null;
-                        if(postMap.get("duration") != null){
-                            String duration = (String)postMap.get("duration");
-
-                            if(!tooSharedCopy[0].equals(""))
-                                post = new Post(id, name, category, frecuency, image, duration, user, result, average, userName, "");
-                            else
-                                post = new Post(id, name, category, frecuency, image, duration, user, result, average, userName, tooSharedCopy[0]);
-
-                        }else{
-
-                            if(!tooSharedCopy[0].equals(""))
-                                post = new Post(id, name, category, frecuency, image, user, result, average, userName, "");
-                            else
-                                post = new Post(id, name, category, frecuency, image, user, result, average, userName, tooSharedCopy[0]);
-                        }
-
-                        if(postMap.get("r_pi") != null && postMap.get("r_aa")!=null && postMap.get("r_gs")!=null && postMap.get("r_ch") != null){
-
-                            post.setmPi(Double.parseDouble(postMap.get("r_pi")+""));
-                            post.setmAa(Double.parseDouble(postMap.get("r_aa")+""));
-                            post.setmGs(Double.parseDouble(postMap.get("r_gs")+""));
-                            post.setmCh(Double.parseDouble(postMap.get("r_ch")+""));
-
-                        }
-
-                        mPostList.addFirst(post);
-                        reloadData();
                     }
 
                     @Override
@@ -501,95 +435,11 @@ public class Home extends ListFragment {
                }
            });
         }
-
-        /*RecyclerView postList = (RecyclerView) view.findViewById(android.R.id.list);
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        layoutManager.setReverseLayout(false);
-
-        postList.setHasFixedSize(false);
-        postList.setLayoutManager(layoutManager);
-
-
-        FirebaseRecyclerAdapter<GenericTypeIndicator, PostViewHolder> mAdapter = new FirebaseRecyclerAdapter<GenericTypeIndicator, PostViewHolder>(
-                GenericTypeIndicator.class, android.R.layout.two_line_list_item,
-                PostViewHolder.class, mDatabase) {
-
-            @Override
-            protected void populateViewHolder(final PostViewHolder viewHolder, final GenericTypeIndicator model, final int position) {
-
-                String key = this.getRef(position).getKey();
-                Log.v("DB", key);
-                mDatabase.child("user-posts").child(key).addListenerForSingleValueEvent(new ValueEventListener() {
-
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        String name = dataSnapshot.child("name").getValue(String.class);
-                        ((TextView)viewHolder.itemView.findViewById(android.R.id.text1)).setText(name);
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-
-                });
-
-            }
-        };
-
-        postList.setAdapter(mAdapter);*/
-
-       /* mDatabase.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Log.v("DB", dataSnapshot.getValue().toString());
-                HashMap map = (HashMap)dataSnapshot.getValue();
-
-                Log.v("DB", ((HashMap)map.get("-KbMbLITyK5aVJRF4_lV")).get("name")+"");
-                //mLeadsAdapter.add(new Post());
-
-
-                /*for (String k:map.keySet()) {
-                    mLeadsAdapter.add(map.get(k));
-                }
-
-                //Post post = dataSnapshot.getValue(Post.class);
-
-                mLeadsAdapter.notifyDataSetChanged();
-
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                Log.v("DB", "removed");
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });*/
-
     }
-
-
-
-
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
     }
 
     /**
@@ -605,16 +455,6 @@ public class Home extends ListFragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
-    }
-
-
-    public static class PostViewHolder extends RecyclerView.ViewHolder{
-
-        public PostViewHolder(View itemView) {
-            super(itemView);
-        }
-
-
     }
 
 }
