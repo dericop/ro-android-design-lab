@@ -37,31 +37,7 @@ public class Post {
 
     }
 
-    /*Constructores para la creación de un post*/
-
-    public Post(String id, String name, String category, String frecuency, String image, String user) {
-        mId = id;
-        mName = name;
-        mCategory = category;
-        mFrecuency = frecuency;
-        mImage = image;
-        mUser = user;
-
-    }
-
-    public Post(String id, String name, String category, String frecuency, String image, String duration, String user){
-        mId = id;
-        mName = name;
-        mCategory = category;
-        mFrecuency = frecuency;
-        mImage = image;
-        mDuration = duration;
-        mUser = user;
-    }
-
-    /*Constructores para obtener posts de la base de datos */
-
-    public Post(String id, String name, String category, String frecuency, String image, String user, long result, long average, String userName, String tooShared) {
+    public Post(String id, String name, String category, String frecuency, String image, String user, long result, long average) {
         mId = id;
         mName = name;
         mCategory = category;
@@ -70,9 +46,7 @@ public class Post {
         mUser = user;
         mResult = result;
         mAverage = average;
-        mUserName = userName;
-        mTooShared = tooShared;
-
+        mTooShared = "";
     }
 
     public Post(String id, String name, String category, String frecuency, String image, String duration, String user, long result, long average, String userName, String tooShared){

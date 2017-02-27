@@ -287,7 +287,7 @@ public class AddPost extends AppCompatActivity {
                 post = new Post(key, nameText.toString(), category.toString(), frecuency.toString(), downloadUrl + "", durationActivity.toString(), mHome.user.getUid(), resultForReply, averageForReply, "", "");
             }
         } else {
-            post = new Post(key, nameText.toString(), category.toString(), frecuency.toString(), downloadUrl + "", mHome.user.getUid(), resultForReply, averageForReply, "", "");
+            post = new Post(key, nameText.toString(), category.toString(), frecuency.toString(), downloadUrl + "", mHome.user.getUid(), resultForReply, averageForReply);
         }
         return post;
     }

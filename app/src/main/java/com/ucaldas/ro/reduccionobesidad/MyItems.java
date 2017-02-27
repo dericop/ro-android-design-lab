@@ -127,7 +127,7 @@ public class MyItems extends Fragment {
                                 post = new Post(id, name, category, frecuency, image, duration, user, result, average, "", "");
 
                             }else{
-                                post = new Post(id, name, category, frecuency, image, user, result, average, "","");
+                                post = new Post(id, name, category, frecuency, image, user, result, average);
                             }
 
                             if(values.get("r_pi") != null && values.get("r_aa")!=null && values.get("r_gs")!=null && values.get("r_ch") != null){

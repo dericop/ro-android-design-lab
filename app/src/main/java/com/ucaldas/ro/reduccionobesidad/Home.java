@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -56,16 +57,20 @@ import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
  * Use the {@link Home#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Home extends ListFragment {
+public class Home extends ListFragment{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private SwipeRefreshLayout mSwipeRefreshing;
     boolean isTheFirstLoad = true;
-    DatabaseReference mDatabase = null;
-    HomeAdapter mPostAdapter= null;
-    Button btn_new_posts = null;
+    private DatabaseReference mDatabase = null;
+    private DatabaseReference postRef = null;
+    private HomeAdapter mPostAdapter= null;
+    private Button btn_new_posts = null;
+    private String lastPostLoaded = "";
+    private boolean flag_loading = false;
+    private int countOfItemsLoadedForTime = 5;
 
 
     // TODO: Rename and change types of parameters
@@ -130,126 +135,112 @@ public class Home extends ListFragment {
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
-    private void refreshPostList(){
+    private long getResult(HashMap postMap){
+        long result = 0;
+        if(postMap.get("result") != null){
+            result = (long)postMap.get("result");
+            Log.v("DB", result+":result");
+        }
+        return result;
+    }
 
-        DatabaseReference mDatabaseTemp;
+    private long getAverage(HashMap postMap){
+        long average = 0;
+        if(postMap.get("average") != null){
+            try {
+                average = (long)postMap.get("average");
+            }catch (NumberFormatException ex){
+
+            }
+        }
+        return average;
+    }
+
+    private void assignPostsReference(){
         if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
-            mDatabaseTemp = mDatabase.child("user-posts");
+            postRef = mDatabase.child("user-posts");
         }else{
-            mDatabaseTemp = mDatabase.child("user-posts-reflexive");
+            postRef = mDatabase.child("user-posts-reflexive");
+        }
+    }
+
+    private void assignUsersReference(){
+        if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
+            postRef = mDatabase.child("users");
+        }else{
+            postRef = mDatabase.child("users-reflexive");
+        }
+    }
+
+    private Post createBasePost(HashMap postMap){
+
+        final String name = (String)postMap.get("name");
+        final String frecuency =(String) postMap.get("frecuency");
+        final String category = (String)postMap.get("category");
+        final String image = (String)postMap.get("image");
+        final String user = (String)postMap.get("user");
+        final String id = (String)postMap.get("id");
+        long result = getResult(postMap);
+        long average = getAverage(postMap);
+
+
+        Post post = new Post(id, name, category, frecuency, image, user, result, average);
+
+        if(postMap.get("last_share") != null){
+            post.setmTooShared(postMap.get("last_share")+"");
         }
 
-        mDatabaseTemp.orderByKey().limitToLast(30).addChildEventListener(new ChildEventListener() {
+        if(postMap.get("duration") != null){
+            post.setmDuration((String)postMap.get("duration"));
+        }
+
+        if(postMap.get("r_pi") != null && postMap.get("r_aa")!=null && postMap.get("r_gs")!=null && postMap.get("r_ch") != null){
+            post.setmPi(Double.parseDouble(postMap.get("r_pi")+""));
+            post.setmAa(Double.parseDouble(postMap.get("r_aa")+""));
+            post.setmGs(Double.parseDouble(postMap.get("r_gs")+""));
+            post.setmCh(Double.parseDouble(postMap.get("r_ch")+""));
+        }
+
+        return post;
+    }
+
+    //Position: 0 -> ingresar al principio, 1 - ingresar al final
+    private void updatePostsFeed(HashMap map, int position){
+        final HashMap<String, Object> postMap = map;
+        Log.v("Pagination",postMap.toString());
+        final Post post = createBasePost(postMap);
+
+        if(position == 0)
+            mPostList.addFirst(post);
+        else
+            mPostList.addLast(post);
+        reloadData();
+
+        assignUsersReference();
+        postRef.child(post.getmUser()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            public void onDataChange(DataSnapshot dataSnapshot){
 
-                final HashMap<String, Object> postMap = (HashMap)dataSnapshot.getValue();
+                HashMap<String, Object> userMap = (HashMap)dataSnapshot.getValue();
+                final String userName = (String)userMap.get("mUserName");
+                post.setmUserName(userName);
+                mPostAdapter.notifyDataSetChanged();
 
-                final String name = (String)postMap.get("name");
-                final String frecuency =(String) postMap.get("frecuency");
-                final String category = (String)postMap.get("category");
-                final String image = (String)postMap.get("image");
-                final String user = (String)postMap.get("user");
-                final String id = (String)postMap.get("id");
-
-                DatabaseReference mDatabaseTemp2;
-                if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
-                    mDatabaseTemp2 = mDatabase.child("users");
-                }else{
-                    mDatabaseTemp2 = mDatabase.child("users-reflexive");
-                }
-
-                Log.v("DATAPP", postMap.toString());
-
-                long result = 0;
-                if(postMap.get("result") != null){
-                    result = (long)postMap.get("result");
-                    Log.v("DB", result+":result");
-                }
-
-                long average = 0;
-                if(postMap.get("average") != null){
-                    try {
-                        average = (long)postMap.get("average");
-                    }catch (NumberFormatException ex){
-
-                    }
-                }
-
-                Post post;
-                if(postMap.get("duration") != null){
-                    String duration = (String)postMap.get("duration");
-
-                    //if(!tooSharedCopy[0].equals(""))
-                        post = new Post(id, name, category, frecuency, image, duration, user, result, average, "", "");
-                    /*else
-                        post = new Post(id, name, category, frecuency, image, duration, user, result, average, userName, tooSharedCopy[0]);*/
-
-                }else{
-
-                    //if(!tooSharedCopy[0].equals(""))
-                        post = new Post(id, name, category, frecuency, image, user, result, average, "", "");
-                    /*else
-                        post = new Post(id, name, category, frecuency, image, user, result, average, userName, tooSharedCopy[0]);*/
-                }
-
-                if(postMap.get("r_pi") != null && postMap.get("r_aa")!=null && postMap.get("r_gs")!=null && postMap.get("r_ch") != null){
-
-                    post.setmPi(Double.parseDouble(postMap.get("r_pi")+""));
-                    post.setmAa(Double.parseDouble(postMap.get("r_aa")+""));
-                    post.setmGs(Double.parseDouble(postMap.get("r_gs")+""));
-                    post.setmCh(Double.parseDouble(postMap.get("r_ch")+""));
-
-                }
-                Log.v("Data", post.toString());
-                mPostList.addFirst(post);
-                reloadData();
-
-                mDatabaseTemp2.child(user).addListenerForSingleValueEvent(new ValueEventListener() {
+                postRef.child(post.getmTooShared()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        HashMap<String, Object> map = (HashMap)dataSnapshot.getValue();
-                        final String userName = (String)map.get("mUserName");
-                        final String[] tooSharedCopy = {""};
 
-                        Log.v("dataPP", name);
+                        if(dataSnapshot.getValue()!=null && !post.getmTooShared().equals("")){
+                            HashMap<String, Object> tooSharedMap = (HashMap) dataSnapshot.getValue();
+                            Log.v("DataShare", "Too:"+tooSharedMap.get("mUserName"));
 
-                        if(postMap.get("last_share") != null){
-                            final String lastShare = (String)postMap.get("last_share");
+                            Log.v("DataShare", "Too:"+post.getmTooShared());
 
-                            DatabaseReference mDatabaseTemp2 = null;
-                            if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
-                                mDatabaseTemp2 = mDatabase.child("users");
-                            }else{
-                                mDatabaseTemp2 = mDatabase.child("users-reflexive");
-                            }
+                            final String tooSharedName = (String) tooSharedMap.get("mUserName");
+                            post.setmTooShared(tooSharedName);
 
-                            mDatabaseTemp2.child(lastShare).addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-
-                                    HashMap<String, Object> tooSharedMap = (HashMap) dataSnapshot.getValue();
-                                    final String tooSharedName = (String) tooSharedMap.get("mUserName");
-                                    tooSharedCopy[0] = tooSharedName;
-                                    for (int i=0; i<mPostList.size();i++) {
-                                        if(mPostList.get(i).getmId().equals(id)){
-                                            mPostList.get(i).setmTooShared(tooSharedName);
-                                            Log.v("dataPP", "Si paso");
-                                        }
-                                    }
-                                    reloadData();
-
-                                }
-
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-
-                                }
-                            });
-
+                            mPostAdapter.notifyDataSetChanged();
                         }
-
-
                     }
 
                     @Override
@@ -257,106 +248,42 @@ public class Home extends ListFragment {
 
                     }
                 });
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void refreshPostList(){
+
+        assignPostsReference();
+
+        postRef.orderByKey().limitToLast(countOfItemsLoadedForTime).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                final HashMap<String, Object> postMap = (HashMap)dataSnapshot.getValue();
+                updatePostsFeed(postMap, 0);
+                if(s!=null)
+                    lastPostLoaded = s;
+
+                Log.v("Pagination", "last page: "+lastPostLoaded);
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                HashMap<String, Object> map = (HashMap)dataSnapshot.getValue();
-
-                String name = (String)map.get("name");
-                String frecuency =(String) map.get("frecuency");
-                String category = (String)map.get("category");
-                String image = (String)map.get("image");
-                String user = (String)map.get("user");
-                final String id = (String)map.get("id");
-
-                long result = 0;
-                if(map.get("result") != null){
-                    result = (long)map.get("result");
-                    Log.v("DB", result+":result");
-                }
-                final long resultData = result;
-
-                long average = 0;
-                if(map.get("average") != null){
-                    try {
-                        average = (long)map.get("average");
-                    }catch (NumberFormatException ex){
-
-                    }
-
-                }
-
-                final long averageData = average;
-
-                String tooShare = "";
-                if(map.get("last_share") != null){
-
-                    DatabaseReference mDatabaseTemp2 = null;
-                    if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
-                        mDatabaseTemp2 = mDatabase.child("users");
-                    }else{
-                        mDatabaseTemp2 = mDatabase.child("users-reflexive");
-                    }
-
-                    tooShare = (String) map.get("last_share");
-                    mDatabaseTemp2.child(tooShare).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            HashMap<String, Object> tooSharedMap = (HashMap) dataSnapshot.getValue();
-                            String tooSharedName = (String) tooSharedMap.get("mUserName");
-
-                            for (int i=0; i<mPostList.size(); i++){
-                                if(mPostList.get(i).getmId().equals(id)){
-                                    mPostList.get(i).setmResult(resultData);
-                                    mPostList.get(i).setmAverage(averageData);
-                                    mPostList.get(i).setmTooShared(tooSharedName);
-
-                                    /*mPostList.get(i).setmId(id);
-                                    mPostList.get(i).setmName(name);
-                                    mPostList.get(i).setmCategory(category);
-                                    mPostList.get(i).setmCategory(category);*/
-                                }
-                            }
-
-                            //}
-
-                            mPostAdapter.notifyDataSetChanged();
-                            mSwipeRefreshing.setRefreshing(false);
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-
-                }else{
-                    for (int i=0; i<mPostList.size(); i++){
-                        if(mPostList.get(i).getmId().equals(id)){
-                            mPostList.get(i).setmResult(result);
-                            mPostList.get(i).setmAverage(average);
-
-                        /*mPostList.get(i).setmId(id);
-                        mPostList.get(i).setmName(name);
-                        mPostList.get(i).setmCategory(category);
-                        mPostList.get(i).setmCategory(category);*/
-                        }
-                    }
-
-                    //}
-
-                    mPostAdapter.notifyDataSetChanged();
-                    mSwipeRefreshing.setRefreshing(false);
-
-                }
-
+                final HashMap<String, Object> postMap = (HashMap)dataSnapshot.getValue();
+                updatePostsFeed(postMap, 0);
 
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                Log.v("DB", "removed");
+
+
             }
 
             @Override
@@ -371,11 +298,37 @@ public class Home extends ListFragment {
         });
     }
 
+    private void loadNextPage(){
+        assignPostsReference();
+
+        if(!lastPostLoaded.equals("")){
+            postRef.orderByKey().limitToLast(countOfItemsLoadedForTime).endAt(lastPostLoaded).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    if(dataSnapshot.getValue()!=null){
+                        final HashMap<String, Object> postMap = (HashMap)dataSnapshot.getValue();
+                        for(Object key: postMap.keySet()){
+                            updatePostsFeed((HashMap)postMap.get(key), 1);
+                        }
+
+                        flag_loading = true;
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
+
+    }
+
     private void reloadData(){
         if(isTheFirstLoad){
             isTheFirstLoad = false;
         }
-
 
         if(isTheFirstLoad)
             btn_new_posts.setVisibility(View.INVISIBLE);
@@ -386,54 +339,88 @@ public class Home extends ListFragment {
         mSwipeRefreshing.setRefreshing(false);
     }
 
+    private void initData(){
+        isTheFirstLoad = true;
+
+        mSwipeRefreshing.setRefreshing(true);
+        mDatabase = FirebaseDatabase.getInstance().getReference(); //Referencia de la base de datos
+    }
+
+    //Inicializa elementos gráficos y asigna eventos iniciales.
+    private void initGraphicalElementsAndEvents(View view){
+        //Obtener elementos gráficos
+        btn_new_posts = (Button) view.findViewById(R.id.btn_new_posts);
+        mSwipeRefreshing = (SwipeRefreshLayout) view.findViewById(R.id.swiperefresh);
+        mListView = (ListView) view.findViewById(android.R.id.list);
+
+        mPostList = new LinkedList<>();
+        //Creación de adaptador para la lista.
+        mPostAdapter = new HomeAdapter(
+                getActivity(),
+                mPostList);
+        mListView.setAdapter(mPostAdapter);
+        mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int i) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem,
+                                 int visibleItemCount, int totalItemCount) {
+
+                if(firstVisibleItem+visibleItemCount == totalItemCount && totalItemCount!=0)
+                {
+                    if(flag_loading == false)
+                    {
+                        flag_loading = true;
+                        loadNextPage();
+
+                    }
+                }
+            }
+        });
+
+
+        //Creación del evento de refresh
+        mSwipeRefreshing.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                //refreshPostList();
+                mSwipeRefreshing.setRefreshing(false);
+            }
+        });
+
+        //Evento para mostrar los posts nuevos.
+        btn_new_posts.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListView.smoothScrollToPosition(0);
+                btn_new_posts.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        //Evento para esconder boton de nuevas publicaciones.
+        mSwipeRefreshing.setOnChildScrollUpCallback(new SwipeRefreshLayout.OnChildScrollUpCallback() {
+            @Override
+            public boolean canChildScrollUp(SwipeRefreshLayout parent, @Nullable View child) {
+                btn_new_posts.setVisibility(View.INVISIBLE);
+                return true;
+            }
+        });
+    }
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
         if(mSwipeRefreshing == null){
-            isTheFirstLoad = true;
-            btn_new_posts = (Button) view.findViewById(R.id.btn_new_posts);
+            //Inicialización
+            initGraphicalElementsAndEvents(view);
+            initData();
 
-            mSwipeRefreshing = (SwipeRefreshLayout) view.findViewById(R.id.swiperefresh);
-            mListView = (ListView) view.findViewById(android.R.id.list);
-            mPostList = new LinkedList<>();
-
-            mPostAdapter = new HomeAdapter(
-                    getActivity(),
-                    mPostList);
-
-
-            mSwipeRefreshing.setRefreshing(true);
-            mDatabase = FirebaseDatabase.getInstance().getReference();
-
-            mListView.setAdapter(mPostAdapter);
-
-            mSwipeRefreshing.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                @Override
-                public void onRefresh() {
-                    //refreshPostList();
-                    mSwipeRefreshing.setRefreshing(false);
-                }
-            });
-
+            //Consultar los primeros posts
             refreshPostList();
-
-            btn_new_posts.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mListView.smoothScrollToPosition(0);
-                    btn_new_posts.setVisibility(View.INVISIBLE);
-                }
-            });
-
-           mSwipeRefreshing.setOnChildScrollUpCallback(new SwipeRefreshLayout.OnChildScrollUpCallback() {
-               @Override
-               public boolean canChildScrollUp(SwipeRefreshLayout parent, @Nullable View child) {
-                   btn_new_posts.setVisibility(View.INVISIBLE);
-                   return true;
-               }
-           });
         }
     }
 
