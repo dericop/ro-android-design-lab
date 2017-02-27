@@ -44,6 +44,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
@@ -70,7 +72,9 @@ public class Home extends ListFragment{
     private Button btn_new_posts = null;
     private String lastPostLoaded = "";
     private boolean flag_loading = false;
-    private int countOfItemsLoadedForTime = 5;
+    private int countOfItemsLoadedForTime = 10;
+
+    private boolean isTheFirstItem = true; //usado para obtener la primer clave en la paginación
 
 
     // TODO: Rename and change types of parameters
@@ -213,7 +217,7 @@ public class Home extends ListFragment{
         if(position == 0)
             mPostList.addFirst(post);
         else
-            mPostList.addLast(post);
+            mPostList.add(10,post);
         reloadData();
 
         assignUsersReference();
@@ -232,9 +236,6 @@ public class Home extends ListFragment{
 
                         if(dataSnapshot.getValue()!=null && !post.getmTooShared().equals("")){
                             HashMap<String, Object> tooSharedMap = (HashMap) dataSnapshot.getValue();
-                            Log.v("DataShare", "Too:"+tooSharedMap.get("mUserName"));
-
-                            Log.v("DataShare", "Too:"+post.getmTooShared());
 
                             final String tooSharedName = (String) tooSharedMap.get("mUserName");
                             post.setmTooShared(tooSharedName);
@@ -267,10 +268,12 @@ public class Home extends ListFragment{
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 final HashMap<String, Object> postMap = (HashMap)dataSnapshot.getValue();
                 updatePostsFeed(postMap, 0);
-                if(s!=null)
-                    lastPostLoaded = s;
 
-                Log.v("Pagination", "last page: "+lastPostLoaded);
+                if(s!=null && isTheFirstItem){
+                    Log.v("Pagination", "last page: "+s);
+                    lastPostLoaded = s;
+                    isTheFirstItem = false;
+                }
             }
 
             @Override
@@ -301,18 +304,36 @@ public class Home extends ListFragment{
     private void loadNextPage(){
         assignPostsReference();
 
+        Log.v("Pagination", "last post: "+lastPostLoaded);
+
         if(!lastPostLoaded.equals("")){
             postRef.orderByKey().limitToLast(countOfItemsLoadedForTime).endAt(lastPostLoaded).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-
                     if(dataSnapshot.getValue()!=null){
                         final HashMap<String, Object> postMap = (HashMap)dataSnapshot.getValue();
-                        for(Object key: postMap.keySet()){
+                        isTheFirstItem = true;
+                        SortedSet<String> keys = new TreeSet<String>(postMap.keySet());
+
+                        postMap.remove(keys.last());
+                        keys = new TreeSet<String>(postMap.keySet());
+
+                        Log.v("PaginationData", keys.toString());
+                        for (String key : keys) {
+
+                            if(isTheFirstItem){
+                                lastPostLoaded = key+"";
+                                Log.v("Pagination", "last page: "+key);
+                                isTheFirstItem = false;
+                            }
+
                             updatePostsFeed((HashMap)postMap.get(key), 1);
                         }
 
-                        flag_loading = true;
+                        mPostAdapter.notifyDataSetChanged();
+
+
+                        flag_loading = false;
                     }
                 }
 
