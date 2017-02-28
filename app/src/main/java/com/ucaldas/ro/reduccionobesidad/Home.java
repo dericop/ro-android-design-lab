@@ -1,54 +1,31 @@
 package com.ucaldas.ro.reduccionobesidad;
 
-import android.content.Context;
-import android.content.Intent;
-import android.database.DataSetObserver;
 import android.net.Uri;
-import android.nfc.FormatException;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.TextView;
 
-import com.firebase.ui.database.FirebaseListAdapter;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.GenericTypeIndicator;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 
 
 /**
@@ -133,6 +110,13 @@ public class Home extends ListFragment{
     }
 
     @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        Log.v("Detalle", "click");
+        //super.onListItemClick(l, v, position, id);
+
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -187,22 +171,25 @@ public class Home extends ListFragment{
         long result = getResult(postMap);
         long average = getAverage(postMap);
 
-
         Post post = new Post(id, name, category, frecuency, image, user, result, average);
 
         if(postMap.get("last_share") != null){
-            post.setmTooShared(postMap.get("last_share")+"");
+            post.setLast_share(postMap.get("last_share")+"");
         }
 
         if(postMap.get("duration") != null){
-            post.setmDuration((String)postMap.get("duration"));
+            post.setDuration((String)postMap.get("duration"));
         }
 
         if(postMap.get("r_pi") != null && postMap.get("r_aa")!=null && postMap.get("r_gs")!=null && postMap.get("r_ch") != null){
-            post.setmPi(Double.parseDouble(postMap.get("r_pi")+""));
-            post.setmAa(Double.parseDouble(postMap.get("r_aa")+""));
-            post.setmGs(Double.parseDouble(postMap.get("r_gs")+""));
-            post.setmCh(Double.parseDouble(postMap.get("r_ch")+""));
+            post.setR_pi(Double.parseDouble(postMap.get("r_pi")+""));
+            post.setR_aa(Double.parseDouble(postMap.get("r_aa")+""));
+            post.setR_gs(Double.parseDouble(postMap.get("r_gs")+""));
+            post.setR_ch(Double.parseDouble(postMap.get("r_ch")+""));
+        }
+
+        if(postMap.get("replyCount") != null){
+            post.setReplyCount((long)postMap.get("replyCount"));
         }
 
         return post;
@@ -221,7 +208,7 @@ public class Home extends ListFragment{
         reloadData();
 
         assignUsersReference();
-        postRef.child(post.getmUser()).addListenerForSingleValueEvent(new ValueEventListener() {
+        postRef.child(post.getUser()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot){
 
@@ -230,15 +217,15 @@ public class Home extends ListFragment{
                 post.setmUserName(userName);
                 mPostAdapter.notifyDataSetChanged();
 
-                postRef.child(post.getmTooShared()).addListenerForSingleValueEvent(new ValueEventListener() {
+                postRef.child(post.getLast_share()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
 
-                        if(dataSnapshot.getValue()!=null && !post.getmTooShared().equals("")){
+                        if(dataSnapshot.getValue()!=null && !post.getLast_share().equals("")){
                             HashMap<String, Object> tooSharedMap = (HashMap) dataSnapshot.getValue();
 
                             final String tooSharedName = (String) tooSharedMap.get("mUserName");
-                            post.setmTooShared(tooSharedName);
+                            post.setLast_share(tooSharedName);
 
                             mPostAdapter.notifyDataSetChanged();
                         }
@@ -257,6 +244,57 @@ public class Home extends ListFragment{
 
             }
         });
+    }
+
+    private void searchPostAndUpdate(DataSnapshot dataSnapshot){
+        final Post postForSearch = dataSnapshot.getValue(Post.class);
+
+        for (final Post p: mPostList){
+            if(p.getId().equals(postForSearch.getId())){
+
+                p.setName(postForSearch.getName());
+                p.setAverage(postForSearch.getAverage());
+                p.setCategory(postForSearch.getCategory());
+                p.setDuration(postForSearch.getDuration());
+                p.setFrecuency(postForSearch.getFrecuency());
+                p.setImage(postForSearch.getImage());
+                p.setR_aa(postForSearch.getR_aa());
+                p.setR_ch(postForSearch.getR_ch());
+                p.setR_gs(postForSearch.getR_gs());
+                p.setR_pi(postForSearch.getR_pi());
+                p.setResult(postForSearch.getResult());
+                p.setReplyCount(postForSearch.getReplyCount());
+
+                if(postForSearch.getLast_share()!=null && !postForSearch.getLast_share().equals("")){
+                    postRef.child(postForSearch.getLast_share()).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+
+                            if(dataSnapshot.getValue()!=null){
+                                HashMap<String, Object> tooSharedMap = (HashMap) dataSnapshot.getValue();
+
+                                final String tooSharedName = (String) tooSharedMap.get("mUserName");
+                                p.setLast_share(tooSharedName);
+
+                                mPostAdapter.notifyDataSetChanged();
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }else{
+                    mPostAdapter.notifyDataSetChanged();
+                }
+
+                return;
+
+            }
+        }
+
+
     }
 
     private void refreshPostList(){
@@ -278,8 +316,8 @@ public class Home extends ListFragment{
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                final HashMap<String, Object> postMap = (HashMap)dataSnapshot.getValue();
-                updatePostsFeed(postMap, 0);
+
+                searchPostAndUpdate(dataSnapshot);
 
             }
 
@@ -331,8 +369,6 @@ public class Home extends ListFragment{
                         }
 
                         mPostAdapter.notifyDataSetChanged();
-
-
                         flag_loading = false;
                     }
                 }
@@ -379,6 +415,8 @@ public class Home extends ListFragment{
         mPostAdapter = new HomeAdapter(
                 getActivity(),
                 mPostList);
+
+
         mListView.setAdapter(mPostAdapter);
         mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
@@ -401,6 +439,7 @@ public class Home extends ListFragment{
                 }
             }
         });
+
 
 
         //Creación del evento de refresh

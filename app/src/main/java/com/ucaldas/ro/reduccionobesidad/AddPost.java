@@ -53,6 +53,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -95,6 +97,8 @@ public class AddPost extends AppCompatActivity {
     private String typeForReply;
     private long resultForReply;
     private long averageForReply;
+
+    private DatabaseReference database;
 
     private ArrayAdapter<CharSequence> categoryAdapter;
 
@@ -189,7 +193,6 @@ public class AddPost extends AppCompatActivity {
                 idForReply = getIntent().getStringExtra("id");
                 typeForReply = getIntent().getStringExtra("type");
                 resultForReply = getIntent().getIntExtra("result", 0);
-
 
                 Log.v("DBP", resultForReply + "");
                 averageForReply = getIntent().getIntExtra("average", 0);
@@ -292,6 +295,54 @@ public class AddPost extends AppCompatActivity {
         return post;
     }
 
+    private void assignUserPostsReference(){
+        if(WelcomeActivity.CURRENT_APP_VERSION.equals("A"))
+            database = database.child("user-posts");
+        else
+            database = database.child("user-posts-reflexive");
+    }
+
+    private void assignUserPostsReferenceForTest(){
+        database = database.child("user-posts-reflexive-tests");
+    }
+
+    private void sumTocounterReply(String idForReply){
+        assignUserPostsReference();
+        database = database.child(idForReply);
+        database.runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(MutableData mutableData) {
+                Log.v("Reply", "Ingreso transaccion");
+
+                Post p = mutableData.getValue(Post.class);
+
+                if (p == null) {
+                    return Transaction.success(mutableData);
+                }
+                Log.v("Reply", "Compartiendo");
+                p.replyCount = p.replyCount + 1;
+
+                // Set value and report transaction success
+                mutableData.setValue(p);
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
+                if(databaseError!=null){
+                    if(getCurrentFocus()!=null){
+                        Snackbar.make(getCurrentFocus(), "Revise su conexión a internet o intentelo más tarde", 2000).show();
+                    }
+                }else{
+                    progress.dismiss();
+                    finish();
+                }
+            }
+
+        });
+
+    }
+
     private void addSaveEventListener() {
         /*
         * Evento para guardar una nueva publicación
@@ -312,12 +363,13 @@ public class AddPost extends AppCompatActivity {
                                     "Espera un momento", true);
 
                             if (isOnline()) {
-                                DatabaseReference datRef = FirebaseDatabase.getInstance().getReference();
+                                database = FirebaseDatabase.getInstance().getReference();
+
                                 String dataKey;
                                 if(WelcomeActivity.CURRENT_APP_VERSION.equals("A"))
-                                    dataKey = datRef.child("user-data").push().getKey();
+                                    dataKey = database.child("user-data").push().getKey();
                                 else
-                                    dataKey = datRef.child("user-data-reflexive").push().getKey();
+                                    dataKey = database.child("user-data-reflexive").push().getKey();
 
                                 Post post = getPostData(idForReply, imageForReply);
                                 Map<String, Object> mapForItems = post.toMap();
@@ -334,13 +386,11 @@ public class AddPost extends AppCompatActivity {
                                     mapForUpdate.put("/user-data-reflexive/" + mHome.user.getUid() + "/" + dataKey, mapForItems);
                                 }
 
-                                //mapForUpdate.put("user-data/"+mHome.user.getUid()+"/", );
 
-                                datRef.updateChildren(mapForUpdate).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                database.updateChildren(mapForUpdate).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
-                                        progress.dismiss();
-                                        finish();
+                                        sumTocounterReply(idForReply);
                                     }
                                 });
 

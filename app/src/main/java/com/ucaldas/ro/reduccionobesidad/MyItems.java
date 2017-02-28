@@ -1,6 +1,5 @@
 package com.ucaldas.ro.reduccionobesidad;
 
-import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -132,10 +131,10 @@ public class MyItems extends Fragment {
 
                             if(values.get("r_pi") != null && values.get("r_aa")!=null && values.get("r_gs")!=null && values.get("r_ch") != null){
 
-                                post.setmPi(Double.parseDouble(values.get("r_pi")+""));
-                                post.setmAa(Double.parseDouble(values.get("r_aa")+""));
-                                post.setmGs(Double.parseDouble(values.get("r_gs")+""));
-                                post.setmCh(Double.parseDouble(values.get("r_ch")+""));
+                                post.setR_pi(Double.parseDouble(values.get("r_pi")+""));
+                                post.setR_aa(Double.parseDouble(values.get("r_aa")+""));
+                                post.setR_gs(Double.parseDouble(values.get("r_gs")+""));
+                                post.setR_ch(Double.parseDouble(values.get("r_ch")+""));
                             }
 
                             myItems.add(post);

@@ -2,17 +2,16 @@ package com.ucaldas.ro.reduccionobesidad;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -41,13 +40,13 @@ public class HomeAdapter extends ArrayAdapter<Post> {
 
         final Post post = getItem(position);
 
-        Log.v("DBT", post.getmCategory());
+        Log.v("DBT", post.getCategory());
         // ¿Existe el view actual?
         //if (null == convertView) {
         List foodList = Arrays.asList(mContext.getResources().getStringArray(R.array.new_post_food_categories));
 
         if(WelcomeActivity.CURRENT_APP_VERSION.equals("R")){
-            if(foodList.contains(post.getmCategory())){
+            if(foodList.contains(post.getCategory())){
                 convertView = inflater.inflate(
                         R.layout.list_home_item_reflexive,
                         parent,
@@ -76,27 +75,35 @@ public class HomeAdapter extends ArrayAdapter<Post> {
         TextView lbl_too = (TextView) convertView.findViewById(R.id.lbl_too);
         TextView txtActivityResult = (TextView) convertView.findViewById(R.id.txt_activity_result);
         LinearLayout containerActivityResult = (LinearLayout) convertView.findViewById(R.id.container_txt_activity_result);
+        TextView txtReply = (TextView) convertView.findViewById(R.id.replyCounter);
+
+
 
         // Setup
-        Glide.with(getContext()).load(post.getmImage()).into(avatar);
-        name.setText(post.getmName());
+        Glide.with(getContext()).load(post.getImage()).into(avatar);
+        name.setText(post.getName());
         title.setText(post.getmUserName());
-        otherUser.setText(post.getmTooShared());
+        otherUser.setText(post.getLast_share());
 
-        if(post.getmTooShared()!=null && post.getmTooShared().equals("")){
+        if(post.getLast_share()!=null && post.getLast_share().equals("")){
             lbl_too.setVisibility(View.INVISIBLE);
         }else{
             lbl_too.setVisibility(View.VISIBLE);
         }
 
-        long result = post.getmResult();
+        if(post.getReplyCount()!=0){
+            txtReply.setText(post.getReplyCount()+"");
+        }
+
+
+        long result = post.getResult();
         Log.v("DB", result+"");
         if(result == 0){
             if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
                 txtAverage.setVisibility(View.INVISIBLE);
                 resultItem.setBackgroundDrawable(getContext().getResources().getDrawable(R.drawable.circle_clock));
             }else{
-                if(!foodList.contains(post.getmCategory())){
+                if(!foodList.contains(post.getCategory())){
                     txtActivityResult.setText("Pendiente");
                     containerActivityResult.setBackgroundColor(mContext.getResources().getColor(R.color.activity_wait_color));
                 }
@@ -105,7 +112,7 @@ public class HomeAdapter extends ArrayAdapter<Post> {
         }else{
             if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
                 //txtAverage.setVisibility(View.VISIBLE);
-                //txtAverage.setText(post.getmAverage()+"");
+                //txtAverage.setText(post.getAverage()+"");
 
                 switch ((int)result){
                     case 1:
@@ -119,9 +126,9 @@ public class HomeAdapter extends ArrayAdapter<Post> {
                         break;
                 }
             }else{
-                if(!foodList.contains(post.getmCategory())){
+                if(!foodList.contains(post.getCategory())){
                     containerActivityResult.setBackgroundColor(mContext.getResources().getColor(R.color.colorAccent));
-                    int intResult = (int)post.getmAverage();
+                    int intResult = (int)post.getAverage();
 
                     if(intResult == 1){
                         txtActivityResult.setText("Sedentario");
@@ -147,8 +154,8 @@ public class HomeAdapter extends ArrayAdapter<Post> {
                     int maxCalificationForPI = 10;
                     int relativeLayoutHeight = 50;
 
-                    if(post.getmPi() != 0){
-                        int percentage = (int)(post.getmPi()*100)/maxCalificationForPI;
+                    if(post.getR_pi() != 0){
+                        int percentage = (int)(post.getR_pi()*100)/maxCalificationForPI;
                         int graphicalHeight = (percentage*relativeLayoutHeight) / 100;
 
                         ViewGroup.LayoutParams piParams = piContainer.getLayoutParams();
@@ -157,8 +164,8 @@ public class HomeAdapter extends ArrayAdapter<Post> {
                     }
 
                     int maxCalificationForOthers = 3;
-                    if(post.getmAa() != 0){
-                        int percentage = (int)(post.getmAa()*100)/maxCalificationForOthers;
+                    if(post.getR_aa() != 0){
+                        int percentage = (int)(post.getR_aa()*100)/maxCalificationForOthers;
                         int graphicalHeight = (percentage*relativeLayoutHeight)/ 100;
 
                         ViewGroup.LayoutParams aaParams = aaContainer.getLayoutParams();
@@ -166,8 +173,8 @@ public class HomeAdapter extends ArrayAdapter<Post> {
                         aaContainer.setLayoutParams(aaParams);
                     }
 
-                    if(post.getmGs() != 0){
-                        int percentage = (int)(post.getmGs()*100)/maxCalificationForOthers;
+                    if(post.getR_gs() != 0){
+                        int percentage = (int)(post.getR_gs()*100)/maxCalificationForOthers;
                         int graphicalHeight = (percentage*relativeLayoutHeight)/ 100;
 
                         ViewGroup.LayoutParams gsParams = gsContainer.getLayoutParams();
@@ -175,9 +182,9 @@ public class HomeAdapter extends ArrayAdapter<Post> {
                         gsContainer.setLayoutParams(gsParams);
                     }
 
-                    if(post.getmCh() != 0){
+                    if(post.getR_ch() != 0){
 
-                        int percentage = (int)(post.getmCh()*100)/maxCalificationForOthers;
+                        int percentage = (int)(post.getR_ch()*100)/maxCalificationForOthers;
                         int graphicalHeight = (percentage*relativeLayoutHeight)/ 100;
                         ViewGroup.LayoutParams chParams = chContainer.getLayoutParams();
                         chParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, graphicalHeight, mContext.getResources().getDisplayMetrics());
@@ -189,7 +196,6 @@ public class HomeAdapter extends ArrayAdapter<Post> {
             }
         }
 
-
         ImageButton action_reply = (ImageButton) convertView.findViewById(R.id.action_reply);
         action_reply.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -197,20 +203,18 @@ public class HomeAdapter extends ArrayAdapter<Post> {
 
                 Intent replyIntent = new Intent(mContext, AddPost.class);
                 replyIntent.putExtra("source", "reply");
-                replyIntent.putExtra("id", post.getmId());
-                replyIntent.putExtra("image", post.getmImage());
-                replyIntent.putExtra("name", post.getmName());
-                replyIntent.putExtra("type", post.getmCategory());
+                replyIntent.putExtra("id", post.getId());
+                replyIntent.putExtra("image", post.getImage());
+                replyIntent.putExtra("name", post.getName());
+                replyIntent.putExtra("type", post.getCategory());
 
-                Log.v("DBP", post.getmResult()+"");
-                replyIntent.putExtra("result", (int)post.getmResult());
-                replyIntent.putExtra("average", (int)post.getmAverage());
+                Log.v("DBP", post.getResult()+"");
+                replyIntent.putExtra("result", (int)post.getResult());
+                replyIntent.putExtra("average", (int)post.getAverage());
                 mContext.startActivity(replyIntent);
             }
         });
 
         return convertView;
     }
-
-
 }

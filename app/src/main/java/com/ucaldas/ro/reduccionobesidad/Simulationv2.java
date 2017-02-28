@@ -477,7 +477,8 @@ public class Simulationv2 extends Fragment {
 
     private ViewGroup.LayoutParams getWidthForBar(View view, int quantity, int maxWidth, int dataSize){
         ViewGroup.LayoutParams params = view.getLayoutParams();
-        params.width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,(((quantity*100/dataSize)*maxWidth)/100), getContext().getResources().getDisplayMetrics());
+        if(getContext() != null)
+            params.width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,(((quantity*100/dataSize)*maxWidth)/100), getContext().getResources().getDisplayMetrics());
         return params;
     }
 

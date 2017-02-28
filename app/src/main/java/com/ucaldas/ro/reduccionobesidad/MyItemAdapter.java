@@ -1,7 +1,6 @@
 package com.ucaldas.ro.reduccionobesidad;
 
 import android.content.Context;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,7 +64,7 @@ public class MyItemAdapter extends BaseAdapter {
                 convertView = inflater.inflate(R.layout.list_my_items_item, null);
             }else{
 
-                if(foodList.contains(post.getmCategory())){
+                if(foodList.contains(post.getCategory())){
                     convertView = inflater.inflate(R.layout.list_my_items_item_reflexive, null);
                 }else{
                     convertView = inflater.inflate(R.layout.list_my_items_item_reflexive_activity, null);
@@ -82,16 +81,16 @@ public class MyItemAdapter extends BaseAdapter {
 
 
             // Setup
-            Glide.with(mContext).load(post.getmImage()).into(thumbnail);
-            name.setText(post.getmName());
-            long result = post.getmResult();
+            Glide.with(mContext).load(post.getImage()).into(thumbnail);
+            name.setText(post.getName());
+            long result = post.getResult();
 
             if(result == 0){
                 if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
                     txtAverage.setVisibility(View.INVISIBLE);
                     resultItem.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.circle_clock));
                 }else{
-                    if(!foodList.contains(post.getmCategory())){
+                    if(!foodList.contains(post.getCategory())){
                         txtActivityResult.setText("Pendiente");
                         containerActivityResult.setBackgroundColor(mContext.getResources().getColor(R.color.activity_wait_color));
                     }
@@ -100,7 +99,7 @@ public class MyItemAdapter extends BaseAdapter {
             }else{
                 if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
                     //txtAverage.setVisibility(View.VISIBLE);
-                    //txtAverage.setText(post.getmAverage()+"");
+                    //txtAverage.setText(post.getAverage()+"");
 
                     switch ((int)result){
                         case 1:
@@ -115,7 +114,7 @@ public class MyItemAdapter extends BaseAdapter {
                     }
                 }else{
 
-                    if(!foodList.contains(post.getmCategory())){
+                    if(!foodList.contains(post.getCategory())){
                         containerActivityResult.setBackgroundColor(mContext.getResources().getColor(R.color.colorAccent));
                         int intResult = (int)result;
 
@@ -143,8 +142,8 @@ public class MyItemAdapter extends BaseAdapter {
                         int maxCalificationForPI = 10;
                         int relativeLayoutHeight = 50;
 
-                        if(post.getmPi() != 0){
-                            int percentage = (int)(post.getmPi()*100)/maxCalificationForPI;
+                        if(post.getR_pi() != 0){
+                            int percentage = (int)(post.getR_pi()*100)/maxCalificationForPI;
                             int graphicalHeight = (percentage*relativeLayoutHeight) / 100;
 
                             ViewGroup.LayoutParams piParams = piContainer.getLayoutParams();
@@ -153,8 +152,8 @@ public class MyItemAdapter extends BaseAdapter {
                         }
 
                         int maxCalificationForOthers = 3;
-                        if(post.getmAa() != 0){
-                            int percentage = (int)(post.getmAa()*100)/maxCalificationForOthers;
+                        if(post.getR_aa() != 0){
+                            int percentage = (int)(post.getR_aa()*100)/maxCalificationForOthers;
                             int graphicalHeight = (percentage*relativeLayoutHeight)/ 100;
 
                             ViewGroup.LayoutParams aaParams = aaContainer.getLayoutParams();
@@ -162,8 +161,8 @@ public class MyItemAdapter extends BaseAdapter {
                             aaContainer.setLayoutParams(aaParams);
                         }
 
-                        if(post.getmGs() != 0){
-                            int percentage = (int)(post.getmGs()*100)/maxCalificationForOthers;
+                        if(post.getR_gs() != 0){
+                            int percentage = (int)(post.getR_gs()*100)/maxCalificationForOthers;
                             int graphicalHeight = (percentage*relativeLayoutHeight)/ 100;
 
                             ViewGroup.LayoutParams gsParams = gsContainer.getLayoutParams();
@@ -171,9 +170,9 @@ public class MyItemAdapter extends BaseAdapter {
                             gsContainer.setLayoutParams(gsParams);
                         }
 
-                        if(post.getmCh() != 0){
+                        if(post.getR_ch() != 0){
 
-                            int percentage = (int)(post.getmCh()*100)/maxCalificationForOthers;
+                            int percentage = (int)(post.getR_ch()*100)/maxCalificationForOthers;
                             int graphicalHeight = (percentage*relativeLayoutHeight)/ 100;
                             ViewGroup.LayoutParams chParams = chContainer.getLayoutParams();
                             chParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, graphicalHeight, mContext.getResources().getDisplayMetrics());
