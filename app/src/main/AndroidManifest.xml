@@ -68,8 +68,10 @@
         <activity
             android:name=".LibraryActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".TermsAndConditions"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".TermsAndConditions"
+            android:screenOrientation="portrait" />
+        <activity android:name=".PostDetail"></activity>
     </application>
 
 </manifest>
