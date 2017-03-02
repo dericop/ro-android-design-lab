@@ -1,13 +1,18 @@
 package com.ucaldas.ro.reduccionobesidad;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -23,7 +28,7 @@ import java.util.List;
  * Created by Dericop on 12/01/17.
  */
 
-public class HomeAdapter extends ArrayAdapter<Post> {
+public class HomeAdapter extends ArrayAdapter<Post>{
 
     private Context mContext;
 
@@ -228,6 +233,35 @@ public class HomeAdapter extends ArrayAdapter<Post> {
 
             }
         });
+
+        avatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+
+                final AlertDialog dialog = builder.create();
+                LayoutInflater inflater = (LayoutInflater) getContext()
+                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+                View dialogLayout = inflater.inflate(R.layout.image_pop_up, null);
+                dialog.setView(dialogLayout);
+
+                dialog.show();
+
+                dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                    @Override
+                    public void onShow(DialogInterface d) {
+
+
+
+
+                    }
+                });
+            }
+        });
+
+
 
         return convertView;
     }

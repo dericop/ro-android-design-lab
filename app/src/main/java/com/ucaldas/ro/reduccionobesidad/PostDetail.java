@@ -3,7 +3,11 @@ package com.ucaldas.ro.reduccionobesidad;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.widget.ImageView;
 import android.widget.ListView;
+
+import com.bumptech.glide.Glide;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -45,6 +49,12 @@ public class PostDetail extends AppCompatActivity {
                 mComments);
 
         commentListView.setAdapter(comAdapter);
+
+
+        //Actualización componentes gráficos
+        ImageView imgPreview = (ImageView) findViewById(R.id.imgPreview);
+        String imageForComment = getIntent().getStringExtra("image");
+        Glide.with(this).load(imageForComment).into(imgPreview);
 
 
     }

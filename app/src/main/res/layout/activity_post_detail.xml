@@ -52,7 +52,7 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
-                    android:background="@drawable/sample"
+                    android:background="@color/colorPrimaryDark"
                     android:layout_margin="7dp"
                     android:id="@+id/imgPreview"/>
 
