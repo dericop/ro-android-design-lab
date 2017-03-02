@@ -37,7 +37,9 @@
         <ListView
             android:id="@android:id/list"
             android:layout_height="match_parent"
-            android:layout_width="match_parent">
+            android:layout_width="match_parent"
+            android:drawSelectorOnTop="false"
+            android:layout_weight="1">
         </ListView>
 
     </android.support.v4.widget.SwipeRefreshLayout>

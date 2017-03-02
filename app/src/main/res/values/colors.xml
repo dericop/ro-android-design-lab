@@ -65,6 +65,7 @@
     <color name="activity_wait_color">#e5e6e7</color>
     <color name="A">#d2d3d5</color>
     <color name="replyIcon">#9e9f9f</color>
+    <color name="detailQualificationContainer">#ccd5d5d5</color>
 
 
 </resources>

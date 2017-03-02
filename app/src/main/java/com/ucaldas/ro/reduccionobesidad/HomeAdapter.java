@@ -215,6 +215,20 @@ public class HomeAdapter extends ArrayAdapter<Post> {
             }
         });
 
+        name.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.v("Detalle", "Click");
+                Intent detailIntent = new Intent(mContext, PostDetail.class);
+                detailIntent.putExtra("id", post.getId());
+                detailIntent.putExtra("image", post.getImage());
+                detailIntent.putExtra("name", post.getName());
+                detailIntent.putExtra("type", post.getCategory());
+                mContext.startActivity(detailIntent);
+
+            }
+        });
+
         return convertView;
     }
 }

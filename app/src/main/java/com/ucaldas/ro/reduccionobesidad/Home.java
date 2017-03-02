@@ -36,7 +36,7 @@ import java.util.TreeSet;
  * Use the {@link Home#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Home extends ListFragment{
+public class Home extends ListFragment implements AdapterView.OnItemClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -59,7 +59,6 @@ public class Home extends ListFragment{
     private String mParam2;
 
 
-    private ListView mListView;
     LinkedList<Post> mPostList;
 
 
@@ -97,6 +96,8 @@ public class Home extends ListFragment{
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
+
+
         /*FloatingActionButton fab = (FloatingActionButton) getContext().findViewById(R.id.btn_addPost);
 
         fab.setOnClickListener(new View.OnClickListener() {
@@ -110,17 +111,40 @@ public class Home extends ListFragment{
     }
 
     @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        Log.v("Detalle", "click");
-        //super.onListItemClick(l, v, position, id);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+
+        return inflater.inflate(R.layout.fragment_home, container, false);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        mPostList = new LinkedList<>();
+        //Creación de adaptador para la lista.
+        mPostAdapter = new HomeAdapter(
+                getActivity(),
+                mPostList);
+
+        setListAdapter(mPostAdapter);
+        getListView().setOnItemClickListener(this);
 
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        if(mSwipeRefreshing == null){
+            //Inicialización
+            initGraphicalElementsAndEvents(view);
+            initData();
+
+            //Consultar los primeros posts
+            refreshPostList();
+        }
     }
 
     private long getResult(HashMap postMap){
@@ -408,17 +432,9 @@ public class Home extends ListFragment{
         //Obtener elementos gráficos
         btn_new_posts = (Button) view.findViewById(R.id.btn_new_posts);
         mSwipeRefreshing = (SwipeRefreshLayout) view.findViewById(R.id.swiperefresh);
-        mListView = (ListView) view.findViewById(android.R.id.list);
-
-        mPostList = new LinkedList<>();
-        //Creación de adaptador para la lista.
-        mPostAdapter = new HomeAdapter(
-                getActivity(),
-                mPostList);
 
 
-        mListView.setAdapter(mPostAdapter);
-        mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+        getListView().setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView absListView, int i) {
 
@@ -455,7 +471,7 @@ public class Home extends ListFragment{
         btn_new_posts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListView.smoothScrollToPosition(0);
+                getListView().smoothScrollToPosition(0);
                 btn_new_posts.setVisibility(View.INVISIBLE);
             }
         });
@@ -471,22 +487,13 @@ public class Home extends ListFragment{
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        if(mSwipeRefreshing == null){
-            //Inicialización
-            initGraphicalElementsAndEvents(view);
-            initData();
-
-            //Consultar los primeros posts
-            refreshPostList();
-        }
+    public void onDetach() {
+        super.onDetach();
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        Log.v("Detalle", "Click");
     }
 
     /**
