@@ -120,6 +120,9 @@ public class mHome extends AppCompatActivity
         * Configuración de las acciones del botón flotante.
         * */
 
+        final FloatingActionsMenu btn_actions_menu = (FloatingActionsMenu) findViewById(R.id.btn_actions_menu);
+
+
         final FloatingActionButton camera_action = (FloatingActionButton) findViewById(R.id.btn_add_post_camera);
         camera_action.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,6 +130,7 @@ public class mHome extends AppCompatActivity
                 Intent camera_intent = new Intent(getBaseContext(), AddPost.class);
                 camera_intent.putExtra("source","camera");
                 startActivity(camera_intent);
+                btn_actions_menu.collapse();
             }
         });
 
@@ -137,6 +141,7 @@ public class mHome extends AppCompatActivity
                 Intent gallery_intent = new Intent(getBaseContext(), AddPost.class);
                 gallery_intent.putExtra("source", "gallery");
                 startActivity(gallery_intent);
+                btn_actions_menu.collapse();
             }
         });
     }

@@ -72,7 +72,7 @@ public class HomeAdapter extends ArrayAdapter<Post>{
         }
 
         // Referencias UI.
-        ImageView avatar = (ImageView) convertView.findViewById(R.id.iv_avatar);
+        final ImageView avatar = (ImageView) convertView.findViewById(R.id.iv_avatar);
         TextView name = (TextView) convertView.findViewById(R.id.post_name);
         TextView title = (TextView) convertView.findViewById(R.id.txt_by);
         TextView otherUser = (TextView) convertView.findViewById(R.id.txt_too);
@@ -253,14 +253,24 @@ public class HomeAdapter extends ArrayAdapter<Post>{
 
                 View dialogLayout = inflater.inflate(R.layout.image_pop_up, null);
                 dialog.setView(dialogLayout);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
                 dialog.show();
-                Log.v("PopUp", "test");
+
+                ImageView imgPrev = (ImageView) dialog.findViewById(R.id.foodImage);
+                Glide.with(mContext).load(post.getImage()).into(imgPrev);
+
+                float imageWidthInPX = (float)imgPrev.getWidth();
+
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(Math.round(imageWidthInPX),
+                        Math.round(imageWidthInPX * (float)imgPrev.getHeight() / (float)imgPrev.getWidth()));
+                //imgPrev.setLayoutParams(layoutParams);
+
                 dialog.setOnShowListener(new DialogInterface.OnShowListener() {
                     @Override
                     public void onShow(DialogInterface d) {
-                   Log.v("PopUp", "Ingreso");
-                  //ImageView imgPrev = (ImageView) dialog.findViewById(R.id.foodImage);
+                        Log.v("PopUp", "Ingreso");
+
                      /* Bitmap icon = BitmapFactory.decodeResource("");
                     float imageWidthInPX = (float)image.getWidth();
 

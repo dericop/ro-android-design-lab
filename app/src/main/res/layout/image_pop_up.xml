@@ -7,7 +7,7 @@
     <ImageView
         android:id="@+id/foodImage"
         android:layout_width="wrap_content"
-        android:layout_height="234dp"
+        android:layout_height="200dp"
         android:src="@drawable/sample"/>
 
 </LinearLayout>
