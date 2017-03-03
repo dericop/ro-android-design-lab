@@ -58,7 +58,7 @@ public class ActivityAdapter extends BaseAdapter {
     }
 
     private Integer[] mThumbIds = {
-            R.drawable.ic_camera, R.drawable.ic_library,
+           //R.drawable.ic_camera, R.drawable.ic_library,
     };
 
 

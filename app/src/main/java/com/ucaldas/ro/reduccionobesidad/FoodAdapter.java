@@ -62,6 +62,6 @@ public class FoodAdapter extends BaseAdapter {
     }
 
     private Integer[] mThumbIds = {
-            R.drawable.ic_camera_c, R.drawable.ic_library_c,
+
     };
 }
