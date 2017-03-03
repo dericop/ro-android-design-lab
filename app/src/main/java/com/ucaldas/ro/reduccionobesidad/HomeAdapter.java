@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.util.TypedValue;
@@ -229,6 +230,12 @@ public class HomeAdapter extends ArrayAdapter<Post>{
                 detailIntent.putExtra("image", post.getImage());
                 detailIntent.putExtra("name", post.getName());
                 detailIntent.putExtra("type", post.getCategory());
+                detailIntent.putExtra("userName", post.getmUserName());
+                detailIntent.putExtra("r_pi", post.getR_pi());
+                detailIntent.putExtra("r_aa", post.getR_aa());
+                detailIntent.putExtra("r_gs", post.getR_gs());
+                detailIntent.putExtra("r_ch", post.getR_ch());
+
                 mContext.startActivity(detailIntent);
 
             }
@@ -248,12 +255,20 @@ public class HomeAdapter extends ArrayAdapter<Post>{
                 dialog.setView(dialogLayout);
 
                 dialog.show();
-
+                Log.v("PopUp", "test");
                 dialog.setOnShowListener(new DialogInterface.OnShowListener() {
                     @Override
                     public void onShow(DialogInterface d) {
+                   Log.v("PopUp", "Ingreso");
+                  //ImageView imgPrev = (ImageView) dialog.findViewById(R.id.foodImage);
+                     /* Bitmap icon = BitmapFactory.decodeResource("");
+                    float imageWidthInPX = (float)image.getWidth();
 
+                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(Math.round(imageWidthInPX),
+                            Math.round(imageWidthInPX * (float)icon.getHeight() / (float)icon.getWidth()));
+                    image.setLayoutParams(layoutParams);*/
 
+                    //Glide.with(mContext).load(post.getImage()).into(imgPrev);
 
 
                     }

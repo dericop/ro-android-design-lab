@@ -93,7 +93,7 @@
 
                                 <View
                                     android:layout_width="match_parent"
-                                    android:layout_height="20dp"
+                                    android:layout_height="0dp"
                                     android:background="@drawable/border_radius_items_progress"
                                     android:layout_alignParentBottom="true"
                                     android:layout_marginLeft="1dp"
@@ -225,6 +225,7 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:id="@+id/title"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Bandeja Paisa con Chorizo"
@@ -246,6 +247,7 @@
                             android:textColor="#fff" />
 
                         <TextView
+                            android:id="@+id/userName"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Daniel Estiven Rico Posada"
@@ -265,6 +267,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/commentsList"
                     android:layout_below="@+id/imgPreview">
+
 
                 </ListView>
 
