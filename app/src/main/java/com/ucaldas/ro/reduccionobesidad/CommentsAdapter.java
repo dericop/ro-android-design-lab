@@ -24,6 +24,7 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -69,6 +70,7 @@ public class CommentsAdapter extends ArrayAdapter<Comment> {
         TextView detail = (TextView) convertView.findViewById(R.id.detail);
         TextView userName = (TextView) convertView.findViewById(R.id.titleName);
         final ImageView avatar = (ImageView) convertView.findViewById(R.id.avatar);
+        TextView time = (TextView) convertView.findViewById(R.id.time);
 
         if(mHome.user != null){
             userName.setText(mHome.user.getDisplayName());
@@ -91,10 +93,45 @@ public class CommentsAdapter extends ArrayAdapter<Comment> {
 
         }
 
-        detail.setText(com.getDetail());
+        if(com!=null){
+            detail.setText(com.getDetail());
 
+            Calendar currentCalendar = Calendar.getInstance();
+            int dayC = currentCalendar.get(Calendar.DAY_OF_MONTH);
+            int monthC = currentCalendar.get(Calendar.MONTH);
+            int yearC = currentCalendar.get(Calendar.YEAR);
+
+            Calendar commentCalendar = Calendar.getInstance();
+            commentCalendar.setTimeInMillis(com.getDate());
+            int dayCom = commentCalendar.get(Calendar.DAY_OF_MONTH);
+            int monthCom = commentCalendar.get(Calendar.MONTH);
+            int yearCom = commentCalendar.get(Calendar.YEAR);
+
+            if(dayC == dayCom && monthC == monthCom && yearC==yearCom){
+                int hourC = currentCalendar.get(Calendar.HOUR_OF_DAY);
+                int hourCom = commentCalendar.get(Calendar.HOUR_OF_DAY);
+                int timeC = hourC - hourCom;
+                if(timeC == 0){//Fué hace menos de una hora{}
+                    int minutesC = currentCalendar.get(Calendar.MINUTE);
+                    int minutesCom = commentCalendar.get(Calendar.MINUTE);
+                    int minuteC = minutesC - minutesCom;
+
+                    time.setText(minuteC +" minutos");
+                }else{
+                    time.setText(timeC+" horas");
+                }
+            }else if(yearC == yearCom){//Igual año
+
+            }else{
+
+            }
+        }
 
         return convertView;
+    }
+
+    private String getMonthString(int n){
+        return "";
     }
 
     public static Bitmap getRoundedCornerBitmap(Bitmap bitmap, int pixels) {
