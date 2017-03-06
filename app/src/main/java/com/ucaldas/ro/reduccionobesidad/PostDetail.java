@@ -1,5 +1,6 @@
 package com.ucaldas.ro.reduccionobesidad;
 
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -7,12 +8,30 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -21,6 +40,9 @@ public class PostDetail extends AppCompatActivity {
     private List mComments;
     private CommentsAdapter comAdapter;
     private ListView commentListView;
+    private FirebaseDatabase database;
+    private DatabaseReference datRef;
+    private String postId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +51,19 @@ public class PostDetail extends AppCompatActivity {
 
         init();
     }
+
+    private void configureDatabase(String postId){
+        database = FirebaseDatabase.getInstance();
+        if(database!=null && mHome.user!=null){
+            if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
+                datRef = database.getReference().child("user-comments").child(postId);
+            }else{
+                datRef = database.getReference().child("user-comments-reflexive").child(postId);
+            }
+        }
+
+    }
+
 
     private void init(){
 
@@ -41,11 +76,9 @@ public class PostDetail extends AppCompatActivity {
         }
 
         commentListView = (ListView) findViewById(R.id.commentsList);
+        commentListView.setEmptyView(findViewById(android.R.id.empty));
 
         mComments = new LinkedList();
-        mComments.add(1);
-        mComments.add(2);
-        mComments.add(2);
 
 
         comAdapter = new CommentsAdapter(
@@ -59,6 +92,7 @@ public class PostDetail extends AppCompatActivity {
         String name = getIntent().getStringExtra("name");
         String imageForComment = getIntent().getStringExtra("image");
         String user = getIntent().getStringExtra("userName");
+        postId = getIntent().getStringExtra("id");
         double r_pi = getIntent().getDoubleExtra("r_pi", 0);
         double r_aa = getIntent().getDoubleExtra("r_aa", 0);
         double r_gs = getIntent().getDoubleExtra("r_gs", 0);
@@ -75,6 +109,78 @@ public class PostDetail extends AppCompatActivity {
 
         updateQualificationInfo(r_pi, r_aa, r_gs, r_ch);
 
+
+        //Consultar los comentarios de la base de datos
+        getPostComments();
+
+    }
+
+    private void closeKeyboard(){
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(this.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+    public void saveComment(View view){
+        Log.v("Comments", "click");
+
+        String comment = ((EditText) findViewById(R.id.edit_message)).getText().toString();
+        if(!comment.equals("")){
+            Log.v("Comments",comment);
+            Calendar cal = Calendar.getInstance();
+            Log.v("Comments", cal.get(Calendar.SECOND)+"");
+            Log.v("Comments", cal.get(Calendar.MINUTE)+"");
+            Log.v("Comments", cal.get(Calendar.HOUR_OF_DAY)+"");
+            Log.v("Comments", cal.get(Calendar.YEAR)+"");
+            Log.v("Comments", cal.get(Calendar.MONTH)+"");
+            Log.v("Comments", cal.get(Calendar.DAY_OF_MONTH)+"");
+
+            long timeInMillis = cal.getTimeInMillis();
+
+            Comment com = new Comment(comment, timeInMillis, postId);
+            String key = datRef.push().getKey();
+            datRef.child(key).setValue(com).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    updateComments();
+                    closeKeyboard();
+                }
+            });
+        }
+    }
+
+    private void getPostComments(){
+        configureDatabase(postId);
+        updateComments();
+    }
+
+    private void updateComments(){
+        datRef.orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.getValue() != null){
+                        HashMap<String, HashMap<String, Object>> map = (HashMap)dataSnapshot.getValue();
+
+                        mComments.clear();
+                        for (String k: map.keySet()){
+                            Comment com = new Comment();
+                            com.setDetail(map.get(k).get("detail")+"");
+                            com.setDate((long)map.get(k).get("date"));
+                            com.setId(map.get(k).get("id")+"");
+
+                            mComments.add(com);
+                        }
+                        comAdapter.notifyDataSetChanged();
+                    }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void updateQualificationInfo(double pi, double aa, double gs, double ch){

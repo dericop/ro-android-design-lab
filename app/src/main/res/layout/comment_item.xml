@@ -40,9 +40,10 @@
                 android:layout_height="match_parent">
 
                 <TextView
+                    android:id="@+id/titleName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Daniel Estiven Rico Posada"
+                    android:text=""
                     android:maxLines="1"
                     android:textStyle="bold"
                     android:ellipsize="end"/>
@@ -58,9 +59,9 @@
             </RelativeLayout>
 
             <TextView
+                android:id="@+id/detail"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam hendrerit orci at imperdiet convallis. " />
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
 

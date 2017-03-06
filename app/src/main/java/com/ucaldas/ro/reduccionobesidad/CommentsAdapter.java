@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
+
 import java.util.List;
 
 /**
@@ -37,15 +39,27 @@ public class CommentsAdapter extends ArrayAdapter<Comment> {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;
 
-
         LayoutInflater inflater = (LayoutInflater) getContext()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
+        if(convertView == null){
+            convertView = inflater.inflate(
+                    R.layout.comment_item,
+                    parent,
+                    false);
+        }
 
-        convertView = inflater.inflate(
-                R.layout.comment_item,
-                parent,
-                false);
+        Comment com = getItem(position);
+
+        TextView detail = (TextView) convertView.findViewById(R.id.detail);
+        TextView userName = (TextView) convertView.findViewById(R.id.titleName);
+
+        if(mHome.user != null)
+            userName.setText(mHome.user.getDisplayName());
+
+        detail.setText(com.getDetail());
+
+
 
         return convertView;
     }

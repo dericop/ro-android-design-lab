@@ -268,8 +268,17 @@
                     android:id="@+id/commentsList"
                     android:layout_below="@+id/imgPreview">
 
-
                 </ListView>
+
+                <TextView
+                    android:id="@android:id/empty"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="No existen comentarios"
+                    android:textStyle="italic"
+                    android:padding="8dp"
+                    android:layout_marginBottom="6dp"
+                    android:layout_below="@id/commentsList"/>
 
             </RelativeLayout>
 
@@ -296,12 +305,14 @@
                 android:textAlignment="center" />
 
             <Button
+                android:id="@+id/btn_save"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_weight="0.3"
                 android:layout_marginTop="-2dp"
                 android:textAllCaps="false"
-                android:text="Enviar"/>
+                android:text="Enviar"
+                android:onClick="saveComment"/>
 
         </LinearLayout>
 

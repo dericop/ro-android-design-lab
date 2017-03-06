@@ -1,5 +1,6 @@
 package com.ucaldas.ro.reduccionobesidad;
 
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -7,16 +8,18 @@ import java.util.Date;
  */
 
 public class Comment {
+    private String id;
     private String detail;
-    private Date date;
+    private long date;
 
     public Comment(){
 
     }
 
-    public Comment(String detail, Date date){
+    public Comment(String detail, long date, String id){
         this.setDetail(detail);
         this.setDate(date);
+        this.setId(id);
     }
 
 
@@ -28,11 +31,19 @@ public class Comment {
         this.detail = detail;
     }
 
-    public Date getDate() {
+    public long getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(long date) {
         this.date = date;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }
