@@ -82,8 +82,7 @@ public class HomeAdapter extends ArrayAdapter<Post>{
         TextView txtActivityResult = (TextView) convertView.findViewById(R.id.txt_activity_result);
         LinearLayout containerActivityResult = (LinearLayout) convertView.findViewById(R.id.container_txt_activity_result);
         TextView txtReply = (TextView) convertView.findViewById(R.id.replyCounter);
-
-
+        TextView txtCommentsC = (TextView) convertView.findViewById(R.id.commentCounter);
 
         // Setup
         Glide.with(getContext()).load(post.getImage()).into(avatar);
@@ -97,9 +96,13 @@ public class HomeAdapter extends ArrayAdapter<Post>{
             lbl_too.setVisibility(View.VISIBLE);
         }
 
-        if(post.getReplyCount()!=0){
+        if(post.getReplyCount()!=0)
             txtReply.setText(post.getReplyCount()+"");
-        }
+
+
+
+        if(post.getCountOfComments()!=0)
+            txtCommentsC.setText(post.getCountOfComments()+"");
 
 
         long result = post.getResult();
@@ -224,7 +227,6 @@ public class HomeAdapter extends ArrayAdapter<Post>{
         name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.v("Detalle", "Click");
                 Intent detailIntent = new Intent(mContext, PostDetail.class);
                 detailIntent.putExtra("id", post.getId());
                 detailIntent.putExtra("image", post.getImage());
@@ -238,6 +240,26 @@ public class HomeAdapter extends ArrayAdapter<Post>{
 
                 mContext.startActivity(detailIntent);
 
+            }
+        });
+
+        ImageButton action_comment = (ImageButton) convertView.findViewById(R.id.action_comment);
+        action_comment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent detailIntent = new Intent(mContext, PostDetail.class);
+                detailIntent.putExtra("id", post.getId());
+                detailIntent.putExtra("image", post.getImage());
+                detailIntent.putExtra("name", post.getName());
+                detailIntent.putExtra("type", post.getCategory());
+                detailIntent.putExtra("userName", post.getmUserName());
+                detailIntent.putExtra("r_pi", post.getR_pi());
+                detailIntent.putExtra("r_aa", post.getR_aa());
+                detailIntent.putExtra("r_gs", post.getR_gs());
+                detailIntent.putExtra("r_ch", post.getR_ch());
+
+                mContext.startActivity(detailIntent);
             }
         });
 
@@ -285,6 +307,8 @@ public class HomeAdapter extends ArrayAdapter<Post>{
                 });
             }
         });
+
+
 
 
 

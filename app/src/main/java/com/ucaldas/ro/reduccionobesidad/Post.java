@@ -28,6 +28,7 @@ public class Post {
     private double r_aa;
     private double r_gs;
     private double r_ch;
+    private long countOfComments;
     public long replyCount;
 
     public Post(){
@@ -44,6 +45,7 @@ public class Post {
         this.result = result;
         this.average = average;
         last_share = "";
+        countOfComments = 0;
     }
 
     public Post(String id, String name, String category, String frecuency, String image, String duration, String user, long result, long average, String userName, String tooShared){
@@ -58,6 +60,7 @@ public class Post {
         this.average = average;
         mUserName = userName;
         last_share = tooShared;
+        countOfComments = 0;
     }
 
     public String getLast_share(){ return last_share; }
@@ -135,6 +138,10 @@ public class Post {
     public double getR_ch() {return r_ch;}
 
     public void setR_ch(double r_ch) {this.r_ch = r_ch;}
+
+    public long getCountOfComments() { return countOfComments; }
+
+    public void setCountOfComments(long countOfComments) { this.countOfComments = countOfComments; }
 
     @Exclude
     public Map<String, Object> toMap() {

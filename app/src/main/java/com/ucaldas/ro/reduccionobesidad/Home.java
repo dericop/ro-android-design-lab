@@ -184,6 +184,14 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
         }
     }
 
+    private void assignCommentsReference(){
+        if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
+            postRef = mDatabase.child("user-comments");
+        }else{
+            postRef = mDatabase.child("user-comments-reflexive");
+        }
+    }
+
     private Post createBasePost(HashMap postMap){
 
         final String name = (String)postMap.get("name");
@@ -253,6 +261,27 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
 
                             mPostAdapter.notifyDataSetChanged();
                         }
+
+                        assignCommentsReference();
+
+                        postRef.child(post.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                if(dataSnapshot.getValue()!=null){
+                                    long countOfComments = dataSnapshot.getChildrenCount();
+
+                                    post.setCountOfComments(countOfComments);
+
+                                    mPostAdapter.notifyDataSetChanged();
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
                     }
 
                     @Override
@@ -260,6 +289,7 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
 
                     }
                 });
+
 
             }
 

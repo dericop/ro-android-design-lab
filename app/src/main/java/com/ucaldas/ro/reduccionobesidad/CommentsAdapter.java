@@ -90,7 +90,6 @@ public class CommentsAdapter extends ArrayAdapter<Comment> {
                     }
                 })
                 .into(avatar);
-
         }
 
         if(com!=null){
@@ -111,7 +110,7 @@ public class CommentsAdapter extends ArrayAdapter<Comment> {
                 int hourC = currentCalendar.get(Calendar.HOUR_OF_DAY);
                 int hourCom = commentCalendar.get(Calendar.HOUR_OF_DAY);
                 int timeC = hourC - hourCom;
-                if(timeC == 0){//Fué hace menos de una hora{}
+                if(timeC == 0){//Fué hace menos de una hora
                     int minutesC = currentCalendar.get(Calendar.MINUTE);
                     int minutesCom = commentCalendar.get(Calendar.MINUTE);
                     int minuteC = minutesC - minutesCom;
@@ -121,9 +120,9 @@ public class CommentsAdapter extends ArrayAdapter<Comment> {
                     time.setText(timeC+" horas");
                 }
             }else if(yearC == yearCom){//Igual año
-
+                    time.setText(getMonthString(monthCom));
             }else{
-
+                time.setText(getMonthString(monthCom)+" "+yearCom);
             }
         }
 
@@ -131,7 +130,48 @@ public class CommentsAdapter extends ArrayAdapter<Comment> {
     }
 
     private String getMonthString(int n){
-        return "";
+        String month = "";
+
+        switch (n){
+            case 0:
+                month = "Enero";
+                break;
+            case 1:
+                month = "Febrero";
+                break;
+            case 2:
+                month = "Marzo";
+                break;
+            case 3:
+                month = "Abril";
+                break;
+            case 4:
+                month = "Mayo";
+                break;
+            case 5:
+                month = "Junio";
+                break;
+            case 6:
+                month = "Julio";
+                break;
+            case 7:
+                month = "Agosto";
+                break;
+            case 8:
+                month = "Sept";
+                break;
+            case 9:
+                month = "Octubre";
+                break;
+            case 10:
+                month = "Nov";
+                break;
+            case 11:
+                month = "Dic";
+                break;
+        }
+
+        return month;
     }
 
     public static Bitmap getRoundedCornerBitmap(Bitmap bitmap, int pixels) {

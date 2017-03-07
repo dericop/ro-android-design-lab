@@ -1,6 +1,10 @@
 package com.ucaldas.ro.reduccionobesidad;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -34,10 +38,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 public class PostDetail extends AppCompatActivity {
 
-    private List mComments;
+    private LinkedList<Comment> mComments;
     private CommentsAdapter comAdapter;
     private ListView commentListView;
     private FirebaseDatabase database;
@@ -124,30 +130,29 @@ public class PostDetail extends AppCompatActivity {
     }
 
     public void saveComment(View view){
-        Log.v("Comments", "click");
 
-        String comment = ((EditText) findViewById(R.id.edit_message)).getText().toString();
-        if(!comment.equals("")){
-            Log.v("Comments",comment);
-            Calendar cal = Calendar.getInstance();
-            Log.v("Comments", cal.get(Calendar.SECOND)+"");
-            Log.v("Comments", cal.get(Calendar.MINUTE)+"");
-            Log.v("Comments", cal.get(Calendar.HOUR_OF_DAY)+"");
-            Log.v("Comments", cal.get(Calendar.YEAR)+"");
-            Log.v("Comments", cal.get(Calendar.MONTH)+"");
-            Log.v("Comments", cal.get(Calendar.DAY_OF_MONTH)+"");
+        if(isOnline()){
+            final EditText editMessage = ((EditText) findViewById(R.id.edit_message));
+            String comment = editMessage.getText().toString();
+            if(!comment.equals("")){
+                Calendar cal = Calendar.getInstance();
+                long timeInMillis = cal.getTimeInMillis();
 
-            long timeInMillis = cal.getTimeInMillis();
+                Comment com = new Comment(comment, timeInMillis, postId);
+                String key = datRef.push().getKey();
+                datRef.child(key).setValue(com).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        updateComments();
+                        editMessage.setText("");
+                        closeKeyboard();
+                    }
+                });
+            }
 
-            Comment com = new Comment(comment, timeInMillis, postId);
-            String key = datRef.push().getKey();
-            datRef.child(key).setValue(com).addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    updateComments();
-                    closeKeyboard();
-                }
-            });
+        }else{
+            View piContainer = findViewById(R.id.piContainer);
+            Snackbar.make(piContainer, "No tienes conexión a internet", Snackbar.LENGTH_INDEFINITE).show();
         }
     }
 
@@ -156,31 +161,45 @@ public class PostDetail extends AppCompatActivity {
         updateComments();
     }
 
+    private boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
+
     private void updateComments(){
-        datRef.orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+        if(isOnline()){
+            datRef.orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
                     if(dataSnapshot.getValue() != null){
                         HashMap<String, HashMap<String, Object>> map = (HashMap)dataSnapshot.getValue();
+                        SortedSet<String> keys = new TreeSet<String>(map.keySet());
 
                         mComments.clear();
-                        for (String k: map.keySet()){
+                        for (String k: keys){
                             Comment com = new Comment();
                             com.setDetail(map.get(k).get("detail")+"");
                             com.setDate((long)map.get(k).get("date"));
                             com.setId(map.get(k).get("id")+"");
 
-                            mComments.add(com);
+                            mComments.addLast(com);
                         }
                         comAdapter.notifyDataSetChanged();
                     }
-            }
+                }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-            }
-        });
+                }
+            });
+        }else{
+            View piContainer = findViewById(R.id.piContainer);
+            Snackbar.make(piContainer, "No tienes conexión a internet", Snackbar.LENGTH_INDEFINITE).show();
+        }
+
     }
 
     private void updateQualificationInfo(double pi, double aa, double gs, double ch){
