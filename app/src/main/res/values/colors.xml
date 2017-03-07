@@ -66,6 +66,7 @@
     <color name="A">#d2d3d5</color>
     <color name="replyIcon">#9e9f9f</color>
     <color name="detailQualificationContainer">#ccd5d5d5</color>
+    <color name="label_float">#ac000000</color>
 
 
 </resources>

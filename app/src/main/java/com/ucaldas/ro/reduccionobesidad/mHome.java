@@ -124,6 +124,7 @@ public class mHome extends AppCompatActivity
 
 
         final FloatingActionButton camera_action = (FloatingActionButton) findViewById(R.id.btn_add_post_camera);
+
         camera_action.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -120,7 +120,7 @@ public class CommentsAdapter extends ArrayAdapter<Comment> {
                     time.setText(timeC+" horas");
                 }
             }else if(yearC == yearCom){//Igual año
-                    time.setText(getMonthString(monthCom));
+                    time.setText(getMonthString(monthCom)+" "+dayCom);
             }else{
                 time.setText(getMonthString(monthCom)+" "+yearCom);
             }

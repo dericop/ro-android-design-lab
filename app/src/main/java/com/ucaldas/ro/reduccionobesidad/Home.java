@@ -21,6 +21,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -95,7 +96,6 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
 
 
         /*FloatingActionButton fab = (FloatingActionButton) getContext().findViewById(R.id.btn_addPost);
@@ -289,8 +289,6 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
 
                     }
                 });
-
-
             }
 
             @Override
@@ -300,7 +298,9 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
         });
     }
 
+
     private void searchPostAndUpdate(DataSnapshot dataSnapshot){
+
         final Post postForSearch = dataSnapshot.getValue(Post.class);
 
         for (final Post p: mPostList){
