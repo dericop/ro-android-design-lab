@@ -168,44 +168,46 @@ public class PostDetail extends AppCompatActivity {
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
+    private void getCommentsDetail(){
+        datRef.orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.getValue() != null){
+                    HashMap<String, HashMap<String, Object>> map = (HashMap)dataSnapshot.getValue();
+                    SortedSet<String> keys = new TreeSet<String>(map.keySet());
+
+                    mComments.clear();
+                    for (String k: keys){
+                        Comment com = new Comment();
+                        com.setDetail(map.get(k).get("detail")+"");
+                        com.setDate((long)map.get(k).get("date"));
+                        com.setId(map.get(k).get("id")+"");
+
+                        mComments.addLast(com);
+                    }
+                    comAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     private void updateComments(){
         if(isOnline()){
             if(datRef != null){
-                datRef.orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.getValue() != null){
-                            HashMap<String, HashMap<String, Object>> map = (HashMap)dataSnapshot.getValue();
-                            SortedSet<String> keys = new TreeSet<String>(map.keySet());
-
-                            mComments.clear();
-                            for (String k: keys){
-                                Comment com = new Comment();
-                                com.setDetail(map.get(k).get("detail")+"");
-                                com.setDate((long)map.get(k).get("date"));
-                                com.setId(map.get(k).get("id")+"");
-
-                                mComments.addLast(com);
-                            }
-                            comAdapter.notifyDataSetChanged();
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
+                getCommentsDetail();
             }else{
                 configureDatabase(postId);
-                updateComments();
+                getCommentsDetail();
             }
-
         }else{
             View piContainer = findViewById(R.id.piContainer);
             Snackbar.make(piContainer, "No tienes conexión a internet", Snackbar.LENGTH_INDEFINITE).show();
         }
-
     }
 
     private void updateQualificationInfo(double pi, double aa, double gs, double ch){
