@@ -53,6 +53,7 @@
                                 android:id="@+id/sim_circle_box_1">
 
                                 <TextView
+                                    android:visibility="invisible"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:textAlignment="center"
@@ -122,6 +123,7 @@
                                 android:id="@+id/sim_circle_box_2">
 
                                 <TextView
+                                    android:visibility="invisible"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:textAlignment="center"
@@ -191,6 +193,7 @@
                                 android:id="@+id/sim_circle_box_3">
 
                                 <TextView
+                                    android:visibility="invisible"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:textAlignment="center"
@@ -241,12 +244,13 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Actividades"
+                android:text="@string/corus_simulation_message"
                 android:textColor="@color/black_overlay"
-                android:textSize="11dp"
-                android:layout_marginLeft="4dp"
+                android:textSize="13sp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
                 android:layout_marginBottom="7dp"
-                android:layout_marginTop="4dp"/>
+                android:layout_marginTop="6dp"/>
 
             <!-- Sección simulación de contextura-->
             <LinearLayout
@@ -261,9 +265,10 @@
                     android:layout_weight=".55"
                     android:background="@drawable/home_item_shadow"
                     android:layout_marginLeft="4dp"
-                    android:layout_marginRight="4dp">
+                    android:layout_marginRight="4dp"
+                    android:padding="7dp">
 
-                    <LinearLayout
+                    <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@color/habit_good"
@@ -274,31 +279,18 @@
                         android:orientation="vertical"
                         android:id="@+id/human_container">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/sim_con_message"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_marginTop="12dp"
-                            android:maxWidth="180dp"
-                            android:textAlignment="center"
-                            android:textSize="12dp"
-                            android:textStyle="bold"
-                            android:lineSpacingExtra="-2dp"
-                            android:textColor="#fff"/>
-
                         <ImageView
                             android:layout_width="120dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="270dp"
                             android:layout_marginLeft="15dp"
                             android:layout_marginRight="15dp"
-                            android:layout_marginTop="10dp"
-                            android:background="@drawable/silueta_humano_1"
+                            android:background="@drawable/silueta_humano_2"
                             android:backgroundTint="#fff"
-                            android:layout_gravity="center"
+                            android:layout_centerVertical="true"
+                            android:layout_centerHorizontal="true"
                             android:id="@+id/human_image_view"/>
 
-                    </LinearLayout>
+                    </RelativeLayout>
 
                 </LinearLayout>
 
@@ -306,7 +298,7 @@
 
                 <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_height="280dp"
+                    android:layout_height="200dp"
                     android:layout_weight=".45"
                     android:background="@drawable/home_item_shadow"
                     android:layout_marginRight="4dp">
@@ -321,23 +313,11 @@
                         android:layout_marginBottom="1dp"
                         android:orientation="vertical">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/sim_weight_message"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_marginTop="12dp"
-                            android:maxWidth="150dp"
-                            android:textAlignment="center"
-                            android:textSize="12dp"
-                            android:textStyle="bold"
-                            android:lineSpacingExtra="-2dp" />
-
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
-                            android:layout_marginTop="15dp"
+                            android:layout_marginTop="20dp"
                             android:layout_marginRight="8dp">
 
                             <!-- Items de clasificación -->

@@ -104,6 +104,26 @@
         <item>3</item>
     </string-array>
 
+    <string-array name="frecuencies">
+        <item>Ocasionalmente</item>
+        <item>1 vez al mes</item>
+        <item>1 vez cada dos semanas</item>
+        <item>1 vez a la semana</item>
+        <item>2-3 veces a la semana</item>
+        <item>Casi todos los días</item>
+        <item>Todos los días</item>
+    </string-array>
+
+    <string-array name="cost_frecuencies">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+    </string-array>
+
     <string-array name="multi_select_list_preference_default_value" />
 
     <string name="pref_title_system_sync_settings">System sync settings</string>
@@ -298,6 +318,7 @@
     <string name="sim_hab_non_healthy">Hábitos no saludables</string>
     <string name="sim_weight_message">Nivel de peso según los hábitos que tienes</string>
     <string name="title_activity_terms_and_conditions">Términos y Condiciones</string>
+    <string name="corus_simulation_message">Una persona adulta tendría este pronóstico de peso según los hábitos compartidos.</string>
 
     <!-- String relacionados con los términos y condiciones -->
     <string name="terms_title">Términos y Condiciones</string>

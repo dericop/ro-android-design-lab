@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -151,9 +152,9 @@ public class Simulation extends Fragment {
             final String[] foodsString = getResources().getStringArray(R.array.new_post_food_categories);
             final List<String> foodsCategories = Arrays.asList(foodsString);
             DatabaseReference firebaseDatabase = FirebaseDatabase.getInstance().getReference().child("user-data").child(mHome.user.getUid());
-            final AtomicInteger countOfHealthy = new AtomicInteger(0);
-            final AtomicInteger countOfMedium = new AtomicInteger(0);
-            final AtomicInteger countOfBad = new AtomicInteger(0);
+            final AtomicInteger countOfHealthy = new AtomicInteger(1);
+            final AtomicInteger countOfMedium = new AtomicInteger(1);
+            final AtomicInteger countOfBad = new AtomicInteger(1);
 
             firebaseDatabase.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -162,6 +163,15 @@ public class Simulation extends Fragment {
                             "Espera un momento", true);*/
 
                     double totalAverage = 0;
+                    double goodHabitsAverage = 1;
+                    double mediumHabitsAverage = 1;
+                    double badHabitsAverages = 1;
+
+                    int sumOfFrecuencies = 0;
+
+                    List<String> frecuencies = Arrays.asList(getResources().getStringArray(R.array.frecuencies));
+                    List<String> frecuenciesCost = Arrays.asList(getResources().getStringArray(R.array.cost_frecuencies));
+
                     Map<String, HashMap> data = (HashMap) dataSnapshot.getValue();
                     if(data != null){
                         for(String key: data.keySet()){
@@ -172,24 +182,38 @@ public class Simulation extends Fragment {
                             //foodsCategories.contains(activityType) &&
                             if(post.get("result") != null){
                                 long result = (long)post.get("result");
+                                long frecuency = Integer.parseInt(frecuenciesCost.get(frecuencies.indexOf(post.get("frecuency"))));
+                                Log.v("Simulation",frecuency+"");
+                                sumOfFrecuencies+=frecuency;
+
                                 if(result == 3){
+                                    goodHabitsAverage *= frecuency;
                                     countOfHealthy.incrementAndGet();
                                 }else if(result == 2){
+                                    mediumHabitsAverage *= frecuency;
                                     countOfMedium.incrementAndGet();
                                 }else{
+                                    badHabitsAverages *= frecuency;
                                     countOfBad.incrementAndGet();
                                 }
 
                                 if(post.get("average") != null) {
                                     try {
-                                        totalAverage += (long) post.get("average");
+                                        totalAverage += (long) post.get("average")*frecuency;
                                     }catch (NumberFormatException ex){
                                         totalAverage += 0.0;
                                     }
-
                                 }
                             }
                         }
+
+                        goodHabitsAverage =  goodHabitsAverage/countOfHealthy.get();
+                        mediumHabitsAverage = mediumHabitsAverage/countOfMedium.get();
+                        badHabitsAverages = badHabitsAverages/countOfBad.get();
+
+                        Log.v("Simulation", goodHabitsAverage+" Good");
+                        Log.v("Simulation", mediumHabitsAverage+" Medium");
+                        Log.v("Simulation", badHabitsAverages+" Bad");
 
                         //Lógica para la sección superior de la interface
 
@@ -201,9 +225,9 @@ public class Simulation extends Fragment {
                         ViewGroup.LayoutParams circleBox2Params = sim_circle_box_2.getLayoutParams();
                         ViewGroup.LayoutParams circleBox3Params = sim_circle_box_3.getLayoutParams();
 
-                        int newSizeBox1 = countOfHealthy.get();
-                        int newSizeBox2 = countOfMedium.get();
-                        int newSizeBox3 = countOfBad.get();
+                        int newSizeBox1 = ((int) goodHabitsAverage);
+                        int newSizeBox2 = ((int) mediumHabitsAverage);
+                        int newSizeBox3 = ((int) badHabitsAverages);
 
                         LinkedList orderedList = new LinkedList();
                         orderedList.push(newSizeBox1);
@@ -244,7 +268,6 @@ public class Simulation extends Fragment {
                             mediumHabits.setTextSize((newSizeBox2 * 14)/40);
                             badHabits.setTextSize((newSizeBox3 * 14)/40);
 
-
                             circleBox1Params.width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, newSizeBox1, getResources().getDisplayMetrics());
                             circleBox1Params.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, newSizeBox1, getResources().getDisplayMetrics());;
                             sim_circle_box_1.setLayoutParams(circleBox1Params);
@@ -257,12 +280,11 @@ public class Simulation extends Fragment {
                             circleBox3Params.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, newSizeBox3, getResources().getDisplayMetrics());
                             sim_circle_box_3.setLayoutParams(circleBox3Params);
 
+                            totalAverage /= sumOfFrecuencies;
 
-                            totalAverage /= (countOfHealthy.get() + countOfMedium.get() + countOfBad.get());
                             paintLevel(totalAverage, view);
 
                         }
-
 
                         countOfHealthy.set(0);
                         countOfMedium.set(0);
@@ -277,11 +299,10 @@ public class Simulation extends Fragment {
 
             });
         }
-
     }
 
     private void paintLevel(double average, View view){
-        final LinearLayout humanContainer = (LinearLayout) view.findViewById(R.id.human_container);
+        final RelativeLayout humanContainer = (RelativeLayout) view.findViewById(R.id.human_container);
         final ImageView humanImageView = (ImageView) view.findViewById(R.id.human_image_view);
 
         restartDefaultView(severe_obesity_container);
@@ -289,6 +310,8 @@ public class Simulation extends Fragment {
         restartDefaultView(obesity_level_1_container);
         restartDefaultView(overweight_container);
         restartDefaultView(normal_weight_container);
+
+
 
         if(average!=0 && average <= 2){
 
@@ -300,7 +323,7 @@ public class Simulation extends Fragment {
             humanContainer.setBackgroundColor(getResources().getColor(R.color.normal_weight));
             humanImageView.setBackgroundDrawable(getResources().getDrawable(R.drawable.silueta_humano_2));
 
-        }else if(average >= 3 && average <=4){
+        }else if(average > 2 && average <=4){
 
             overweight_container.getChildAt(0).setBackgroundColor(getResources().getColor(R.color.overweight));
             overweight_container.getChildAt(1).setBackgroundColor(getResources().getColor(R.color.overweight));
@@ -311,7 +334,7 @@ public class Simulation extends Fragment {
             Log.v("DBO", "Obesidad II");
 
 
-        }else if(average >=5 && average <=6){
+        }else if(average >4 && average <=6){
             Log.v("DBO", "Obesidad I");
 
             obesity_level_1_container.getChildAt(0).setBackgroundColor(getResources().getColor(R.color.obesity_1));
@@ -321,7 +344,7 @@ public class Simulation extends Fragment {
             humanContainer.setBackgroundColor(getResources().getColor(R.color.obesity_1));
             humanImageView.setBackgroundDrawable(getResources().getDrawable(R.drawable.silueta_humano_4));
 
-        }else if(average >= 7 && average <= 8){
+        }else if(average > 6 && average <= 8){
 
             Log.v("DBO", "Soprepeso");
 
