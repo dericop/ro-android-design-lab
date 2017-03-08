@@ -11,7 +11,7 @@ import java.util.Map;
  */
 
 @IgnoreExtraProperties
-public class Post {
+public class Post{
 
     private String id;
     private String name;

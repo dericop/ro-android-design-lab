@@ -1,9 +1,11 @@
 package com.ucaldas.ro.reduccionobesidad;
 
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,8 +39,11 @@ public class MyItems extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    ArrayList<Post> myItems;
 
+    private View refView;
     private OnFragmentInteractionListener mListener;
+    private SwipeRefreshLayout itemsRefresh;
 
     public MyItems() {
         // Required empty public constructor
@@ -73,11 +78,27 @@ public class MyItems extends Fragment {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void setMenuVisibility(boolean menuVisible) {
+        super.setMenuVisibility(menuVisible);
 
-        final GridView grid_items = (GridView) view.findViewById(R.id.grid_items);
-        final ArrayList<Post> myItems = new ArrayList<>();
+        if(menuVisible && refView!=null){
+            //loadItems();
+        }
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    private void loadItems(){
+        final GridView grid_items = (GridView) refView.findViewById(R.id.grid_items);
+        myItems = new ArrayList<>();
         final MyItemAdapter itemAdapter = new MyItemAdapter(this.getContext(), myItems);
         grid_items.setAdapter(itemAdapter);
 
@@ -151,7 +172,14 @@ public class MyItems extends Fragment {
             });
 
         }
+    }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        refView = view;
+        loadItems();
     }
 
     @Override
@@ -168,17 +196,16 @@ public class MyItems extends Fragment {
         }
     }
 
-    /*
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }*/
+
+        Log.v("Pager", refView+" Attached!!");
+        if(refView != null)
+            loadItems();
+
+    }
 
     @Override
     public void onDetach() {
