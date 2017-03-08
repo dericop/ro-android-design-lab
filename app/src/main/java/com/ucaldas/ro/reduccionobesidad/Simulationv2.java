@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -112,7 +113,7 @@ public class Simulationv2 extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         //Progress de PI
-        final View piBottom = (View) view.findViewById(R.id.pi_bottom);
+        /*final View piBottom = (View) view.findViewById(R.id.pi_bottom);
         final View piBottomMedium = (View) view.findViewById(R.id.pi_bottom_medium);
         final View piMedium = (View) view.findViewById(R.id.pi_medium);
         final View piMediumTop = (View) view.findViewById(R.id.pi_medium_top);
@@ -124,74 +125,101 @@ public class Simulationv2 extends Fragment {
         final TextView piBottomMediumData = (TextView) view.findViewById(R.id.pi_bottom_medium_data);
         final TextView piMediumData = (TextView) view.findViewById(R.id.pi_medim_data);
         final TextView piMediumTopData = (TextView) view.findViewById(R.id.pi_medium_top_data);
-        final TextView piTopData = (TextView) view.findViewById(R.id.pi_top_data);
+        final TextView piTopData = (TextView) view.findViewById(R.id.pi_top_data);*/
 
 
         //Progress de AA
-        final View aaBottom = (View) view.findViewById(R.id.aa_bottom);
-        final View aaBottomMedium = (View) view.findViewById(R.id.aa_bottom_medium);
+        //final View aaBottom = (View) view.findViewById(R.id.aa_bottom);
+        /*final View aaBottomMedium = (View) view.findViewById(R.id.aa_bottom_medium);
         final View aaMedium = (View) view.findViewById(R.id.aa_medium);
         final View aaMediumTop = (View) view.findViewById(R.id.aa_medium_top);
-        final View aaTop = (View) view.findViewById(R.id.aa_top);
+        final View aaTop = (View) view.findViewById(R.id.aa_top);*/
 
         //Textos de AA
         //final TextView aaPercentage = (TextView) view.findViewById(R.id.aa_percentage);
-        final TextView aaBottomData = (TextView) view.findViewById(R.id.aa_bottom_data);
-        final TextView aaBottomMediumData = (TextView) view.findViewById(R.id.aa_bottom_medium_data);
+        //final TextView aaBottomData = (TextView) view.findViewById(R.id.aa_bottom_data);
+        /*final TextView aaBottomMediumData = (TextView) view.findViewById(R.id.aa_bottom_medium_data);
         final TextView aaMediumData = (TextView) view.findViewById(R.id.aa_medium_data);
         final TextView aaMediumTopData = (TextView) view.findViewById(R.id.aa_medium_top_data);
-        final TextView aaTopData = (TextView) view.findViewById(R.id.aa_top_data);
+        final TextView aaTopData = (TextView) view.findViewById(R.id.aa_top_data);*/
 
 
         //Progress de GS
-        final View gsBottom = (View) view.findViewById(R.id.gs_bottom);
-        final View gsBottomMedium = (View) view.findViewById(R.id.gs_bottom_medium);
+        //final View gsBottom = (View) view.findViewById(R.id.gs_bottom);
+        /*final View gsBottomMedium = (View) view.findViewById(R.id.gs_bottom_medium);
         final View gsMedium = (View) view.findViewById(R.id.gs_medium);
         final View gsMediumTop = (View) view.findViewById(R.id.gs_medium_top);
-        final View gsTop = (View) view.findViewById(R.id.gs_top);
+        final View gsTop = (View) view.findViewById(R.id.gs_top);*/
 
         //Textos de GS
         //final TextView gsPercentage = (TextView) view.findViewById(R.id.gs_percentage);
-        final TextView gsBottomData = (TextView) view.findViewById(R.id.gs_bottom_data);
+        /*final TextView gsBottomData = (TextView) view.findViewById(R.id.gs_bottom_data);
         final TextView gsBottomMediumData = (TextView) view.findViewById(R.id.gs_bottom_medium_data);
         final TextView gsMediumData = (TextView) view.findViewById(R.id.gs_medium_data);
         final TextView gsMediumTopData = (TextView) view.findViewById(R.id.gs_medium_top_data);
-        final TextView gsTopData = (TextView) view.findViewById(R.id.gs_top_data);
+        final TextView gsTopData = (TextView) view.findViewById(R.id.gs_top_data);*/
 
 
         //Progress de CH
-        final View chBottom = (View) view.findViewById(R.id.ch_bottom);
-        final View chBottomMedium = (View) view.findViewById(R.id.ch_bottom_medium);
+        //final View chBottom = (View) view.findViewById(R.id.ch_bottom);
+        /*final View chBottomMedium = (View) view.findViewById(R.id.ch_bottom_medium);
         final View chMedium = (View) view.findViewById(R.id.ch_medium);
         final View chMediumTop = (View) view.findViewById(R.id.ch_medium_top);
-        final View chTop = (View) view.findViewById(R.id.ch_top);
+        final View chTop = (View) view.findViewById(R.id.ch_top);*/
 
         //Textos de CH
         //final TextView chPercentage = (TextView) view.findViewById(R.id.ch_percentage);
-        final TextView chBottomData = (TextView) view.findViewById(R.id.ch_bottom_data);
-        final TextView chBottomMediumData = (TextView) view.findViewById(R.id.ch_bottom_medium_data);
+        //final TextView chBottomData = (TextView) view.findViewById(R.id.ch_bottom_data);
+        /*final TextView chBottomMediumData = (TextView) view.findViewById(R.id.ch_bottom_medium_data);
         final TextView chMediumData = (TextView) view.findViewById(R.id.ch_medium_data);
         final TextView chMediumTopData = (TextView) view.findViewById(R.id.ch_medium_top_data);
-        final TextView chTopData = (TextView) view.findViewById(R.id.ch_top_data);
+        final TextView chTopData = (TextView) view.findViewById(R.id.ch_top_data);*/
 
 
         //Progress de AF
-        final View afSed= (View) view.findViewById(R.id.af_sed);
-        final View afBottom = (View) view.findViewById(R.id.af_bottom);
+        //final View afSed= (View) view.findViewById(R.id.af_sed);
+        /*final View afBottom = (View) view.findViewById(R.id.af_bottom);
         final View afBottomMedium = (View) view.findViewById(R.id.af_bottom_medium);
         final View afMedium = (View) view.findViewById(R.id.af_medium);
         final View afMediumTop = (View) view.findViewById(R.id.af_medium_top);
-        final View afTop = (View) view.findViewById(R.id.af_top);
+        final View afTop = (View) view.findViewById(R.id.af_top);*/
 
         //Textos de AF
         //final TextView afPercentage = (TextView) view.findViewById(R.id.af_percentage);
-        final TextView afSedData = (TextView) view.findViewById(R.id.af_sed_data);
-        final TextView afBottomData = (TextView) view.findViewById(R.id.af_bottom_data);
+       // final TextView afSedData = (TextView) view.findViewById(R.id.af_sed_data);
+        /*final TextView afBottomData = (TextView) view.findViewById(R.id.af_bottom_data);
         final TextView afBottomMediumData = (TextView) view.findViewById(R.id.af_bottom_medium_data);
         final TextView afMediumData = (TextView) view.findViewById(R.id.af_medium_data);
         final TextView afMediumTopData = (TextView) view.findViewById(R.id.af_medium_top_data);
-        final TextView afTopData = (TextView) view.findViewById(R.id.af_top_data);
+        final TextView afTopData = (TextView) view.findViewById(R.id.af_top_data);*/
 
+        View pi_without = view.findViewById(R.id.pi_without);
+        View pi_bottom = view.findViewById(R.id.pi_bottom);
+        View pi_bottom_medium = view.findViewById(R.id.pi_bottom_medium);
+        View pi_medium = view.findViewById(R.id.pi_medium);
+        View pi_medium_top = view.findViewById(R.id.pi_medium_top);
+        View pi_top = view.findViewById(R.id.pi_top);
+
+        View aa_without = view.findViewById(R.id.aa_without);
+        View aa_bottom = view.findViewById(R.id.aa_bottom);
+        View aa_bottom_medium = view.findViewById(R.id.aa_bottom_medium);
+        View aa_medium = view.findViewById(R.id.aa_medium);
+        View aa_medium_top = view.findViewById(R.id.aa_medium_top);
+        View aa_top = view.findViewById(R.id.aa_top);
+
+        View gs_without = view.findViewById(R.id.gs_without);
+        View gs_bottom = view.findViewById(R.id.gs_bottom);
+        View gs_bottom_medium = view.findViewById(R.id.gs_bottom_medium);
+        View gs_medium = view.findViewById(R.id.gs_medium);
+        View gs_medium_top = view.findViewById(R.id.gs_medium_top);
+        View gs_top = view.findViewById(R.id.gs_top);
+
+        View ch_without = view.findViewById(R.id.ch_without);
+        View ch_bottom = view.findViewById(R.id.ch_bottom);
+        View ch_bottom_medium = view.findViewById(R.id.ch_bottom_medium);
+        View ch_medium = view.findViewById(R.id.ch_medium);
+        View ch_medium_top = view.findViewById(R.id.ch_medium_top);
+        View ch_top = view.findViewById(R.id.ch_top);
 
         if(mHome.user != null){
             final String[] foodsString = getResources().getStringArray(R.array.new_post_food_categories);
@@ -341,8 +369,10 @@ public class Simulationv2 extends Fragment {
 
                         int barMaxWidth = 200;
 
+
+
                         //Actualización de los datos correspondientes a las barras PI
-                        piBottomData.setText(countOfPIb.get()+"");
+                        /*piBottomData.setText(countOfPIb.get()+"");
                         piBottomMediumData.setText(countOfPImb.get()+"");
                         piMediumData.setText(countOfPIm.get()+"");
                         piMediumTopData.setText(countOfPIma.get()+"");
@@ -353,7 +383,7 @@ public class Simulationv2 extends Fragment {
                         piBottomMedium.setLayoutParams(getWidthForBar(piBottomMedium, countOfPImb.get(), barMaxWidth, size));
                         piMedium.setLayoutParams(getWidthForBar(piMedium, countOfPIm.get(), barMaxWidth, size));
                         piMediumTop.setLayoutParams(getWidthForBar(piMediumTop, countOfPIma.get(), barMaxWidth, size));
-                        piTop.setLayoutParams(getWidthForBar(piTop, countOfPIa.get(), barMaxWidth, size));
+                        piTop.setLayoutParams(getWidthForBar(piTop, countOfPIa.get(), barMaxWidth, size));*/
 
                         //Actualización porcentaje PI
                         /*int piTPercentage = ((countOfPIa.get()+countOfPIb.get()+countOfPIm.get()+countOfPIma.get()+countOfPImb.get())*100)/size;
@@ -362,18 +392,18 @@ public class Simulationv2 extends Fragment {
 
 
                         //Actualización de los datos correspondientes a las barras AA
-                        aaBottomData.setText(countOfAAb.get()+"");
-                        aaBottomMediumData.setText(countOfAAmb.get()+"");
+                        //aaBottomData.setText(countOfAAb.get()+"");
+                        /*aaBottomMediumData.setText(countOfAAmb.get()+"");
                         aaMediumData.setText(countOfAAm.get()+"");
                         aaMediumTopData.setText(countOfAAma.get()+"");
-                        aaTopData.setText(countOfAAa.get()+"");
+                        aaTopData.setText(countOfAAa.get()+"");*/
 
                         //Actualización de view barras AA
-                        aaBottom.setLayoutParams(getWidthForBar(aaBottom, countOfAAb.get(), barMaxWidth, size));
-                        aaBottomMedium.setLayoutParams(getWidthForBar(aaBottomMedium, countOfAAmb.get(), barMaxWidth, size));
+                        //aaBottom.setLayoutParams(getWidthForBar(aaBottom, countOfAAb.get(), barMaxWidth, size));
+                        /*aaBottomMedium.setLayoutParams(getWidthForBar(aaBottomMedium, countOfAAmb.get(), barMaxWidth, size));
                         aaMedium.setLayoutParams(getWidthForBar(aaMedium, countOfAAm.get(), barMaxWidth, size));
                         aaMediumTop.setLayoutParams(getWidthForBar(aaMediumTop, countOfAAma.get(), barMaxWidth, size));
-                        aaTop.setLayoutParams(getWidthForBar(aaTop, countOfAAa.get(), barMaxWidth, size));
+                        aaTop.setLayoutParams(getWidthForBar(aaTop, countOfAAa.get(), barMaxWidth, size));*/
 
                         //Actualización porcentaje AA
                         /*int aaTPercentage = ((countOfAAa.get()+countOfAAb.get()+countOfAAm.get()+countOfAAma.get()+countOfAAmb.get())*100)/size;
@@ -381,18 +411,18 @@ public class Simulationv2 extends Fragment {
 
 
                         //Actualización de los datos correspondientes a las barras GS
-                        gsBottomData.setText(countOfGSb.get()+"");
+                        /*gsBottomData.setText(countOfGSb.get()+"");
                         gsBottomMediumData.setText(countOfGSmb.get()+"");
                         gsMediumData.setText(countOfGSm.get()+"");
                         gsMediumTopData.setText(countOfGSma.get()+"");
-                        gsTopData.setText(countOfGSa.get()+"");
+                        gsTopData.setText(countOfGSa.get()+"");*/
 
                         //Actualización de view barras GS
-                        gsBottom.setLayoutParams(getWidthForBar(gsBottom, countOfGSb.get(), barMaxWidth, size));
-                        gsBottomMedium.setLayoutParams(getWidthForBar(gsBottomMedium, countOfGSmb.get(), barMaxWidth, size));
+                        //gsBottom.setLayoutParams(getWidthForBar(gsBottom, countOfGSb.get(), barMaxWidth, size));
+                        /*gsBottomMedium.setLayoutParams(getWidthForBar(gsBottomMedium, countOfGSmb.get(), barMaxWidth, size));
                         gsMedium.setLayoutParams(getWidthForBar(gsMedium, countOfGSm.get(), barMaxWidth, size));
                         gsMediumTop.setLayoutParams(getWidthForBar(gsMediumTop, countOfGSma.get(), barMaxWidth, size));
-                        gsTop.setLayoutParams(getWidthForBar(gsTop, countOfGSa.get(), barMaxWidth, size));
+                        gsTop.setLayoutParams(getWidthForBar(gsTop, countOfGSa.get(), barMaxWidth, size));*/
 
                         //Actualización porcentaje GS
                         /*int gsTPercentage = ((countOfGSa.get()+countOfGSb.get()+countOfGSm.get()+countOfGSma.get()+countOfGSmb.get())*100)/size;
@@ -400,18 +430,18 @@ public class Simulationv2 extends Fragment {
 
 
                         //Actualización de los datos correspondientes a las barras CH
-                        chBottomData.setText(countOfCHb.get()+"");
-                        chBottomMediumData.setText(countOfCHmb.get()+"");
+                        //chBottomData.setText(countOfCHb.get()+"");
+                        /*chBottomMediumData.setText(countOfCHmb.get()+"");
                         chMediumData.setText(countOfCHm.get()+"");
                         chMediumTopData.setText(countOfCHma.get()+"");
-                        chTopData.setText(countOfCHa.get()+"");
+                        chTopData.setText(countOfCHa.get()+"");*/
 
                         //Actualización de view barras CH
-                        chBottom.setLayoutParams(getWidthForBar(chBottom, countOfCHb.get(), barMaxWidth, size));
-                        chBottomMedium.setLayoutParams(getWidthForBar(chBottomMedium, countOfCHmb.get(), barMaxWidth, size));
+                        //chBottom.setLayoutParams(getWidthForBar(chBottom, countOfCHb.get(), barMaxWidth, size));
+                        /*chBottomMedium.setLayoutParams(getWidthForBar(chBottomMedium, countOfCHmb.get(), barMaxWidth, size));
                         chMedium.setLayoutParams(getWidthForBar(chMedium, countOfCHm.get(), barMaxWidth, size));
                         chMediumTop.setLayoutParams(getWidthForBar(chMediumTop, countOfCHma.get(), barMaxWidth, size));
-                        chTop.setLayoutParams(getWidthForBar(chTop, countOfCHa.get(), barMaxWidth, size));
+                        chTop.setLayoutParams(getWidthForBar(chTop, countOfCHa.get(), barMaxWidth, size));*/
 
                         //Actualización porcentaje CH
                         /*int chTPercentage = ((countOfCHa.get()+countOfCHb.get()+countOfCHm.get()+countOfCHma.get()+countOfCHmb.get())*100)/size;
@@ -419,19 +449,19 @@ public class Simulationv2 extends Fragment {
 
 
                         //Actualización de los datos correspondientes a las barras AF
-                        afBottomData.setText(countOfAFb.get()+"");
+                        /*afBottomData.setText(countOfAFb.get()+"");
                         afBottomMediumData.setText(countOfAFmb.get()+"");
                         afMediumData.setText(countOfAFm.get()+"");
                         afMediumTopData.setText(countOfAFma.get()+"");
-                        afTopData.setText(countOfAFa.get()+"");
+                        afTopData.setText(countOfAFa.get()+"");*/
 
                         //Actualización de view barras AF
-                        afSed.setLayoutParams(getWidthForBar(afSed, countOfAFs.get(), barMaxWidth, size));
-                        afBottom.setLayoutParams(getWidthForBar(afBottom, countOfAFb.get(), barMaxWidth, size));
+                        //afSed.setLayoutParams(getWidthForBar(afSed, countOfAFs.get(), barMaxWidth, size));
+                        /*afBottom.setLayoutParams(getWidthForBar(afBottom, countOfAFb.get(), barMaxWidth, size));
                         afBottomMedium.setLayoutParams(getWidthForBar(afBottomMedium, countOfAFmb.get(), barMaxWidth, size));
                         afMedium.setLayoutParams(getWidthForBar(afMedium, countOfAFm.get(), barMaxWidth, size));
                         afMediumTop.setLayoutParams(getWidthForBar(afMediumTop, countOfAFma.get(), barMaxWidth, size));
-                        afTop.setLayoutParams(getWidthForBar(afTop, countOfAFa.get(), barMaxWidth, size));
+                        afTop.setLayoutParams(getWidthForBar(afTop, countOfAFa.get(), barMaxWidth, size));*/
 
                         //Actualización porcentaje AF
                         /*int afTPercentage = ((countOfAFs.get()+countOfAFa.get()+countOfAFb.get()+countOfAFm.get()+countOfAFma.get()+countOfAFmb.get())*100)/size;

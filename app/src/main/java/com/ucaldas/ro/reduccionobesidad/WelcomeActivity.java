@@ -30,7 +30,7 @@ public class WelcomeActivity extends AppCompatActivity {
     private Button btnSkip, btnNext;
     private PrefManager prefManager;
 
-    public static String CURRENT_APP_VERSION = "A"; //Existen dos opciones "A", "R"
+    public static String CURRENT_APP_VERSION = "R"; //Existen dos opciones "A", "R"
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +55,6 @@ public class WelcomeActivity extends AppCompatActivity {
         dotsLayout = (LinearLayout) findViewById(R.id.layoutDots);
         btnSkip = (Button) findViewById(R.id.btn_skip);
         btnNext = (Button) findViewById(R.id.btn_next);
-
 
         // layouts of all welcome sliders
         // add few more layouts if you want
