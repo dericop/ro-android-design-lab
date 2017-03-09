@@ -120,6 +120,7 @@ public class MyItems extends Fragment {
                         HashMap<String, HashMap<String, String>> map = (HashMap)dataSnapshot.getValue();
 
                         Log.v("DB", map.toString());
+
                         for (String key: map.keySet()){
                             HashMap<String, Object> values = (HashMap) map.get(key);
 

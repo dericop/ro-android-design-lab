@@ -186,14 +186,16 @@ public class Simulation extends Fragment {
                                 Log.v("Simulation",frecuency+"");
                                 sumOfFrecuencies+=frecuency;
 
+                                double averagePon = Double.parseDouble(post.get("average")+"")*frecuency;
+
                                 if(result == 3){
-                                    goodHabitsAverage *= frecuency;
+                                    goodHabitsAverage += averagePon;
                                     countOfHealthy.incrementAndGet();
                                 }else if(result == 2){
-                                    mediumHabitsAverage *= frecuency;
+                                    mediumHabitsAverage += averagePon;
                                     countOfMedium.incrementAndGet();
                                 }else{
-                                    badHabitsAverages *= frecuency;
+                                    badHabitsAverages += averagePon;
                                     countOfBad.incrementAndGet();
                                 }
 

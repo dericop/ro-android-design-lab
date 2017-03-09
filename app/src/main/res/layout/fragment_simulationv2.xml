@@ -1432,7 +1432,7 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="9dp"
                                         android:layout_marginTop="1.5dp"
-                                        android:background="#f05a29"
+                                        android:background="#00adee"
                                         android:visibility="invisible"
                                         android:id="@+id/af_without"/>
 
@@ -1453,7 +1453,7 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="9dp"
                                         android:layout_marginTop="1.5dp"
-                                        android:background="#f05a29"
+                                        android:background="#00adee"
                                         android:visibility="invisible"
                                         android:id="@+id/af_bottom"/>
 
@@ -1475,7 +1475,7 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="9dp"
                                         android:layout_marginTop="1.5dp"
-                                        android:background="#f05a29"
+                                        android:background="#00adee"
                                         android:visibility="invisible"
                                         android:id="@+id/af_bottom_medium"/>
 
@@ -1497,7 +1497,7 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="9dp"
                                         android:layout_marginTop="1.5dp"
-                                        android:background="#f05a29"
+                                        android:background="#00adee"
                                         android:visibility="invisible"
                                         android:id="@+id/af_medium"/>
 
@@ -1519,7 +1519,7 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="9dp"
                                         android:layout_marginTop="1.5dp"
-                                        android:background="#f05a29"
+                                        android:background="#00adee"
                                         android:visibility="invisible"
                                         android:id="@+id/af_medium_top"/>
 
