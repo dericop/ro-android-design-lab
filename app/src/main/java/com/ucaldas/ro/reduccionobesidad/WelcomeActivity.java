@@ -20,7 +20,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class WelcomeActivity extends AppCompatActivity {
+import com.google.firebase.iid.FirebaseInstanceId;
+
+public class WelcomeActivity extends AppCompatActivity{
 
     private ViewPager viewPager;
     private MyViewPagerAdapter myViewPagerAdapter;
