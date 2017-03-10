@@ -441,9 +441,7 @@ public class AddPost extends AppCompatActivity {
                                     @Override
                                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                         Log.v("ST", "satisfactorio");
-
                                         Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                                        Log.v("ST", downloadUrl + "");
 
                                         DatabaseReference database = FirebaseDatabase.getInstance().getReference();
                                         String key;
@@ -500,8 +498,6 @@ public class AddPost extends AppCompatActivity {
                                     Snackbar.make(getCurrentFocus(), "Revise su conexión a internet e intentelo más tarde", 2000).show();
                                 progress.dismiss();
                             }
-
-
                         }
 
 

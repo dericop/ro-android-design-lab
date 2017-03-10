@@ -79,6 +79,7 @@
                             android:text="@string/add_radio_food"
                             android:onClick="onRadioButtonClicked"
                             android:layout_marginRight="30dp"
+                            android:layout_marginEnd="30dp"
                             android:textAllCaps="false"
                             android:textSize="14sp" />
 
@@ -87,7 +88,8 @@
                             android:layout_height="wrap_content"
                             android:text="@string/add_radio_activity"
                             android:onClick="onRadioButtonClicked"
-                            android:layout_marginLeft="30dp"/>
+                            android:layout_marginLeft="30dp"
+                            android:layout_marginStart="30dp"/>
 
 
                     </RadioGroup>
@@ -99,7 +101,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/add_name_label"
                     android:textStyle="italic"
-                    android:textSize="10dp"
+                    android:textSize="10sp"
                     android:layout_marginTop="12dp"
                     android:textColor="@color/form_labels"/>
 
@@ -113,12 +115,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/textInputEditText"
-                        android:backgroundTint="#e9e9e9"
+                        android:backgroundTint="@color/colorAccent"
                         android:paddingTop="0dp"/>
 
                 </android.support.design.widget.TextInputLayout>
 
                 <LinearLayout
+                    android:baselineAligned="true"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -129,6 +132,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight=".50"
                         android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:orientation="vertical">
 
                         <TextView
@@ -137,18 +141,17 @@
                             android:text="@string/new_post_category"
                             android:textColor="@color/form_labels"
                             android:textStyle="italic"
-                            android:textSize="10dp"
+                            android:textSize="10sp"
                             android:id="@+id/lblCategory" />
 
                         <Spinner
                             android:id="@+id/category_spinner"
                             android:layout_width="fill_parent"
                             android:layout_height="50dp"
-                            android:layout_alignParentLeft="true"
-                            android:layout_alignParentStart="true"
                             style="@style/Base.Widget.AppCompat.Spinner.Underlined"
                             android:theme="@style/ThemeSpinner"
                             android:spinnerMode="dropdown"
+                            android:backgroundTint="@color/colorAccent"
                             android:layout_marginTop="-8dp"/>
 
                     </LinearLayout>
@@ -172,8 +175,7 @@
                             android:id="@+id/frecuency_spinner"
                             android:layout_width="fill_parent"
                             android:layout_height="50dp"
-                            android:layout_alignParentLeft="true"
-                            android:layout_alignParentStart="true"
+                            android:backgroundTint="@color/colorAccent"
                             style="@style/Base.Widget.AppCompat.Spinner.Underlined"
                             android:theme="@style/ThemeSpinner"
                             android:spinnerMode="dropdown"
@@ -201,8 +203,7 @@
                     <Spinner
                         android:id="@+id/activity_duration"
                         android:layout_width="fill_parent"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true"
+                        android:backgroundTint="@color/colorAccent"
                         style="@style/Base.Widget.AppCompat.Spinner.Underlined"
                         android:theme="@style/ThemeSpinner"
                         android:layout_height="50dp"
