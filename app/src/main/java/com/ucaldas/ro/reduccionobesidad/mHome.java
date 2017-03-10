@@ -35,6 +35,7 @@ import android.widget.TextView;
 
 import com.getbase.floatingactionbutton.AddFloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.github.florent37.tutoshowcase.TutoShowcase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
@@ -43,11 +44,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import co.mobiwise.materialintro.shape.Focus;
+import co.mobiwise.materialintro.shape.FocusGravity;
+import co.mobiwise.materialintro.shape.ShapeType;
+import co.mobiwise.materialintro.view.MaterialIntroView;
+
 public class mHome extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private TabLayout tabLayout;
-    private ViewPager viewPager;
 
     private static Context context;
 
@@ -81,8 +86,10 @@ public class mHome extends AppCompatActivity
         /*
         * Configurar viewPager para navegación general de la aplicación
         * */
+        ViewPager viewPager;
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);
+
     }
 
     private void configureNavigationView(){
@@ -112,6 +119,7 @@ public class mHome extends AppCompatActivity
             //Actualización de la imagen de perfil
             ImageView imageView = (ImageView)header.findViewById(R.id.imageView);
             Picasso.with(getBaseContext()).load(image).into(imageView);
+
         }
     }
 
@@ -145,6 +153,26 @@ public class mHome extends AppCompatActivity
                 btn_actions_menu.collapse();
             }
         });
+
+
+        /*new MaterialIntroView.Builder(this)
+                .enableDotAnimation(false)
+                .enableIcon(true)
+                .setMaskColor(R.color.black_overlay)
+                .setFocusGravity(FocusGravity.CENTER)
+                .setFocusType(Focus.NORMAL)
+                .enableFadeAnimation(true)
+                .performClick(false)
+                .setInfoText("Hi There! Click this card and see what happens.")
+                .setTarget(camera_action)
+                .setUsageId("intro_card") //THIS SHOULD BE UNIQUE ID
+                .show();*/
+
+        /*TutoShowcase.from(this)
+                .setContentView(R.layout.list_home_item_reflexive)
+                .on(camera_action)
+                .addCircle()
+                .show();*/
     }
 
     private void configureToolbarAndToggleActionBar(){
@@ -187,6 +215,10 @@ public class mHome extends AppCompatActivity
         createTabIcons();
     }
 
+    private void showAssitant(){
+        Log.v("Assitant", "Click");
+    }
+
     private void createTabIcons() {
 
         TextView tabOne = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
@@ -227,6 +259,8 @@ public class mHome extends AppCompatActivity
         return true;
     }
 
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -248,8 +282,8 @@ public class mHome extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_manage) {
-
+        if (id == R.id.nav_intro) {
+            Log.v("Menu", "Clicked");
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

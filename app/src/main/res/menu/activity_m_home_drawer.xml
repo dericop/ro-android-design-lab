@@ -5,7 +5,12 @@
         <item
             android:id="@+id/nav_manage"
             android:icon="@drawable/ic_action_configuration"
-            android:title="Configuración" />
+            android:title="Configuración"/>
+
+        <item
+            android:id="@+id/nav_intro"
+            android:icon="@drawable/ic_action_assistant"
+            android:title="Ver guía"/>
     </group>
 
     <!--<item android:title="Communicate">

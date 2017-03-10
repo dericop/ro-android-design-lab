@@ -78,6 +78,9 @@ dependencies {
     compile 'com.firebaseui:firebase-ui-database:1.1.1'
     compile 'com.google.firebase:firebase-messaging:10.0.1'
     compile 'com.google.firebase:firebase-crash:10.0.1'
+    compile 'com.github.iammert:MaterialIntroView:1.6.0'
+    compile 'com.github.florent37:tutoshowcase:1.0.1'
+
     testCompile 'junit:junit:4.12'
 
 }

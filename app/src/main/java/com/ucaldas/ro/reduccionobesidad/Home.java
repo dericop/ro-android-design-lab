@@ -29,6 +29,11 @@ import java.util.LinkedList;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import co.mobiwise.materialintro.shape.Focus;
+import co.mobiwise.materialintro.shape.FocusGravity;
+import co.mobiwise.materialintro.shape.ShapeType;
+import co.mobiwise.materialintro.view.MaterialIntroView;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -132,6 +137,9 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
         setListAdapter(mPostAdapter);
         getListView().setOnItemClickListener(this);
 
+
+
+
     }
 
     @Override
@@ -146,6 +154,8 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
             //Consultar los primeros posts
             refreshPostList();
         }
+
+
     }
 
     private long getResult(HashMap postMap){
