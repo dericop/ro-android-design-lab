@@ -1,7 +1,15 @@
 package com.ucaldas.ro.reduccionobesidad;
 
+import android.*;
+import android.Manifest;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -14,8 +22,12 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
+import android.support.v13.app.ActivityCompat;
+import android.support.v13.app.FragmentCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -50,6 +62,7 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.security.acl.Permission;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -57,13 +70,16 @@ import java.util.List;
 import java.util.Map;
 
 
-public class AddPost extends AppCompatActivity{
+public class AddPost extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback{
 
     static final int REQUEST_IMAGE_CAPTURE = 1; //Bandera para verificar en los resultados de actividad si se ha tomado una foto.
     static final int RESULT_LOAD_IMAGE = 2; //Bandera para verificar en los resultados de actividad si se ha cargado una foto de la galería
     private String SOURCE = ""; //Indica el origen de un llamado, con el objetivo de reutilizar la vista.
     private boolean isActivity;
     private boolean radioButtonIsClicked = false;
+    private static final String FRAGMENT_DIALOG = "dialog";
+    private static final int REQUEST_CAMERA_PERMISSION = 1;
+    private static final int REQUEST_STORAGE_PERMISSION = 2;
 
     //Datos que el usuario va a ingresar para la publiación
     private Spinner frecuencySpinner;
@@ -90,6 +106,10 @@ public class AddPost extends AppCompatActivity{
     private final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1;
 
 
+
+    //Prueba
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,7 +118,7 @@ public class AddPost extends AppCompatActivity{
         //Log.v("AUser", mHome.user.getUid());
 
         configureToolbarAndActions();
-        assignActivitySourceAndInitData();
+        assignActivitySourceAndInitData(savedInstanceState);
 
         //Esconder el teclado
         getWindow().setSoftInputMode(
@@ -159,16 +179,42 @@ public class AddPost extends AppCompatActivity{
                 R.array.new_post_food_categories, android.R.layout.simple_spinner_dropdown_item); //Cargar con las categorias de alimentos
     }
 
-    private void assignActivitySourceAndInitData() {
+    private void assignActivitySourceAndInitData(Bundle saveInstanceState) {
         /*
         * Asigna el origen de la creación de esta vista
         * Inicializa los datos con respecto al origen
         * */
         //Creación del spinner de categorias
         categorySpinner = (Spinner) findViewById(R.id.category_spinner);
+
         prev = (ImageView) findViewById(R.id.imagePreview);
+        prev.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                requestCameraPermission();
+            }
+        });
         SOURCE = getIntent().getStringExtra("source"); //Obtiene el origen
-        //isActivity = true; //Inicialmente se configura el post como una publicación de actividad
+
+        // Creación del spinner de frecuencias para un nuevo post
+        frecuencySpinner = (Spinner) findViewById(R.id.frecuency_spinner);
+        ArrayAdapter<CharSequence> frecuencyAdapter;
+        frecuencyAdapter = ArrayAdapter.createFromResource(this, R.array.new_post_frecuencies, android.R.layout.simple_spinner_dropdown_item);
+
+
+        //Configuración de adaptadores para cargar los datos
+        frecuencySpinner.setAdapter(frecuencyAdapter);
+
+        //Creación del spinner de duraciones para un nuevo post
+        durationSpinner = (Spinner) findViewById(R.id.activity_duration);
+        ArrayAdapter<CharSequence> durationAdapter;
+        durationAdapter = ArrayAdapter.createFromResource(this, R.array.new_post_activity_duration, android.R.layout.simple_spinner_dropdown_item);
+        //Configuración del adaptador de duraciones de una actividad
+        durationSpinner.setAdapter(durationAdapter);
+
+
+        TextView txt_name = (TextView) findViewById(R.id.textInputEditText);
+
 
         switch(SOURCE){
             case "reply":
@@ -182,7 +228,6 @@ public class AddPost extends AppCompatActivity{
                 Log.v("DBP", resultForReply + "");
                 averageForReply = getIntent().getIntExtra("average", 0);
 
-                TextView txt_name = (TextView) findViewById(R.id.textInputEditText);
                 txt_name.setEnabled(false);
                 txt_name.setText(name);
 
@@ -217,20 +262,7 @@ public class AddPost extends AppCompatActivity{
 
         categorySpinner.setAdapter(categoryAdapter);
 
-        // Creación del spinner de frecuencias para un nuevo post
-        frecuencySpinner = (Spinner) findViewById(R.id.frecuency_spinner);
-        ArrayAdapter<CharSequence> frecuencyAdapter;
-        frecuencyAdapter = ArrayAdapter.createFromResource(this, R.array.new_post_frecuencies, android.R.layout.simple_spinner_dropdown_item);
 
-        //Configuración de adaptadores para cargar los datos
-        frecuencySpinner.setAdapter(frecuencyAdapter);
-
-        //Creación del spinner de duraciones para un nuevo post
-        durationSpinner = (Spinner) findViewById(R.id.activity_duration);
-        ArrayAdapter<CharSequence> durationAdapter;
-        durationAdapter = ArrayAdapter.createFromResource(this, R.array.new_post_activity_duration, android.R.layout.simple_spinner_dropdown_item);
-        //Configuración del adaptador de duraciones de una actividad
-        durationSpinner.setAdapter(durationAdapter);
     }
 
     private void changeStatusBarColor() {
@@ -655,40 +687,112 @@ public class AddPost extends AppCompatActivity{
 
     private void dispatchTakePictureIntent() {
 
+        if (Build.VERSION.SDK_INT >= 21) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                    != PackageManager.PERMISSION_GRANTED) {
+
+                requestCameraPermission();
+                return;
+            }
+
+        }
+
+        startCamera();
+    }
 
 
 
+
+    private void dispatchGaleryPicture() {
+        /*
+        * Habilita la galería de fotos para adjuntar una foto.
+        * */
+
+        /*if(Build.VERSION.SDK_INT >= 21){
+            if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+
+                requestMediaPermission();
+            }
+
+            return;
+        }*/
+
+        startMedia();
+
+    }
+
+    private void requestMediaPermission(){
+        ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                REQUEST_STORAGE_PERMISSION);
+    }
+
+
+    private void requestCameraPermission() {
+       /* if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.CAMERA)) {
+            new ConfirmationDialog().show(getFragmentManager(),FRAGMENT_DIALOG);
+        } else {*/
+        ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.CAMERA},
+                REQUEST_CAMERA_PERMISSION);
+        //}
+    }
+
+    private void startMedia(){
+
+        Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        if(i.resolveActivity(getPackageManager()) != null){
+            startActivityForResult(i, RESULT_LOAD_IMAGE);
+        }
+    }
+
+    private void startCamera(){
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         }
-
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
         switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_READ_CONTACTS: {
+            case REQUEST_CAMERA_PERMISSION: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
+                    Log.v("Camera", "Tienes permiso");
+                    startCamera();
 
-                    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-                        startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-                    }
+                } else if(ActivityCompat.shouldShowRequestPermissionRationale(this, permissions[0])){
 
-
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
-
-                } else {
-                    Log.v("Permissions", "Permiso negado");
-                    finish();
+                    ErrorDialog.newInstance(getString(R.string.request_permission))
+                            .show(getFragmentManager(), FRAGMENT_DIALOG);
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
+                }else{
+                    ErrorDialog.newInstance(getString(R.string.permission_indication))
+                            .show(getFragmentManager(), FRAGMENT_DIALOG);
+
+                }
+                break;
+            }
+            case REQUEST_STORAGE_PERMISSION:{
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    Log.v("Camera", "Tienes permiso");
+                    startMedia();
+
+                } else if(ActivityCompat.shouldShowRequestPermissionRationale(this, permissions[0])){
+
+                    ErrorDialog.newInstance(getString(R.string.request_permission))
+                            .show(getFragmentManager(), FRAGMENT_DIALOG);
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }else{
+                    ErrorDialog.newInstance(getString(R.string.permission_indication))
+                            .show(getFragmentManager(), FRAGMENT_DIALOG);
+
                 }
                 break;
             }
@@ -698,12 +802,65 @@ public class AddPost extends AppCompatActivity{
         }
     }
 
-    private void dispatchGaleryPicture() {
-        /*
-        * Habilita la galería de fotos para adjuntar una foto.
-        * */
-        Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(i, RESULT_LOAD_IMAGE);
+
+
+    public static class ConfirmationDialog extends DialogFragment {
+
+        @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            final Activity parent = getActivity();
+            return new AlertDialog.Builder(getActivity())
+                    .setMessage(R.string.request_permission)
+                    .setCancelable(false)
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            ActivityCompat.requestPermissions(parent,
+                                    new String[]{Manifest.permission.CAMERA},
+                                    REQUEST_CAMERA_PERMISSION);
+                        }
+                    })
+                    .setNegativeButton(android.R.string.cancel,
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Activity activity = parent;
+                                    if (activity != null) {
+                                        activity.finish();
+                                    }
+                                }
+                            })
+                    .create();
+        }
+    }
+
+    public static class ErrorDialog extends DialogFragment {
+
+        private static final String ARG_MESSAGE = "message";
+
+        public static ErrorDialog newInstance(String message) {
+            ErrorDialog dialog = new ErrorDialog();
+            Bundle args = new Bundle();
+            args.putString(ARG_MESSAGE, message);
+            dialog.setArguments(args);
+            return dialog;
+        }
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            final Activity activity = getActivity();
+            return new AlertDialog.Builder(activity)
+                    .setMessage(getArguments().getString(ARG_MESSAGE))
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            activity.finish();
+                        }
+                    })
+                    .create();
+        }
+
     }
 
 }

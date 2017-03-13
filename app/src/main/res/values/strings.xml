@@ -21,6 +21,13 @@
     <string name="play_again_desc">Para ver de nuevo, limpia los datos de la app</string>
     <string name="play_again">Ver de nuevo</string>
 
+    <string name="request_permission">El permiso de la cámara es requisito para realizar publicaciones.</string>
+    <string name="permission_indication">El permiso de la cámara es requisito para realizar publicaciones y lo has deshabilitado permanentemente, si cambias de opinión ve a ajustes,
+        busca la aplicación y habilitalo.</string>
+    <string name="intro_message">Texto de introducción</string>
+    <string name="camera_error">Es necesario el acceso a la camara</string>
+
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_m_home">CoCono</string>
