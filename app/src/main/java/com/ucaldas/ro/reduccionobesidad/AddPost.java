@@ -694,13 +694,10 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
                 requestCameraPermission();
                 return;
             }
-
         }
 
         startCamera();
     }
-
-
 
 
     private void dispatchGaleryPicture() {
@@ -718,7 +715,6 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
         }*/
 
         startMedia();
-
     }
 
     private void requestMediaPermission(){

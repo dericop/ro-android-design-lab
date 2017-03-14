@@ -79,6 +79,12 @@ public class MyItemAdapter extends BaseAdapter {
             TextView txtActivityResult = (TextView) convertView.findViewById(R.id.txt_activity_result);
             LinearLayout containerActivityResult = (LinearLayout) convertView.findViewById(R.id.container_txt_activity_result);
 
+            thumbnail.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    
+                }
+            });
 
             // Setup
             Glide.with(mContext).load(post.getImage()).into(thumbnail);

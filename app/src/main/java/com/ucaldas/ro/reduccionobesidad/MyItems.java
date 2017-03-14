@@ -45,6 +45,10 @@ public class MyItems extends Fragment {
     private OnFragmentInteractionListener mListener;
     private SwipeRefreshLayout itemsRefresh;
 
+    private DatabaseReference itemsRef = null;
+    private DatabaseReference mDatabase = null;
+
+
     public MyItems() {
         // Required empty public constructor
     }
@@ -102,24 +106,21 @@ public class MyItems extends Fragment {
         final MyItemAdapter itemAdapter = new MyItemAdapter(this.getContext(), myItems);
         grid_items.setAdapter(itemAdapter);
 
-        Log.v("view", "test view");
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
         DatabaseReference firebaseDatabase = null;
         if(mHome.user != null){
             if(WelcomeActivity.CURRENT_APP_VERSION.equals("A"))
-                firebaseDatabase = FirebaseDatabase.getInstance().getReference().child("user-data").child(mHome.user.getUid());
+                firebaseDatabase = mDatabase.child("user-data").child(mHome.user.getUid());
             else
-                firebaseDatabase = FirebaseDatabase.getInstance().getReference().child("user-data-reflexive").child(mHome.user.getUid());
+                firebaseDatabase = mDatabase.child("user-data-reflexive").child(mHome.user.getUid());
 
             firebaseDatabase.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if(dataSnapshot.hasChildren()){
                         myItems.clear();
-
                         HashMap<String, HashMap<String, String>> map = (HashMap)dataSnapshot.getValue();
-
-                        Log.v("DB", map.toString());
 
                         for (String key: map.keySet()){
                             HashMap<String, Object> values = (HashMap) map.get(key);
@@ -131,7 +132,7 @@ public class MyItems extends Fragment {
                             String user = (String)values.get("user");
                             String id = (String)values.get("id");
 
-                            long result = 0;
+                            /*long result = 0;
                             if(values.get("result") != null){
                                 result = (long)values.get("result");
                             }
@@ -139,29 +140,54 @@ public class MyItems extends Fragment {
                             long average = 0;
                             if(values.get("average") != null){
                                 average = (long)values.get("average");
-                            }
+                            }*/
 
-                            Post post = null;
+                            getPostReference(id);
+
+                            final Post post = new Post();
+                            post.setName(name);
+                            post.setFrecuency(frecuency);
+                            post.setCategory(category);
+                            post.setImage(image);
+                            post.setUser(user);
+                            post.setId(id);
+
                             if(values.get("duration") != null){
-
                                 String duration = (String)values.get("duration");
-                                post = new Post(id, name, category, frecuency, image, duration, user, result, average, "", "");
-
-                            }else{
-                                post = new Post(id, name, category, frecuency, image, user, result, average);
+                                post.setDuration(duration);
                             }
 
-                            if(values.get("r_pi") != null && values.get("r_aa")!=null && values.get("r_gs")!=null && values.get("r_ch") != null){
+                            itemsRef.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    Post rPost = dataSnapshot.getValue(Post.class);
+                                    if(rPost.getResult()!=0)
+                                        post.setResult(rPost.getResult());
 
-                                post.setR_pi(Double.parseDouble(values.get("r_pi")+""));
-                                post.setR_aa(Double.parseDouble(values.get("r_aa")+""));
-                                post.setR_gs(Double.parseDouble(values.get("r_gs")+""));
-                                post.setR_ch(Double.parseDouble(values.get("r_ch")+""));
-                            }
+                                    if(rPost.getR_aa() != 0)
+                                        post.setR_aa(rPost.getR_aa());
 
-                            myItems.add(post);
-                            itemAdapter.notifyDataSetChanged();
-                            grid_items.setAdapter(itemAdapter);
+                                    if(rPost.getR_pi() != 0)
+                                        post.setR_pi(rPost.getR_pi());
+
+                                    if(rPost.getR_ch() != 0)
+                                        post.setR_pi(rPost.getR_ch());
+
+                                    if(rPost.getR_gs() != 0)
+                                        post.setR_gs(rPost.getR_gs());
+
+                                    myItems.add(post);
+                                    itemAdapter.notifyDataSetChanged();
+                                    grid_items.setAdapter(itemAdapter);
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+
+
                         }
                     }
                 }
@@ -173,6 +199,17 @@ public class MyItems extends Fragment {
             });
 
         }
+    }
+
+    private DatabaseReference getPostReference(String id){
+        if(!id.equals("")){
+            if(WelcomeActivity.CURRENT_APP_VERSION.equals("A"))
+                itemsRef = mDatabase.child("user-posts").child(id);
+            else
+                itemsRef = mDatabase.child("user-posts-reflexive").child(id);
+        }
+
+        return null;
     }
 
     @Override
