@@ -212,17 +212,40 @@
                 </LinearLayout>
 
 
-                <Button
-                    android:layout_width="200dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/add_save_text"
-                    android:background="@color/colorAccent"
-                    android:tint="@color/colorAccent"
-                    android:textColor="#fff"
-                    android:textStyle="bold"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="20dp"
-                    android:id="@+id/btn_save"/>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <Button
+                        android:layout_width="200dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/add_save_text"
+                        android:background="@color/colorAccent"
+                        android:tint="@color/colorAccent"
+                        android:textColor="#fff"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="20dp"
+                        android:id="@+id/btn_save"/>
+
+                    <Button
+                        android:layout_width="200dp"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/btn_save"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="10dp"
+                        android:background="@color/delete_button"
+                        android:gravity="center"
+                        android:text="Eliminar"
+                        android:textColor="#fff"
+                        android:textStyle="bold"
+                        android:tint="@color/colorAccent"
+                        android:visibility="gone" />
+
+                </RelativeLayout>
+
+
 
 
             </LinearLayout>

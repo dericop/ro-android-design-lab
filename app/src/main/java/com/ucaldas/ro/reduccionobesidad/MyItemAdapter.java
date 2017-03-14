@@ -90,6 +90,7 @@ public class MyItemAdapter extends BaseAdapter {
                     detailIntent.putExtra("frecuency", post.getFrecuency());
                     detailIntent.putExtra("duration", post.getDuration());
                     detailIntent.putExtra("image", post.getImage());
+                    detailIntent.putExtra("id", post.getId());
 
                     mContext.startActivity(detailIntent);
                 }

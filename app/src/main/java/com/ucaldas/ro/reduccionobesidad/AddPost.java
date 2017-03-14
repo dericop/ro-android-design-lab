@@ -55,6 +55,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -68,6 +69,8 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 
 public class AddPost extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback{
@@ -98,6 +101,8 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
     private String typeForReply;
     private long resultForReply;
     private long averageForReply;
+
+    private String idForUpdate;
 
     private DatabaseReference database;
 
@@ -133,6 +138,7 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
         loadAdapterWithActivityCategories();
         spinnerDuration.setVisibility(View.VISIBLE);
         spinner_duration_label.setVisibility(View.VISIBLE);
+        categorySpinner.setAdapter(categoryAdapter);
         isActivity = true;
     }
 
@@ -145,6 +151,7 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
         spinnerDuration.setVisibility(View.INVISIBLE);
         spinner_duration_label.setVisibility(View.INVISIBLE);
 
+        categorySpinner.setAdapter(categoryAdapter);
         isActivity = false;
     }
 
@@ -216,6 +223,10 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
 
         TextView txt_name = (TextView) findViewById(R.id.textInputEditText);
         List foodList = Arrays.asList(getResources().getStringArray(R.array.new_post_food_categories));
+        List activityList = Arrays.asList(getResources().getStringArray(R.array.new_post_activity_categories));
+        List durationList = Arrays.asList(getResources().getStringArray(R.array.new_post_activity_duration));
+        List frecuencyList = Arrays.asList(getResources().getStringArray(R.array.new_post_frecuencies));
+
         RadioButton radioActivity = (RadioButton) findViewById(R.id.radio_activity);
         RadioButton radioFood = (RadioButton) findViewById(R.id.radio_food);
 
@@ -256,8 +267,7 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
                 final String mFrecuency = getIntent().getStringExtra("frecuency");
                 final String mDuration = getIntent().getStringExtra("duration");
                 final String mImage= getIntent().getStringExtra("image");
-
-                Log.v("Detail", "hola");
+                idForUpdate = getIntent().getStringExtra("id");
 
                 if(mName!=null){
                     txt_name.setText(mName);
@@ -269,14 +279,21 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
                     if (foodList.contains(mCategory)) {
                         radioFood.setChecked(true);
                         hideSpinnerDurationAndLoadData();
+                        categorySpinner.setSelection(foodList.indexOf(mCategory));
+                        frecuencySpinner.setSelection(frecuencyList.indexOf(mFrecuency));
+                        isActivity = false;
                     } else {
                         radioActivity.setSelected(true);
                         showSpinnerDurationAndLoadData();
+                        categorySpinner.setSelection(activityList.indexOf(mCategory));
+                        durationSpinner.setSelection(durationList.indexOf(mDuration));
+                        frecuencySpinner.setSelection(frecuencyList.indexOf(mFrecuency));
+                        isActivity = true;
                     }
-
+                    radioButtonIsClicked = true;
                     radioActivity.setEnabled(false);
                     radioFood.setEnabled(false);
-                    categorySpinner.setAdapter(categoryAdapter);
+
                 }
 
 
@@ -289,10 +306,8 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
                 break;
         }
 
-        if (!SOURCE.equals("reply"))
+        if (!SOURCE.equals("reply") && !SOURCE.equals("update"))
             loadAdapterWithActivityCategories();
-
-        categorySpinner.setAdapter(categoryAdapter);
 
 
     }
@@ -317,6 +332,7 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
 
 
         addSaveEventListener();
+
 
         changeStatusBarColor();
         if(getSupportActionBar() != null){
@@ -392,6 +408,234 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
 
     }
 
+    private void replyPost(){
+
+        progress = ProgressDialog.show(that, "Compartiendo Publicación...",
+                "Espera un momento", true);
+
+        if (isOnline()) {
+            database = FirebaseDatabase.getInstance().getReference();
+
+            String dataKey;
+            if(WelcomeActivity.CURRENT_APP_VERSION.equals("A"))
+                dataKey = database.child("user-data").push().getKey();
+            else
+                dataKey = database.child("user-data-reflexive").push().getKey();
+
+            Post post = getPostData(idForReply, imageForReply);
+            Map<String, Object> mapForItems = post.toMap();
+
+            Log.v("db", idForReply);
+
+            Map<String, Object> mapForUpdate = new HashMap<>();
+
+            if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
+                mapForUpdate.put("/user-posts/" + idForReply + "/" + "last_share", mHome.user.getUid());
+                mapForUpdate.put("/user-data/" + mHome.user.getUid() + "/" + dataKey, mapForItems);
+            }else{
+                mapForUpdate.put("/user-posts-reflexive/" + idForReply + "/" + "last_share", mHome.user.getUid());
+                mapForUpdate.put("/user-data-reflexive/" + mHome.user.getUid() + "/" + dataKey, mapForItems);
+            }
+
+
+            database.updateChildren(mapForUpdate).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    sumTocounterReply(idForReply);
+                }
+            });
+
+
+        } else {
+            if(getCurrentFocus()!=null){
+                Snackbar.make(getCurrentFocus(), "Revise su conexión a internet e intentelo más tarde", 2000).show();
+            }
+            progress.dismiss();
+        }
+    }
+
+    private void addPostAndUploadImage(){
+        progress = ProgressDialog.show(that, "Agregando Publicación...",
+                "Espera un momento", true);
+
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReferenceFromUrl("gs://reduccion-de-obesidad-7414c.appspot.com");
+
+
+        prev.setDrawingCacheEnabled(true);
+        prev.buildDrawingCache();
+        Bitmap bitmap = prev.getDrawingCache();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 60, baos);
+        byte[] data = baos.toByteArray();
+
+
+        Calendar cal = Calendar.getInstance();
+        String date = cal.get(Calendar.YEAR) + "" + cal.get(Calendar.MONTH) + "" + cal.get(Calendar.DAY_OF_MONTH) + "" + cal.get(Calendar.HOUR) + "" + cal.get(Calendar.MINUTE) + "" + cal.get(Calendar.SECOND) + "";
+
+        StorageReference imagesRef = storageRef.child("images/" + mHome.user.getUid() + "/" + date);
+
+        if (isOnline()) {
+            UploadTask uploadTask = imagesRef.putBytes(data);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle unsuccessful uploads
+                    if(getCurrentFocus() != null)
+                        Snackbar.make(getCurrentFocus(), "Revise su conexión a internet e intentelo más tarde", 2000).show();
+                    progress.dismiss();
+
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                    addPost(downloadUrl);
+
+                }
+            });
+        } else {
+            if(getCurrentFocus()!=null)
+                Snackbar.make(getCurrentFocus(), "Revise su conexión a internet e intentelo más tarde", 2000).show();
+            progress.dismiss();
+        }
+    }
+
+    private void addPost(Uri downloadUrl){
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+        String key;
+        String dataKey;
+
+        if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
+            key = database.child("user-posts").push().getKey();
+            dataKey = database.child("user-data").push().getKey();
+        }else{
+            key = database.child("user-posts-reflexive").push().getKey();
+            dataKey = database.child("user-data-reflexive").push().getKey();
+        }
+
+        Post post = getPostData(key, downloadUrl.toString());
+
+        if (post != null) {
+            Map<String, Object> postValues = post.toMap();
+
+            Map<String, Object> childUpdates = new HashMap<>();
+            //addSaveEventListener();
+
+            if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
+                childUpdates.put("/user-posts/" + key, postValues);
+                childUpdates.put("/user-data/" + mHome.user.getUid() + "/" + dataKey, postValues);
+            }else{
+                childUpdates.put("/user-posts-reflexive/" + key, postValues);
+                childUpdates.put("/user-data-reflexive/" + mHome.user.getUid() + "/" + dataKey, postValues);
+            }
+
+            OnCompleteListener saveListener = new OnCompleteListener() {
+                @Override
+                public void onComplete(@NonNull Task task) {
+
+                    if (task.isSuccessful()) {
+                        progress.dismiss();
+                        finish();
+
+                    } else {
+                        Log.v("DB", task.getResult() + "");
+                        progress.dismiss();
+                        if(getCurrentFocus()!=null)
+                            Snackbar.make(getCurrentFocus(), "Revise su conexión a internet o intentelo más tarde", 2000).show();
+                    }
+                }
+            };
+            database.updateChildren(childUpdates).addOnCompleteListener(saveListener);
+        }
+    }
+
+    private void updatePost(){
+
+        if(!idForUpdate.equals("")){
+            final DatabaseReference db = FirebaseDatabase.getInstance().getReference();
+            DatabaseReference updateref = db;
+
+            if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
+                updateref = db.child("user-data").child(mHome.user.getUid());
+            }else{
+                updateref = db.child("user-data-reflexive").child(mHome.user.getUid());
+            }
+
+
+            updateref.orderByChild("id").equalTo(idForUpdate).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Log.v("Update", dataSnapshot.getValue()+ "");
+
+                    progress = ProgressDialog.show(that, "Actualizando Publicación...",
+                            "Espera un momento", true);
+
+                    if(dataSnapshot.hasChildren()){
+                        HashMap<String, Object> userMap = (HashMap)dataSnapshot.getValue();
+                        SortedSet<String> keys = new TreeSet<String>(userMap.keySet());
+
+                        HashMap postMap = (HashMap)userMap.get(keys.first());
+
+                        if (postMap != null) {
+                            if (isActivity) {
+                                View duration_view = durationSpinner.getSelectedView();
+                                if (duration_view != null && duration_view instanceof TextView) {
+                                    CharSequence durationActivity;
+                                    TextView activity_duration = (TextView) duration_view;
+                                    durationActivity = activity_duration.getText();
+
+                                    postMap.put("duration", durationActivity.toString());
+                                }
+                            }
+
+                            postMap.put("frecuency",frecuency.toString());
+                            postMap.put("category",category.toString());
+
+                            Map<String, Object> childUpdates = new HashMap<>();
+
+                            if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
+                                childUpdates.put("/user-data/" + mHome.user.getUid() + "/" + keys.first(),postMap);
+                            }else{
+                                childUpdates.put("/user-data-reflexive/" + mHome.user.getUid() + "/" + keys.first(), postMap);
+                            }
+
+                            OnCompleteListener saveListener = new OnCompleteListener() {
+                                @Override
+                                public void onComplete(@NonNull Task task) {
+
+                                    if (task.isSuccessful()) {
+                                        progress.dismiss();
+                                        finish();
+
+                                    } else {
+                                        Log.v("DB", task.getResult() + "");
+                                        progress.dismiss();
+                                        if(getCurrentFocus()!=null)
+                                            Snackbar.make(getCurrentFocus(), "Revise su conexión a internet o intentelo más tarde", 2000).show();
+                                    }
+                                }
+                            };
+                            db.updateChildren(childUpdates).addOnCompleteListener(saveListener);
+                        }
+                    }else{
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+        }else{
+            if(getCurrentFocus()!=null)
+                Snackbar.make(getCurrentFocus(), "Revise su conexión a internet o intentelo más tarde", 2000).show();
+        }
+    }
+
     private void addSaveEventListener() {
         /*
         * Evento para guardar una nueva publicación
@@ -408,147 +652,19 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
                     if (userDataIsOK()) {
 
                         if (SOURCE.equals("reply")) {
-                            progress = ProgressDialog.show(that, "Compartiendo Publicación...",
-                                    "Espera un momento", true);
 
-                            if (isOnline()) {
-                                database = FirebaseDatabase.getInstance().getReference();
+                            replyPost();
 
-                                String dataKey;
-                                if(WelcomeActivity.CURRENT_APP_VERSION.equals("A"))
-                                    dataKey = database.child("user-data").push().getKey();
-                                else
-                                    dataKey = database.child("user-data-reflexive").push().getKey();
+                        } else if(SOURCE.equals("update")){
 
-                                Post post = getPostData(idForReply, imageForReply);
-                                Map<String, Object> mapForItems = post.toMap();
-
-                                Log.v("db", idForReply);
-
-                                Map<String, Object> mapForUpdate = new HashMap<>();
-
-                                if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
-                                    mapForUpdate.put("/user-posts/" + idForReply + "/" + "last_share", mHome.user.getUid());
-                                    mapForUpdate.put("/user-data/" + mHome.user.getUid() + "/" + dataKey, mapForItems);
-                                }else{
-                                    mapForUpdate.put("/user-posts-reflexive/" + idForReply + "/" + "last_share", mHome.user.getUid());
-                                    mapForUpdate.put("/user-data-reflexive/" + mHome.user.getUid() + "/" + dataKey, mapForItems);
-                                }
+                            updatePost();
 
 
-                                database.updateChildren(mapForUpdate).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        sumTocounterReply(idForReply);
-                                    }
-                                });
+                        }else {
 
+                            addPostAndUploadImage();
 
-                            } else {
-                                if(getCurrentFocus()!=null){
-                                    Snackbar.make(getCurrentFocus(), "Revise su conexión a internet e intentelo más tarde", 2000).show();
-                                }
-                                progress.dismiss();
-                            }
-
-
-                        } else {
-
-                            progress = ProgressDialog.show(that, "Agregando Publicación...",
-                                    "Espera un momento", true);
-
-                            FirebaseStorage storage = FirebaseStorage.getInstance();
-                            StorageReference storageRef = storage.getReferenceFromUrl("gs://reduccion-de-obesidad-7414c.appspot.com");
-
-
-                            prev.setDrawingCacheEnabled(true);
-                            prev.buildDrawingCache();
-                            Bitmap bitmap = prev.getDrawingCache();
-                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                            bitmap.compress(Bitmap.CompressFormat.JPEG, 60, baos);
-                            byte[] data = baos.toByteArray();
-
-
-                            Calendar cal = Calendar.getInstance();
-                            String date = cal.get(Calendar.YEAR) + "" + cal.get(Calendar.MONTH) + "" + cal.get(Calendar.DAY_OF_MONTH) + "" + cal.get(Calendar.HOUR) + "" + cal.get(Calendar.MINUTE) + "" + cal.get(Calendar.SECOND) + "";
-
-                            StorageReference imagesRef = storageRef.child("images/" + mHome.user.getUid() + "/" + date);
-
-                            if (isOnline()) {
-                                UploadTask uploadTask = imagesRef.putBytes(data);
-                                uploadTask.addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception exception) {
-                                        // Handle unsuccessful uploads
-                                        Log.v("Add", "Error");
-                                        if(getCurrentFocus() != null)
-                                            Snackbar.make(getCurrentFocus(), "Revise su conexión a internet e intentelo más tarde", 2000).show();
-                                        progress.dismiss();
-
-                                    }
-                                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                    @Override
-                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                        Log.v("ST", "satisfactorio");
-                                        Uri downloadUrl = taskSnapshot.getDownloadUrl();
-
-                                        DatabaseReference database = FirebaseDatabase.getInstance().getReference();
-                                        String key;
-                                        String dataKey;
-
-                                        if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
-                                            key = database.child("user-posts").push().getKey();
-                                            dataKey = database.child("user-data").push().getKey();
-                                        }else{
-                                            key = database.child("user-posts-reflexive").push().getKey();
-                                            dataKey = database.child("user-data-reflexive").push().getKey();
-                                        }
-
-                                        Post post = getPostData(key, downloadUrl.toString());
-
-                                        if (post != null) {
-                                            Map<String, Object> postValues = post.toMap();
-
-                                            Map<String, Object> childUpdates = new HashMap<>();
-                                            //addSaveEventListener();
-
-                                            if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
-                                                childUpdates.put("/user-posts/" + key, postValues);
-                                                childUpdates.put("/user-data/" + mHome.user.getUid() + "/" + dataKey, postValues);
-                                            }else{
-                                                childUpdates.put("/user-posts-reflexive/" + key, postValues);
-                                                childUpdates.put("/user-data-reflexive/" + mHome.user.getUid() + "/" + dataKey, postValues);
-                                            }
-
-
-                                            OnCompleteListener saveListener = new OnCompleteListener() {
-                                                @Override
-                                                public void onComplete(@NonNull Task task) {
-
-                                                    if (task.isSuccessful()) {
-                                                        progress.dismiss();
-                                                        finish();
-
-                                                    } else {
-                                                        Log.v("DB", task.getResult() + "");
-                                                        progress.dismiss();
-                                                        if(getCurrentFocus()!=null)
-                                                            Snackbar.make(getCurrentFocus(), "Revise su conexión a internet o intentelo más tarde", 2000).show();
-                                                    }
-                                                }
-                                            };
-                                            database.updateChildren(childUpdates).addOnCompleteListener(saveListener);
-                                        }
-
-                                    }
-                                });
-                            } else {
-                                if(getCurrentFocus()!=null)
-                                    Snackbar.make(getCurrentFocus(), "Revise su conexión a internet e intentelo más tarde", 2000).show();
-                                progress.dismiss();
-                            }
                         }
-
 
                     }
                 }

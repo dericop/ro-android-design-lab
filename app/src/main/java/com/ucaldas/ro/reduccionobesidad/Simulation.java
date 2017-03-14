@@ -162,6 +162,8 @@ public class Simulation extends Fragment {
                     /*progress = ProgressDialog.show(getContext(), "Creando simulación...",
                             "Espera un momento", true);*/
 
+                    Log.v("Simulation", "La simulación ha cambiado");
+
                     double totalAverage = 0;
                     double goodHabitsAverage = 1;
                     double mediumHabitsAverage = 1;
