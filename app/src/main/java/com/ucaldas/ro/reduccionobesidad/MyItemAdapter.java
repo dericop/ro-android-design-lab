@@ -1,6 +1,7 @@
 package com.ucaldas.ro.reduccionobesidad;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,7 +57,7 @@ public class MyItemAdapter extends BaseAdapter {
         if (view == null) {
 
             // Lead actual.
-            Post post = getItem(i);
+            final Post post = getItem(i);
             List foodList = Arrays.asList(mContext.getResources().getStringArray(R.array.new_post_food_categories));
 
             if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
@@ -82,7 +83,15 @@ public class MyItemAdapter extends BaseAdapter {
             thumbnail.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    
+                    Intent detailIntent = new Intent(mContext, AddPost.class);
+                    detailIntent.putExtra("source", "update");
+                    detailIntent.putExtra("name", post.getName());
+                    detailIntent.putExtra("category", post.getCategory());
+                    detailIntent.putExtra("frecuency", post.getFrecuency());
+                    detailIntent.putExtra("duration", post.getDuration());
+                    detailIntent.putExtra("image", post.getImage());
+
+                    mContext.startActivity(detailIntent);
                 }
             });
 

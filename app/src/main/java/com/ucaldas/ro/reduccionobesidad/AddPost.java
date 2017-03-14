@@ -144,6 +144,7 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
         loadAdapterWithFoodCategories();
         spinnerDuration.setVisibility(View.INVISIBLE);
         spinner_duration_label.setVisibility(View.INVISIBLE);
+
         isActivity = false;
     }
 
@@ -214,7 +215,9 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
 
 
         TextView txt_name = (TextView) findViewById(R.id.textInputEditText);
-
+        List foodList = Arrays.asList(getResources().getStringArray(R.array.new_post_food_categories));
+        RadioButton radioActivity = (RadioButton) findViewById(R.id.radio_activity);
+        RadioButton radioFood = (RadioButton) findViewById(R.id.radio_food);
 
         switch(SOURCE){
             case "reply":
@@ -224,17 +227,11 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
                 idForReply = getIntent().getStringExtra("id");
                 typeForReply = getIntent().getStringExtra("type");
                 resultForReply = getIntent().getIntExtra("result", 0);
-
-                Log.v("DBP", resultForReply + "");
                 averageForReply = getIntent().getIntExtra("average", 0);
 
                 txt_name.setEnabled(false);
                 txt_name.setText(name);
 
-                RadioButton radioActivity = (RadioButton) findViewById(R.id.radio_activity);
-                RadioButton radioFood = (RadioButton) findViewById(R.id.radio_food);
-
-                List foodList = Arrays.asList(getResources().getStringArray(R.array.new_post_food_categories));
 
                 if (foodList.contains(typeForReply)) {
                     radioFood.setChecked(true);
@@ -251,6 +248,41 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
                 break;
             case "camera":
                 dispatchTakePictureIntent();
+                break;
+            case "update":
+
+                final String mName = getIntent().getStringExtra("name");
+                final String mCategory = getIntent().getStringExtra("category");
+                final String mFrecuency = getIntent().getStringExtra("frecuency");
+                final String mDuration = getIntent().getStringExtra("duration");
+                final String mImage= getIntent().getStringExtra("image");
+
+                Log.v("Detail", "hola");
+
+                if(mName!=null){
+                    txt_name.setText(mName);
+                    txt_name.setEnabled(false);
+                }
+
+                if(mCategory!=null){
+
+                    if (foodList.contains(mCategory)) {
+                        radioFood.setChecked(true);
+                        hideSpinnerDurationAndLoadData();
+                    } else {
+                        radioActivity.setSelected(true);
+                        showSpinnerDurationAndLoadData();
+                    }
+
+                    radioActivity.setEnabled(false);
+                    radioFood.setEnabled(false);
+                    categorySpinner.setAdapter(categoryAdapter);
+                }
+
+
+                if(mImage!=null)
+                    Glide.with(this).load(mImage).into(prev);
+
                 break;
             default:
                 dispatchGaleryPicture();
