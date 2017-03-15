@@ -107,6 +107,7 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
     private DatabaseReference database;
 
     private ArrayAdapter<CharSequence> categoryAdapter;
+    private AppCompatActivity thisRef;
 
     private final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1;
 
@@ -199,7 +200,7 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
         prev.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                requestCameraPermission();
+                //requestCameraPermission();
             }
         });
         SOURCE = getIntent().getStringExtra("source"); //Obtiene el origen
@@ -262,6 +263,10 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
                 break;
             case "update":
 
+
+                Button btnDelete = (Button) findViewById(R.id.btn_delete);
+                btnDelete.setVisibility(View.VISIBLE);
+
                 final String mName = getIntent().getStringExtra("name");
                 final String mCategory = getIntent().getStringExtra("category");
                 final String mFrecuency = getIntent().getStringExtra("frecuency");
@@ -296,6 +301,57 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
 
                 }
 
+                thisRef = this;
+                database = FirebaseDatabase.getInstance().getReference();
+
+                btnDelete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        new AlertDialog.Builder(thisRef)
+                                .setIcon(R.drawable.ic_delete)
+                                .setTitle("¿Estás seguro que deseas eliminar esta publicación?")
+                                .setPositiveButton("Si", new DialogInterface.OnClickListener()
+                                {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        assignUserDataReference();
+
+                                        database.child(mHome.user.getUid()).orderByChild("id").equalTo(idForUpdate).addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                                if(dataSnapshot.hasChildren()){
+                                                    HashMap<String, Object> map = (HashMap)dataSnapshot.getValue();
+                                                    SortedSet<String> keys = new TreeSet<String>(map.keySet());
+                                                    String keyForDelete = keys.first();
+
+                                                    Log.v("Delete", keyForDelete);
+
+                                                    database.child(mHome.user.getUid()).child(keyForDelete).removeValue(new DatabaseReference.CompletionListener() {
+                                                        @Override
+                                                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                                            //progress.dismiss();
+                                                        }
+                                                    });
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+
+                                            }
+                                        });
+
+                                        finish();
+                                    }
+
+                                })
+                                .setNegativeButton("No", null)
+                                .show();
+
+                    }
+                });
 
                 if(mImage!=null)
                     Glide.with(this).load(mImage).into(prev);
@@ -365,6 +421,13 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
             database = database.child("user-posts");
         else
             database = database.child("user-posts-reflexive");
+    }
+
+    private void assignUserDataReference(){
+        if(WelcomeActivity.CURRENT_APP_VERSION.equals("A"))
+            database = database.child("user-data");
+        else
+            database = database.child("user-data-reflexive");
     }
 
     private void assignUserPostsReferenceForTest(){

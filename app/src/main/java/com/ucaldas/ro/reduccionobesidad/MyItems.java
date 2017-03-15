@@ -161,24 +161,28 @@ public class MyItems extends Fragment {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     Post rPost = dataSnapshot.getValue(Post.class);
-                                    if(rPost.getResult()!=0)
-                                        post.setResult(rPost.getResult());
 
-                                    if(rPost.getR_aa() != 0)
-                                        post.setR_aa(rPost.getR_aa());
+                                    if(rPost!=null){
+                                        if(rPost.getResult()!=0)
+                                            post.setResult(rPost.getResult());
 
-                                    if(rPost.getR_pi() != 0)
-                                        post.setR_pi(rPost.getR_pi());
+                                        if(rPost.getR_aa() != 0)
+                                            post.setR_aa(rPost.getR_aa());
 
-                                    if(rPost.getR_ch() != 0)
-                                        post.setR_pi(rPost.getR_ch());
+                                        if(rPost.getR_pi() != 0)
+                                            post.setR_pi(rPost.getR_pi());
 
-                                    if(rPost.getR_gs() != 0)
-                                        post.setR_gs(rPost.getR_gs());
+                                        if(rPost.getR_ch() != 0)
+                                            post.setR_pi(rPost.getR_ch());
 
-                                    myItems.add(post);
-                                    itemAdapter.notifyDataSetChanged();
-                                    grid_items.setAdapter(itemAdapter);
+                                        if(rPost.getR_gs() != 0)
+                                            post.setR_gs(rPost.getR_gs());
+
+                                        myItems.add(post);
+                                        itemAdapter.notifyDataSetChanged();
+                                        grid_items.setAdapter(itemAdapter);
+                                    }
+
                                 }
 
                                 @Override
