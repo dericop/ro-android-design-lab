@@ -584,7 +584,6 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
             Map<String, Object> postValues = post.toMap();
 
             Map<String, Object> childUpdates = new HashMap<>();
-            //addSaveEventListener();
 
             if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
                 childUpdates.put("/user-posts/" + key, postValues);

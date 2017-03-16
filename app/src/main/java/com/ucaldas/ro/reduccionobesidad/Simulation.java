@@ -179,9 +179,9 @@ public class Simulation extends Fragment {
                         for(String key: data.keySet()){
 
                             Map<String, Object> post = data.get(key);
-
                             //String activityType = post.get("category")+"";
                             //foodsCategories.contains(activityType) &&
+
                             if(post.get("result") != null){
                                 long result = (long)post.get("result");
                                 long frecuency = Integer.parseInt(frecuenciesCost.get(frecuencies.indexOf(post.get("frecuency"))));

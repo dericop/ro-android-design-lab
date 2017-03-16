@@ -73,22 +73,10 @@ public class CommentsAdapter extends ArrayAdapter<Comment> {
         TextView time = (TextView) convertView.findViewById(R.id.time);
 
         if(mHome.user != null){
-            userName.setText(mHome.user.getDisplayName());
+            userName.setText(com.getUser());
             Glide.with(mContext)
-                .load(mHome.user.getPhotoUrl())
+                .load(com.getUserPhoto())
                 .asBitmap()
-                .listener(new RequestListener<Uri, Bitmap>() {
-                    @Override
-                    public boolean onException(Exception e, Uri model, Target<Bitmap> target, boolean isFirstResource) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(Bitmap resource, Uri model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
-
-                        return false;
-                    }
-                })
                 .into(avatar);
         }
 

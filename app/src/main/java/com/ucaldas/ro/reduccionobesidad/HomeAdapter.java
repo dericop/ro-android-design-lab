@@ -237,6 +237,7 @@ public class HomeAdapter extends ArrayAdapter<Post>{
                 detailIntent.putExtra("r_aa", post.getR_aa());
                 detailIntent.putExtra("r_gs", post.getR_gs());
                 detailIntent.putExtra("r_ch", post.getR_ch());
+                detailIntent.putExtra("result", post.getResult());
 
                 mContext.startActivity(detailIntent);
 
@@ -258,6 +259,7 @@ public class HomeAdapter extends ArrayAdapter<Post>{
                 detailIntent.putExtra("r_aa", post.getR_aa());
                 detailIntent.putExtra("r_gs", post.getR_gs());
                 detailIntent.putExtra("r_ch", post.getR_ch());
+                detailIntent.putExtra("result", post.getResult());
 
                 mContext.startActivity(detailIntent);
             }

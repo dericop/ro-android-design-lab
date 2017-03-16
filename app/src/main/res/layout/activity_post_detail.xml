@@ -68,12 +68,14 @@
                     android:layout_marginRight="6dp">
                     
                     <LinearLayout
+                        android:id="@+id/cocono_qualification"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.35"
                         android:layout_marginLeft="4dp"
                         android:layout_marginTop="4dp"
-                        android:layout_marginBottom="4dp">
+                        android:layout_marginBottom="4dp"
+                        android:visibility="gone">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -215,6 +217,40 @@
 
                         </LinearLayout>
 
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/corus_qualification"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.1"
+                        android:layout_marginLeft="4dp"
+                        android:layout_marginTop="4dp"
+                        android:visibility="visible"
+                        android:layout_marginBottom="4dp">
+
+                        <LinearLayout
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/circle_clock"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginLeft="5dp"
+                            android:gravity="left"
+                            android:id="@+id/result_item">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:textAlignment="center"
+                                android:textSize="20dp"
+                                android:gravity="center"
+                                android:layout_marginTop="-2dp"
+                                android:layout_marginLeft="2dp"
+                                android:textColor="#fff"
+                                android:id="@+id/txt_average_data"/>
+
+                        </LinearLayout>
                     </LinearLayout>
 
                     <LinearLayout

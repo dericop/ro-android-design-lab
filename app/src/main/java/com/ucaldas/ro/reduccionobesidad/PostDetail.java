@@ -17,6 +17,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -39,6 +40,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -59,13 +61,13 @@ public class PostDetail extends AppCompatActivity {
         init();
     }
 
-    private void configureDatabase(String postId){
+    private void configureDatabase(){
         database = FirebaseDatabase.getInstance();
         if(database!=null && mHome.user!=null){
             if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
-                datRef = database.getReference().child("user-comments").child(postId);
+                datRef = database.getReference().child("user-comments");
             }else{
-                datRef = database.getReference().child("user-comments-reflexive").child(postId);
+                datRef = database.getReference().child("user-comments-reflexive");
             }
         }
 
@@ -104,6 +106,7 @@ public class PostDetail extends AppCompatActivity {
         double r_aa = getIntent().getDoubleExtra("r_aa", 0);
         double r_gs = getIntent().getDoubleExtra("r_gs", 0);
         double r_ch = getIntent().getDoubleExtra("r_ch", 0);
+        long result = getIntent().getLongExtra("result", 0);
 
         //Actualización componentes gráficos
         ImageView imgPreview = (ImageView) findViewById(R.id.imgPreview);
@@ -114,7 +117,40 @@ public class PostDetail extends AppCompatActivity {
         title.setText(name);
         userName.setText(user);
 
-        updateQualificationInfo(r_pi, r_aa, r_gs, r_ch);
+        LinearLayout corusQualificationContainer = (LinearLayout)  findViewById(R.id.corus_qualification);
+        LinearLayout coconoQualificationContainer = (LinearLayout)  findViewById(R.id.cocono_qualification);
+
+
+
+        if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
+            corusQualificationContainer.setVisibility(View.VISIBLE);
+            coconoQualificationContainer.setVisibility(View.GONE);
+
+            LinearLayout resultItem = (LinearLayout) findViewById(R.id.result_item);
+            Log.v("Result", result+"result ");
+
+            switch ((int)result) {
+                case 0:
+                    resultItem.setBackgroundDrawable(getResources().getDrawable(R.drawable.circle_clock));
+                    break;
+                case 1:
+                    resultItem.setBackgroundDrawable(getResources().getDrawable(R.drawable.circle_bad));
+                    break;
+                case 2:
+                    resultItem.setBackgroundDrawable(getResources().getDrawable(R.drawable.circle_medium));
+                    break;
+                case 3:
+                    resultItem.setBackgroundDrawable(getResources().getDrawable(R.drawable.circle_good));
+                    break;
+            }
+
+        }else{
+            corusQualificationContainer.setVisibility(View.GONE);
+            coconoQualificationContainer.setVisibility(View.VISIBLE);
+
+            updateQualificationInfo(r_pi, r_aa, r_gs, r_ch);
+
+        }
 
 
         //Consultar los comentarios de la base de datos
@@ -140,15 +176,47 @@ public class PostDetail extends AppCompatActivity {
                 long timeInMillis = cal.getTimeInMillis();
 
                 Comment com = new Comment(comment, timeInMillis, postId);
-                String key = datRef.push().getKey();
-                datRef.child(key).setValue(com).addOnCompleteListener(new OnCompleteListener<Void>() {
+                com.setUser(mHome.user.getUid());
+                com.setUserPhoto(mHome.user.getPhotoUrl().toString());
+
+                DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+
+                String key;
+
+                if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
+                    key = database.child("user-comments").push().getKey();
+                }else{
+                    key = database.child("user-comments-reflexive").push().getKey();
+                }
+
+
+                Map<String, Object> commentValues = com.toMap();
+                Map<String, Object> childUpdates = new HashMap<>();
+
+                if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
+                    childUpdates.put("/user-comments/" + key, commentValues);
+                }else{
+                    childUpdates.put("/user-comments-reflexive/" + key, commentValues);
+                }
+
+                OnCompleteListener saveListener = new OnCompleteListener() {
                     @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        updateComments();
-                        editMessage.setText("");
-                        closeKeyboard();
+                    public void onComplete(@NonNull Task task) {
+
+                        if (task.isSuccessful()) {
+                            updateComments();
+                            editMessage.setText("");
+                            closeKeyboard();
+
+                        } else {
+                            Log.v("DB", task.getResult() + "");
+                            if(getCurrentFocus()!=null)
+                                Snackbar.make(getCurrentFocus(), "Revise su conexión a internet o intentelo más tarde", 2000).show();
+                        }
                     }
-                });
+                };
+                database.updateChildren(childUpdates).addOnCompleteListener(saveListener);
+
             }
 
         }else{
@@ -158,7 +226,7 @@ public class PostDetail extends AppCompatActivity {
     }
 
     private void getPostComments(){
-        configureDatabase(postId);
+        configureDatabase();
         updateComments();
     }
 
@@ -170,23 +238,59 @@ public class PostDetail extends AppCompatActivity {
     }
 
     private void getCommentsDetail(){
-        datRef.orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
+        final DatabaseReference userDataDB = FirebaseDatabase.getInstance().getReference();
+        configureDatabase();
+
+        datRef.orderByChild("id").equalTo(postId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.getValue() != null){
                     HashMap<String, HashMap<String, Object>> map = (HashMap)dataSnapshot.getValue();
                     SortedSet<String> keys = new TreeSet<String>(map.keySet());
 
+                    DatabaseReference userDataRef;
+
                     mComments.clear();
                     for (String k: keys){
-                        Comment com = new Comment();
+                        final Comment com = new Comment();
                         com.setDetail(map.get(k).get("detail")+"");
                         com.setDate((long)map.get(k).get("date"));
                         com.setId(map.get(k).get("id")+"");
 
-                        mComments.addLast(com);
+                        if(map.get(k).get("user") != null){
+                            String userKey = map.get(k).get("user")+"";
+
+                            if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
+                                userDataRef = userDataDB.child("users");
+                            }else{
+                                userDataRef = userDataDB.child("users-reflexive");
+                            }
+
+                            userDataRef.child(userKey).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                    if(dataSnapshot.hasChildren()){
+                                        HashMap<String, HashMap<String, Object>> map = (HashMap)dataSnapshot.getValue();
+                                        SortedSet<String> keys = new TreeSet<String>(map.keySet());
+
+                                        com.setUser(map.get("mUserName")+"");
+                                        com.setUserPhoto(map.get("mPhotoUrl")+"");
+
+                                        mComments.addFirst(com);
+                                        comAdapter.notifyDataSetChanged();
+                                    }
+
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+
+                        }
                     }
-                    comAdapter.notifyDataSetChanged();
                 }
             }
 
@@ -203,7 +307,7 @@ public class PostDetail extends AppCompatActivity {
                 getCommentsDetail();
             }else{
                 try {
-                    configureDatabase(postId);
+                    configureDatabase();
                     getCommentsDetail();
                 }catch (DatabaseException de){
                     Log.v("Error", de.getMessage());
