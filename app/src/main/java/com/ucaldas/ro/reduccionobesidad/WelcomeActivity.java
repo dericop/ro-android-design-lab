@@ -97,8 +97,6 @@ public class WelcomeActivity extends AppCompatActivity{
                 }
             }
         });
-
-
     }
 
     private void addBottomDots(int currentPage) {

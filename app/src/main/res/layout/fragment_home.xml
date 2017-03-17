@@ -16,32 +16,36 @@
             android:layout_height="wrap_content"
             android:src="@android:color/transparent"
             android:text="Nuevas publicaciones"
-            android:textSize="14dp"
+            android:textSize="14sp"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:background="@drawable/border_radius"
             android:backgroundTint="@color/colorAccent"
             android:paddingLeft="4dp"
             android:paddingRight="4dp"
             android:textColor="#fff"
+            android:layout_gravity="center_horizontal"
             android:id="@+id/btn_new_posts"
             android:visibility="invisible"/>
 
+        <android.support.v4.widget.SwipeRefreshLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/swiperefresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ListView
+                android:id="@android:id/list"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:drawSelectorOnTop="false"
+                android:layout_weight="1">
+            </ListView>
+
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+
     </FrameLayout>
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/swiperefresh"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
-        <ListView
-            android:id="@android:id/list"
-            android:layout_height="match_parent"
-            android:layout_width="match_parent"
-            android:drawSelectorOnTop="false"
-            android:layout_weight="1">
-        </ListView>
-
-    </android.support.v4.widget.SwipeRefreshLayout>
 
 </FrameLayout>

@@ -152,6 +152,8 @@ public class Post{
         result.put("image", image);
         result.put("user", user);
         result.put("id", id);
+        result.put("replyCount", replyCount);
+        result.put("countOfComments", countOfComments);
 
         if(this.result != 0)
             result.put("result", this.result);

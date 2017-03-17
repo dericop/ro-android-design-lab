@@ -275,12 +275,15 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
 
                         assignCommentsReference();
 
-                        postRef.child(post.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                        Log.v("Counter", post.getId()+"");
+                        postRef.orderByChild("id").equalTo(post.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
 
+
                                 if(dataSnapshot.getValue()!=null){
                                     long countOfComments = dataSnapshot.getChildrenCount();
+                                    Log.v("Counter", countOfComments+" cant");
 
                                     post.setCountOfComments(countOfComments);
 
@@ -312,7 +315,9 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
 
     private void searchPostAndUpdate(DataSnapshot dataSnapshot){
 
+
         final Post postForSearch = dataSnapshot.getValue(Post.class);
+
 
         for (final Post p: mPostList){
             if(p.getId().equals(postForSearch.getId())){
@@ -330,6 +335,9 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
                 p.setResult(postForSearch.getResult());
                 p.setReplyCount(postForSearch.getReplyCount());
 
+                mPostAdapter.notifyDataSetChanged();
+
+
                 if(postForSearch.getLast_share()!=null && !postForSearch.getLast_share().equals("")){
                     postRef.child(postForSearch.getLast_share()).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
@@ -337,6 +345,8 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
 
                             if(dataSnapshot.getValue()!=null){
                                 HashMap<String, Object> tooSharedMap = (HashMap) dataSnapshot.getValue();
+
+                                Log.v("Counter", tooSharedMap.toString());
 
                                 final String tooSharedName = (String) tooSharedMap.get("mUserName");
                                 p.setLast_share(tooSharedName);
@@ -382,6 +392,7 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
+                Log.v("Counter", "Cambio");
                 searchPostAndUpdate(dataSnapshot);
 
             }

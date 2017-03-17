@@ -500,7 +500,6 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
                 mapForUpdate.put("/user-data-reflexive/" + mHome.user.getUid() + "/" + dataKey, mapForItems);
             }
 
-
             database.updateChildren(mapForUpdate).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
