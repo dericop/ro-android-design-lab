@@ -109,6 +109,11 @@ public class Simulationv2 extends Fragment {
         mListener = null;
     }
 
+    /* en onPostExecute()
+        if(isAdded()){
+            getResources().getString(R.string.app_name);
+        }
+    */
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 

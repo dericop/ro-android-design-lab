@@ -280,13 +280,11 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
 
-
                                 if(dataSnapshot.getValue()!=null){
                                     long countOfComments = dataSnapshot.getChildrenCount();
                                     Log.v("Counter", countOfComments+" cant");
 
                                     post.setCountOfComments(countOfComments);
-
                                     mPostAdapter.notifyDataSetChanged();
                                 }
                             }
@@ -315,9 +313,17 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
 
     private void searchPostAndUpdate(DataSnapshot dataSnapshot){
 
-
         final Post postForSearch = dataSnapshot.getValue(Post.class);
 
+        Log.v("Change", "Prueba: "+postForSearch.getLast_share());
+
+        DatabaseReference updateReference;
+
+        if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
+            updateReference = mDatabase.child("users");
+        }else{
+            updateReference = mDatabase.child("users-reflexive");
+        }
 
         for (final Post p: mPostList){
             if(p.getId().equals(postForSearch.getId())){
@@ -337,9 +343,9 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
 
                 mPostAdapter.notifyDataSetChanged();
 
-
                 if(postForSearch.getLast_share()!=null && !postForSearch.getLast_share().equals("")){
-                    postRef.child(postForSearch.getLast_share()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    Log.v("Change", postRef.toString());
+                    updateReference.child(postForSearch.getLast_share()).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -363,23 +369,28 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
                 }else{
                     mPostAdapter.notifyDataSetChanged();
                 }
-
                 return;
-
             }
         }
-
-
     }
 
     private void refreshPostList(){
 
-        assignPostsReference();
+        //assignPostsReference();
+        DatabaseReference pReference;
 
-        postRef.orderByKey().limitToLast(countOfItemsLoadedForTime).addChildEventListener(new ChildEventListener() {
+        if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
+            pReference = mDatabase.child("user-posts");
+        }else{
+            pReference = mDatabase.child("user-posts-reflexive");
+        }
+
+        pReference.orderByKey().limitToLast(countOfItemsLoadedForTime).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 final HashMap<String, Object> postMap = (HashMap)dataSnapshot.getValue();
+                Log.v("Postmap", postMap.toString());
+
                 updatePostsFeed(postMap, 0);
 
                 if(s!=null && isTheFirstItem){
@@ -392,7 +403,8 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
-                Log.v("Counter", "Cambio");
+                Log.v("Change", "Changed");
+
                 searchPostAndUpdate(dataSnapshot);
 
             }
