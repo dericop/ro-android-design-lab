@@ -282,9 +282,10 @@ public class mHome extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        /*if (id == R.id.nav_intro) {
-            Log.v("Menu", "Clicked");
-        }*/
+        if (id == R.id.nav_manage) {
+            Intent confIntent = new Intent(getContext(), ConfigurationActivity.class);
+            startActivity(confIntent);
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

@@ -83,10 +83,10 @@
                     android:textColor="#808285"
                     android:ellipsize="end"
                     android:paddingRight="8dp"
-                    android:layout_marginTop="-5dp"
+                    android:layout_marginTop="-3dp"
                     android:maxLines="2"
                     tools:textStyle="bold"
-                    android:lineSpacingExtra="-4dp"/>
+                    android:lineSpacingExtra="-2dp"/>
 
                 <TextView
                     android:id="@+id/lbl_by"
@@ -144,38 +144,69 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_below="@id/top_data_container">
+                android:layout_height="40dp"
+                android:padding="7dp">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center">
 
-                    <RelativeLayout
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <ImageButton
+                        android:id="@+id/action_comment"
+                        android:layout_width="23dp"
+                        android:layout_height="23dp"
+                        android:background="@drawable/ic_action_comment"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="30dp"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginEnd="30dp"/>
+
+                    <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent">
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:layout_alignTop="@+id/action_comment"
+                        android:layout_marginLeft="25dp"
+                        android:layout_marginStart="25dp"
+                        android:textSize="14sp"
+                        android:id="@+id/commentCounter"
+                        android:textColor="@color/replyIcon"
+                        android:textStyle="normal|bold" />
 
-                        <ImageButton
-                            android:id="@+id/action_reply"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:background="@drawable/ic_action_reply"
-                            android:layout_gravity="center"
-                            android:layout_marginRight="30dp" />
+                </RelativeLayout>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="..."
-                            android:layout_alignTop="@+id/action_reply"
-                            android:layout_marginLeft="32dp"
-                            android:layout_marginTop="8dp"
-                            android:textSize="12dp"/>
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="70dp"
+                    android:layout_marginStart="70dp">
 
-                    </RelativeLayout>
+                    <ImageButton
+                        android:id="@+id/action_reply"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:background="@drawable/ic_reply"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="1dp"
+                        android:layout_marginRight="30dp"
+                        android:layout_marginEnd="30dp" />
 
-                </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:layout_alignTop="@+id/action_reply"
+                        android:layout_marginLeft="25dp"
+                        android:layout_marginStart="25dp"
+                        android:textSize="14sp"
+                        android:layout_marginTop="1dp"
+                        android:id="@+id/replyCounter"
+                        android:textColor="@color/replyIcon"
+                        android:textStyle="normal|bold" />
+
+                </RelativeLayout>
+
             </RelativeLayout>
 
 

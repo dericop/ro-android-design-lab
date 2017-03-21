@@ -268,9 +268,13 @@
     <string name="action_add">Agregar</string>
     <string name="add_radio_activity">Actividad</string>
     <string name="add_radio_food">Alimento</string>
-    <string name="add_name_label">Nombre de la publicación</string>
+    <string name="add_name_label">Nombre</string>
     <string name="add_activity_duration">Duración de la actividad</string>
     <string name="add_save_text">Guardar</string>
+
+    <string name="conf_name">Nombre</string>
+    <string name="conf_weight">Peso</string>
+    <string name="conf_gender">Género</string>
 
     <string-array name="new_post_activity_categories">
         <item></item>
