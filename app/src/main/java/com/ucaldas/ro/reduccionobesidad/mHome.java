@@ -285,6 +285,8 @@ public class mHome extends AppCompatActivity
         if (id == R.id.nav_manage) {
             Intent confIntent = new Intent(getContext(), ConfigurationActivity.class);
             startActivity(confIntent);
+        }else if(id == R.id.nav_intro){
+
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

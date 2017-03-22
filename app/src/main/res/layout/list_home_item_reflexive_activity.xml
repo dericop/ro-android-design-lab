@@ -49,6 +49,7 @@
                     android:textSize="12sp"
                     android:layout_gravity="center"
                     android:textAlignment="center"
+                    android:paddingTop="3dp"
                     android:id="@+id/txt_activity_result"/>
 
             </LinearLayout>
@@ -204,6 +205,22 @@
                         android:id="@+id/replyCounter"
                         android:textColor="@color/replyIcon"
                         android:textStyle="normal|bold" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="5dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="19 min"
+                        android:gravity="center"
+                        android:maxWidth="75dp"
+                        android:layout_marginTop="3dp"/>
 
                 </RelativeLayout>
 

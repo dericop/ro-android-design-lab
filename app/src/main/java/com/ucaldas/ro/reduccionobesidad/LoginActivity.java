@@ -85,6 +85,8 @@ public class LoginActivity extends AppCompatActivity implements
 
         mAuth = FirebaseAuth.getInstance();
 
+        final LoginActivity that = this;
+
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -100,25 +102,17 @@ public class LoginActivity extends AppCompatActivity implements
                     AUser newUser = new AUser(user.getUid(), user.getDisplayName(), user.getEmail(), user.getPhotoUrl().toString());
                     DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
-                    if(WelcomeActivity.CURRENT_APP_VERSION.equals("A"))
-                        mDatabase.child("users").child(user.getUid()).setValue(newUser);
-                    else
-                        mDatabase.child("users-reflexive").child(user.getUid()).setValue(newUser);
+                    PrefManager prefManager;
+                    prefManager = new PrefManager(that);
+
+                    if (prefManager.isFirstTimeLaunch()) {
+                        if(WelcomeActivity.CURRENT_APP_VERSION.equals("A"))
+                            mDatabase.child("users").child(user.getUid()).setValue(newUser);
+                        else
+                            mDatabase.child("users-reflexive").child(user.getUid()).setValue(newUser);
+                    }
 
                     startActivity(new Intent(getBaseContext(), mHome.class));
-
-                    /*mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                            //progress.dismiss();
-                        }
-                    });*/
-
 
                 } else {
                     // AUser is signed out
