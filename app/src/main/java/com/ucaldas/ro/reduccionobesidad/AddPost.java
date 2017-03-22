@@ -720,7 +720,6 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
 
                             updatePost();
 
-
                         }else {
 
                             addPostAndUploadImage();
