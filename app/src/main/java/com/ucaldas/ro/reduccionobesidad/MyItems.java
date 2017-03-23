@@ -78,6 +78,7 @@ public class MyItems extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        Log.v("Items", "Creando items");
 
     }
 
@@ -132,16 +133,6 @@ public class MyItems extends Fragment {
                             String user = (String)values.get("user");
                             String id = (String)values.get("id");
 
-                            /*long result = 0;
-                            if(values.get("result") != null){
-                                result = (long)values.get("result");
-                            }
-
-                            long average = 0;
-                            if(values.get("average") != null){
-                                average = (long)values.get("average");
-                            }*/
-
                             getPostReference(id);
 
                             final Post post = new Post();
@@ -190,8 +181,6 @@ public class MyItems extends Fragment {
 
                                 }
                             });
-
-
                         }
                     }
                 }
@@ -238,6 +227,17 @@ public class MyItems extends Fragment {
         }
     }
 
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        Log.v("Items", hidden+"");
+
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+
+    }
 
     @Override
     public void onAttach(Context context) {

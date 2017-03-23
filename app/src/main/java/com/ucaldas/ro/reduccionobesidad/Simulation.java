@@ -128,6 +128,12 @@ public class Simulation extends Fragment {
         }
     }
 
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        Log.v("Items", "paso");
+        super.onHiddenChanged(hidden);
+    }
+
     /*
     @Override
     public void onAttach(Context context) {
@@ -315,8 +321,6 @@ public class Simulation extends Fragment {
         restartDefaultView(overweight_container);
         restartDefaultView(normal_weight_container);
 
-
-
         if(average!=0 && average <= 2){
 
             Log.v("DBO", "Peso normal");
@@ -401,6 +405,7 @@ public class Simulation extends Fragment {
         super.onDetach();
         mListener = null;
     }
+
 
     /**
      * This interface must be implemented by activities that contain this

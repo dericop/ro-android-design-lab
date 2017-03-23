@@ -65,7 +65,6 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
     private String mParam1;
     private String mParam2;
 
-
     LinkedList<Post> mPostList;
 
 
@@ -103,7 +102,6 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-
         /*FloatingActionButton fab = (FloatingActionButton) getContext().findViewById(R.id.btn_addPost);
 
         fab.setOnClickListener(new View.OnClickListener() {
@@ -123,6 +121,12 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
 
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        Log.v("Items", hidden+" asd");
+    }
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
