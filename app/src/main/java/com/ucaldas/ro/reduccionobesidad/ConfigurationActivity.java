@@ -5,6 +5,15 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
@@ -27,6 +36,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.HashMap;
 
 public class ConfigurationActivity extends AppCompatActivity {
@@ -42,6 +53,7 @@ public class ConfigurationActivity extends AppCompatActivity {
     private Button btn_saveChanges;
     private ProgressDialog progressDialog;
     private ArrayAdapter<CharSequence> genderAdapter;
+    private Button btn_ChangePhoto;
 
 
     @Override
@@ -80,12 +92,15 @@ public class ConfigurationActivity extends AppCompatActivity {
         }
     }
 
+    private static int RESULT_LOAD_IMAGE = 1;
+
     private void initGraphicalComponents(){
         this.photo = (ImageView) findViewById(R.id.photo);
         this.textInputName = (TextView) findViewById(R.id.textInputName);
         this.textInputEditWeight = (TextView) findViewById(R.id.textInputEditWeight);
         this.gender_spinner = (Spinner) findViewById(R.id.gender_spinner);
         this.btn_saveChanges = (Button) findViewById(R.id.btn_saveChanges);
+        this.btn_ChangePhoto = (Button) findViewById(R.id.btn_change_photo);
 
         genderAdapter = ArrayAdapter.createFromResource(this,
                 R.array.gender_options, android.R.layout.simple_spinner_dropdown_item );
@@ -98,7 +113,71 @@ public class ConfigurationActivity extends AppCompatActivity {
                 updateDataInDB();
             }
         });
+
+        this.btn_ChangePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                if(i.resolveActivity(getPackageManager()) != null){
+                    startActivityForResult(i, RESULT_LOAD_IMAGE);
+                }
+            }
+        });
+
     }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if(requestCode == RESULT_LOAD_IMAGE){
+            Uri selectedImage = data.getData();
+            String[] orientationColumn = {MediaStore.Images.Media.ORIENTATION};
+            Cursor cur = managedQuery(selectedImage, orientationColumn, null, null, null);
+
+            int orientation = -1;
+            if (cur != null && cur.moveToFirst()) {
+                orientation = cur.getInt(cur.getColumnIndex(orientationColumn[0]));
+            }
+
+            loadImageResultInImageView(photo, data, orientation);
+        }
+    }
+
+
+    private void loadImageResultInImageView(ImageView imageView, Intent data, int orientation) {
+
+        try {
+            final Uri imageUri = data.getData();
+            final InputStream imageStream = getContentResolver().openInputStream(imageUri);
+            final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+
+            int nh = (int) (selectedImage.getHeight() * (512.0 / selectedImage.getWidth()));
+            Bitmap scaled = Bitmap.createScaledBitmap(selectedImage, 512, nh, true);
+
+            Bitmap rotated;
+            if(orientation == 90)
+                rotated = rotateBitmap(scaled, 90);
+            else if(orientation == 270)
+                rotated = ConfigurationActivity.rotateBitmap(scaled, 270);
+            else
+                rotated = rotateBitmap(scaled, 0);
+
+            imageView.setImageBitmap(rotated);
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public static Bitmap rotateBitmap(Bitmap source, float angle)
+    {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+    }
+
 
     private void updateDataInDB(){
         HashMap data;

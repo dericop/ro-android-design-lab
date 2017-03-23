@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -869,7 +870,16 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
 
             if (requestCode == REQUEST_IMAGE_CAPTURE || requestCode == RESULT_LOAD_IMAGE) {
 
-                loadImageResultInImageView(prev, data);
+                Uri selectedImage = data.getData();
+                String[] orientationColumn = {MediaStore.Images.Media.ORIENTATION};
+                Cursor cur = managedQuery(selectedImage, orientationColumn, null, null, null);
+
+                int orientation = -1;
+                if (cur != null && cur.moveToFirst()) {
+                    orientation = cur.getInt(cur.getColumnIndex(orientationColumn[0]));
+                }
+
+                loadImageResultInImageView(prev, data, orientation);
             }
 
         } else {
@@ -877,7 +887,7 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
         }
     }
 
-    private void loadImageResultInImageView(ImageView imageView, Intent data) {
+    private void loadImageResultInImageView(ImageView imageView, Intent data, int orientation) {
 
         try {
             final Uri imageUri = data.getData();
@@ -887,7 +897,18 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
             int nh = (int) (selectedImage.getHeight() * (512.0 / selectedImage.getWidth()));
             Bitmap scaled = Bitmap.createScaledBitmap(selectedImage, 512, nh, true);
 
-            imageView.setImageBitmap(scaled);
+            Bitmap rotated;
+            Log.v("photo", orientation+"");
+
+            if(orientation == 90)
+                rotated = ConfigurationActivity.rotateBitmap(scaled, 90);
+            else if(orientation == 270)
+                rotated = ConfigurationActivity.rotateBitmap(scaled, 270);
+            else
+                rotated = ConfigurationActivity.rotateBitmap(scaled, 0);
+
+            imageView.setImageBitmap(rotated);
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
