@@ -241,64 +241,67 @@ public class PostDetail extends AppCompatActivity {
         final DatabaseReference userDataDB = FirebaseDatabase.getInstance().getReference();
         configureDatabase();
 
-        datRef.orderByChild("id").equalTo(postId).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.getValue() != null){
-                    HashMap<String, HashMap<String, Object>> map = (HashMap)dataSnapshot.getValue();
-                    SortedSet<String> keys = new TreeSet<String>(map.keySet());
+        if(datRef != null){
+            datRef.orderByChild("id").equalTo(postId).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.getValue() != null){
+                        HashMap<String, HashMap<String, Object>> map = (HashMap)dataSnapshot.getValue();
+                        SortedSet<String> keys = new TreeSet<String>(map.keySet());
 
-                    DatabaseReference userDataRef;
+                        DatabaseReference userDataRef;
 
-                    mComments.clear();
-                    for (String k: keys){
-                        final Comment com = new Comment();
-                        com.setDetail(map.get(k).get("detail")+"");
-                        com.setDate((long)map.get(k).get("date"));
-                        com.setId(map.get(k).get("id")+"");
+                        mComments.clear();
+                        for (String k: keys){
+                            final Comment com = new Comment();
+                            com.setDetail(map.get(k).get("detail")+"");
+                            com.setDate((long)map.get(k).get("date"));
+                            com.setId(map.get(k).get("id")+"");
 
-                        if(map.get(k).get("user") != null){
-                            String userKey = map.get(k).get("user")+"";
+                            if(map.get(k).get("user") != null){
+                                String userKey = map.get(k).get("user")+"";
 
-                            if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
-                                userDataRef = userDataDB.child("users");
-                            }else{
-                                userDataRef = userDataDB.child("users-reflexive");
-                            }
+                                if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
+                                    userDataRef = userDataDB.child("users");
+                                }else{
+                                    userDataRef = userDataDB.child("users-reflexive");
+                                }
 
-                            userDataRef.child(userKey).addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                userDataRef.child(userKey).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
 
-                                    if(dataSnapshot.hasChildren()){
-                                        HashMap<String, HashMap<String, Object>> map = (HashMap)dataSnapshot.getValue();
-                                        SortedSet<String> keys = new TreeSet<String>(map.keySet());
+                                        if(dataSnapshot.hasChildren()){
+                                            HashMap<String, HashMap<String, Object>> map = (HashMap)dataSnapshot.getValue();
+                                            SortedSet<String> keys = new TreeSet<String>(map.keySet());
 
-                                        com.setUser(map.get("mUserName")+"");
-                                        com.setUserPhoto(map.get("mPhotoUrl")+"");
+                                            com.setUser(map.get("mUserName")+"");
+                                            com.setUserPhoto(map.get("mPhotoUrl")+"");
 
-                                        mComments.addFirst(com);
-                                        comAdapter.notifyDataSetChanged();
+                                            mComments.addFirst(com);
+                                            comAdapter.notifyDataSetChanged();
+                                        }
+
                                     }
 
-                                }
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
 
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
+                                    }
+                                });
 
-                                }
-                            });
-
+                            }
                         }
                     }
                 }
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-            }
-        });
+                }
+            });
+        }
+
     }
 
     private void updateComments(){
@@ -366,7 +369,6 @@ public class PostDetail extends AppCompatActivity {
             chParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, graphicalHeight, getResources().getDisplayMetrics());
             chContainer.setLayoutParams(chParams);
         }
-
 
     }
 

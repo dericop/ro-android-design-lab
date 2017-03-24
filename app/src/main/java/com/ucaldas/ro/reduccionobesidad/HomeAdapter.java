@@ -18,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -209,59 +210,37 @@ public class HomeAdapter extends ArrayAdapter<Post>{
         action_reply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                Intent replyIntent = new Intent(mContext, AddPost.class);
-                replyIntent.putExtra("source", "reply");
-                replyIntent.putExtra("id", post.getId());
-                replyIntent.putExtra("image", post.getImage());
-                replyIntent.putExtra("name", post.getName());
-                replyIntent.putExtra("type", post.getCategory());
-
-                Log.v("DBP", post.getResult()+"");
-                replyIntent.putExtra("result", (int)post.getResult());
-                replyIntent.putExtra("average", (int)post.getAverage());
-                mContext.startActivity(replyIntent);
+            replyAction(post);
             }
         });
 
         name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent detailIntent = new Intent(mContext, PostDetail.class);
-                detailIntent.putExtra("id", post.getId());
-                detailIntent.putExtra("image", post.getImage());
-                detailIntent.putExtra("name", post.getName());
-                detailIntent.putExtra("type", post.getCategory());
-                detailIntent.putExtra("userName", post.getmUserName());
-                detailIntent.putExtra("r_pi", post.getR_pi());
-                detailIntent.putExtra("r_aa", post.getR_aa());
-                detailIntent.putExtra("r_gs", post.getR_gs());
-                detailIntent.putExtra("r_ch", post.getR_ch());
-                detailIntent.putExtra("result", post.getResult());
-
-                mContext.startActivity(detailIntent);
-
+                commentAction(post);
             }
         });
+
 
         ImageButton action_comment = (ImageButton) convertView.findViewById(R.id.action_comment);
         action_comment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                commentAction(post);
+            }
+        });
 
-                Intent detailIntent = new Intent(mContext, PostDetail.class);
-                detailIntent.putExtra("id", post.getId());
-                detailIntent.putExtra("image", post.getImage());
-                detailIntent.putExtra("name", post.getName());
-                detailIntent.putExtra("type", post.getCategory());
-                detailIntent.putExtra("userName", post.getmUserName());
-                detailIntent.putExtra("r_pi", post.getR_pi());
-                detailIntent.putExtra("r_aa", post.getR_aa());
-                detailIntent.putExtra("r_gs", post.getR_gs());
-                detailIntent.putExtra("r_ch", post.getR_ch());
-                detailIntent.putExtra("result", post.getResult());
+        txtCommentsC.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                commentAction(post);
+            }
+        });
 
-                mContext.startActivity(detailIntent);
+        txtReply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                replyAction(post);
             }
         });
 
@@ -309,11 +288,37 @@ public class HomeAdapter extends ArrayAdapter<Post>{
                 });
             }
         });
-
-
-
-
-
         return convertView;
     }
+
+    private void replyAction(Post post){
+        Intent replyIntent = new Intent(mContext, AddPost.class);
+        replyIntent.putExtra("source", "reply");
+        replyIntent.putExtra("id", post.getId());
+        replyIntent.putExtra("image", post.getImage());
+        replyIntent.putExtra("name", post.getName());
+        replyIntent.putExtra("type", post.getCategory());
+
+        replyIntent.putExtra("result", (int)post.getResult());
+        replyIntent.putExtra("average", (int)post.getAverage());
+        mContext.startActivity(replyIntent);
+    }
+
+    private void commentAction(Post post){
+        Intent detailIntent = new Intent(mContext, PostDetail.class);
+        detailIntent.putExtra("id", post.getId());
+        detailIntent.putExtra("image", post.getImage());
+        detailIntent.putExtra("name", post.getName());
+        detailIntent.putExtra("type", post.getCategory());
+        detailIntent.putExtra("userName", post.getmUserName());
+        detailIntent.putExtra("r_pi", post.getR_pi());
+        detailIntent.putExtra("r_aa", post.getR_aa());
+        detailIntent.putExtra("r_gs", post.getR_gs());
+        detailIntent.putExtra("r_ch", post.getR_ch());
+        detailIntent.putExtra("result", post.getResult());
+
+        mContext.startActivity(detailIntent);
+    }
+
+
 }
