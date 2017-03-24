@@ -267,6 +267,9 @@ public class PostDetail extends AppCompatActivity {
                                     userDataRef = userDataDB.child("users-reflexive");
                                 }
 
+                                mComments.addFirst(com);
+                                comAdapter.notifyDataSetChanged();
+
                                 userDataRef.child(userKey).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -278,10 +281,9 @@ public class PostDetail extends AppCompatActivity {
                                             com.setUser(map.get("mUserName")+"");
                                             com.setUserPhoto(map.get("mPhotoUrl")+"");
 
-                                            mComments.addFirst(com);
+
                                             comAdapter.notifyDataSetChanged();
                                         }
-
                                     }
 
                                     @Override
