@@ -866,20 +866,29 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
         * Este método es llamado cuando se obtiene un resultado de otra vista, ej: tomar foto, adjuntar foto de galería
         * */
 
+        Log.v("CameraE", resultCode+"");
         if (resultCode == RESULT_OK) { //¿Se retornó de tomar una foto?
 
-            if (requestCode == REQUEST_IMAGE_CAPTURE || requestCode == RESULT_LOAD_IMAGE) {
+            if (requestCode == RESULT_LOAD_IMAGE) {
 
                 Uri selectedImage = data.getData();
-                String[] orientationColumn = {MediaStore.Images.Media.ORIENTATION};
-                Cursor cur = managedQuery(selectedImage, orientationColumn, null, null, null);
+                if(selectedImage != null){
+                    String[] orientationColumn = {MediaStore.Images.Media.ORIENTATION};
+                    Cursor cur = managedQuery(selectedImage, orientationColumn, null, null, null);
 
-                int orientation = -1;
-                if (cur != null && cur.moveToFirst()) {
-                    orientation = cur.getInt(cur.getColumnIndex(orientationColumn[0]));
+                    int orientation = -1;
+                    if (cur != null && cur.moveToFirst()) {
+                        orientation = cur.getInt(cur.getColumnIndex(orientationColumn[0]));
+                    }
+
+                    loadImageResultInImageView(prev, data, orientation);
                 }
 
-                loadImageResultInImageView(prev, data, orientation);
+            }else if(requestCode == REQUEST_IMAGE_CAPTURE){
+                Bundle extras = data.getExtras();
+                Bitmap imageBitmap = (Bitmap) extras.get("data");
+
+                prev.setImageBitmap(imageBitmap);
             }
 
         } else {
@@ -934,15 +943,6 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
         /*
         * Habilita la galería de fotos para adjuntar una foto.
         * */
-
-        /*if(Build.VERSION.SDK_INT >= 21){
-            if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-
-                requestMediaPermission();
-            }
-
-            return;
-        }*/
 
         startMedia();
     }

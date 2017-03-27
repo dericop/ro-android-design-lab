@@ -38,6 +38,11 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.github.florent37.tutoshowcase.TutoShowcase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -55,6 +60,8 @@ public class mHome extends AppCompatActivity
     private TabLayout tabLayout;
 
     private static Context context;
+    private DatabaseReference mDatabase;
+    private DatabaseReference userRef;
 
     /* Atributos para el control de usuarios */
     static FirebaseUser user;
@@ -63,6 +70,7 @@ public class mHome extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_m_home);
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
         configureToolbarAndToggleActionBar();
         addListenerToFloatButton();
@@ -102,24 +110,45 @@ public class mHome extends AppCompatActivity
 
         if(user != null){
             //Datos del usuario logueado
-            String displayName = user.getDisplayName();
+
             String email = user.getEmail();
-            Uri image = user.getPhotoUrl();
 
-            //Actualización de titulo del menú lateral
-            TextView navHeaderTitle = (TextView)header.findViewById(R.id.nav_header_title);
-            navHeaderTitle.setText(displayName);
+            final TextView navHeaderTitle = (TextView)header.findViewById(R.id.nav_header_title);
+            final TextView navHeaderSubtitle = (TextView)header.findViewById(R.id.nav_header_subtitle);
+            final ImageView imageView = (ImageView)header.findViewById(R.id.imageView);
 
-            //Actualización de subtitulo del menu lateral
-            TextView navHeaderSubtitle = (TextView)header.findViewById(R.id.nav_header_subtitle);
             navHeaderSubtitle.setText(email);
 
-            Log.v("AUser", image+"");
+            configureDBReference();
 
-            //Actualización de la imagen de perfil
-            ImageView imageView = (ImageView)header.findViewById(R.id.imageView);
-            Picasso.with(getBaseContext()).load(image).into(imageView);
+            this.userRef.child(mHome.user.getUid()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.getValue() != null){
+                        AUser user = dataSnapshot.getValue(AUser.class);
+                        if(user != null){
+                            String displayName = user.getmUserName();
+                            String image = user.getmPhotoUrl();
 
+                            navHeaderTitle.setText(displayName);
+                            Picasso.with(getBaseContext()).load(image).into(imageView);
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
+    }
+
+    private void configureDBReference(){
+        if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
+            this.userRef = mDatabase.child("users");
+        }else{
+            this.userRef = mDatabase.child("users-reflexive");
         }
     }
 
@@ -127,7 +156,6 @@ public class mHome extends AppCompatActivity
         /*
         * Configuración de las acciones del botón flotante.
         * */
-
         final FloatingActionsMenu btn_actions_menu = (FloatingActionsMenu) findViewById(R.id.btn_actions_menu);
 
 

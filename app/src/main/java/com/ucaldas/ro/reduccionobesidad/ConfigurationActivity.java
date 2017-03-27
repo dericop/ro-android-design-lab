@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -12,32 +13,47 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.Calendar;
 import java.util.HashMap;
 
 public class ConfigurationActivity extends AppCompatActivity {
@@ -54,6 +70,7 @@ public class ConfigurationActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private ArrayAdapter<CharSequence> genderAdapter;
     private Button btn_ChangePhoto;
+    private TextInputLayout nameLayout;
 
 
     @Override
@@ -101,6 +118,7 @@ public class ConfigurationActivity extends AppCompatActivity {
         this.gender_spinner = (Spinner) findViewById(R.id.gender_spinner);
         this.btn_saveChanges = (Button) findViewById(R.id.btn_saveChanges);
         this.btn_ChangePhoto = (Button) findViewById(R.id.btn_change_photo);
+        this.nameLayout = (TextInputLayout) findViewById(R.id.txt_input_layour_name);
 
         genderAdapter = ArrayAdapter.createFromResource(this,
                 R.array.gender_options, android.R.layout.simple_spinner_dropdown_item );
@@ -124,6 +142,27 @@ public class ConfigurationActivity extends AppCompatActivity {
             }
         });
 
+        EditText nameEditText = nameLayout.getEditText();
+        if(nameEditText!=null) {
+            nameEditText.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+                    nameLayout.setError("");
+                    nameLayout.setErrorEnabled(false);
+                }
+            });
+        }
+
     }
 
 
@@ -140,12 +179,92 @@ public class ConfigurationActivity extends AppCompatActivity {
                 orientation = cur.getInt(cur.getColumnIndex(orientationColumn[0]));
             }
 
-            loadImageResultInImageView(photo, data, orientation);
+            if(loadImageResultInImageView(photo, data, orientation)){
+
+                FirebaseStorage storage = FirebaseStorage.getInstance();
+                StorageReference storageRef = storage.getReferenceFromUrl("gs://reduccion-de-obesidad-7414c.appspot.com");
+
+                Calendar cal = Calendar.getInstance();
+                String date = cal.get(Calendar.YEAR) + "" + cal.get(Calendar.MONTH) + "" + cal.get(Calendar.DAY_OF_MONTH) + "" + cal.get(Calendar.HOUR) + "" + cal.get(Calendar.MINUTE) + "" + cal.get(Calendar.SECOND) + "";
+                StorageReference imagesRef = storageRef.child("images/" + mHome.user.getUid() + "/" + date);
+
+
+                photo.setDrawingCacheEnabled(true);
+                photo.buildDrawingCache();
+                Bitmap bitmap = photo.getDrawingCache();
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 60, baos);
+                byte[] dat = baos.toByteArray();
+
+                if (isOnline()) {
+                    configureDBReference();
+
+                    this.progressDialog = ProgressDialog.show(this, "Actualizando foto...", "Espera un momento", true);
+                    this.progressDialog.setCancelable(true);
+
+                    UploadTask uploadTask = imagesRef.putBytes(dat);
+                    uploadTask.addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+
+                            if(getCurrentFocus() != null)
+                                Snackbar.make(getCurrentFocus(), "Revise su conexión a internet e intentelo más tarde", 2000).show();
+                            progressDialog.dismiss();
+
+                        }
+                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            if(taskSnapshot != null){
+                                Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                                updateUserPhoto(downloadUrl);
+                            }
+                        }
+                    });
+                } else {
+                    if(getCurrentFocus()!=null)
+                        Snackbar.make(getCurrentFocus(), "Revise su conexión a internet e intentelo más tarde", 2000).show();
+                    progressDialog.dismiss();
+                }
+            };
         }
     }
 
+    private void updateUserPhoto(final Uri downloadUrl){
+        this.confRef.child(mHome.user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.getValue() != null){
+                    AUser user = dataSnapshot.getValue(AUser.class);
+                    if(!downloadUrl.equals(""))
+                        user.setmPhotoUrl(downloadUrl.toString());
+                    confRef.child(mHome.user.getUid()).updateChildren(user.toMap()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            progressDialog.dismiss();
+                        }
+                    });
+                }
+            }
 
-    private void loadImageResultInImageView(ImageView imageView, Intent data, int orientation) {
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+
+    public boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
+
+
+    private boolean loadImageResultInImageView(ImageView imageView, Intent data, int orientation) {
 
         try {
             final Uri imageUri = data.getData();
@@ -164,11 +283,12 @@ public class ConfigurationActivity extends AppCompatActivity {
                 rotated = rotateBitmap(scaled, 0);
 
             imageView.setImageBitmap(rotated);
+            return true;
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+            return false;
         }
-
     }
 
     public static Bitmap rotateBitmap(Bitmap source, float angle)
@@ -181,43 +301,69 @@ public class ConfigurationActivity extends AppCompatActivity {
 
     private void updateDataInDB(){
         HashMap data;
-        CharSequence name = this.textInputName.getText();
-        CharSequence gender = this.gender_spinner.getSelectedItem().toString();
-        CharSequence weight = this.textInputEditWeight.getText().toString();
+        final CharSequence name = this.textInputName.getText();
+        final CharSequence gender = this.gender_spinner.getSelectedItem().toString();
+        final CharSequence weight = this.textInputEditWeight.getText().toString();
 
-        if(!name.equals("")){
-            String uid = mHome.user.getUid();
-            String email = mHome.user.getEmail();
-            String photoUrl = mHome.user.getPhotoUrl()+"";
+        final AppCompatActivity that = this;
 
+        if(!(name.length()==0)){
+            final String uid = mHome.user.getUid();
+            final String email = mHome.user.getEmail();
+            final String uName = name.toString().replace("\n", "");
 
-            AUser user = new AUser(uid, name.toString(), email, photoUrl);
+            configureDBReference();
+            if(isOnline()){
 
-            if(!gender.equals(""))
-                user.setmGender(gender.toString());
+                confRef.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.getValue() != null){
+                            AUser user = dataSnapshot.getValue(AUser.class);
+                            user.setmUserName(uName);
 
-            if(!weight.equals(""))
-                user.setmWeight(Long.parseLong(weight.toString()));
+                            if(!gender.equals(""))
+                                user.setmGender(gender.toString());
 
-            data = user.toMap();
+                            if(!weight.equals(""))
+                                user.setmWeight(Long.parseLong(weight.toString()));
 
-            HashMap dataToUpdate = new HashMap();
+                            HashMap userData = user.toMap();
+                            HashMap dataToUpdate = new HashMap();
 
-            if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
-                dataToUpdate.put("/users/"+uid, data);
+                            if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
+                                dataToUpdate.put("/users/"+uid, userData);
+                            }else{
+                                dataToUpdate.put("/users-reflexive/" + uid, userData);
+                            }
+
+                            progressDialog = ProgressDialog.show(that, "Actualizando datos...", "Espera un momento", true);
+                            progressDialog.setCancelable(true);
+
+                            mDatabase.updateChildren(dataToUpdate).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    finish();
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
             }else{
-                dataToUpdate.put("/users-reflexive/" + uid, data);
+                if(getCurrentFocus()!=null)
+                    Snackbar.make(getCurrentFocus(), "Revise su conexión a internet e intentelo más tarde", 2000).show();
+                progressDialog.dismiss();
             }
 
-            this.progressDialog = ProgressDialog.show(this, "Actualizando datos...", "Espera un momento", true);
-            this.progressDialog.setCancelable(true);
-
-            mDatabase.updateChildren(dataToUpdate).addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    finish();
-                }
-            });
+        }else{
+            nameLayout.setError("El nombre es requerido");
+            nameLayout.setErrorEnabled(true);
         }
     }
 
