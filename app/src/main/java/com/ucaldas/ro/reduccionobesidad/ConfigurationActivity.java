@@ -393,8 +393,6 @@ public class ConfigurationActivity extends AppCompatActivity {
                     String remoteWeight = user.getmWeight()+"";
                     String photoUrl = user.getmPhotoUrl();
 
-                    Log.v("Configuration", remoteName);
-
                     if(!remoteWeight.equals(""))
                         textInputEditWeight.setText(remoteWeight);
 
