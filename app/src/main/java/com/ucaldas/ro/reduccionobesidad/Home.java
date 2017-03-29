@@ -140,10 +140,6 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
 
         setListAdapter(mPostAdapter);
         getListView().setOnItemClickListener(this);
-
-
-
-
     }
 
     @Override
@@ -158,7 +154,6 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
             //Consultar los primeros posts
             refreshPostList();
         }
-
 
     }
 

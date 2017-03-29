@@ -382,39 +382,40 @@ public class ConfigurationActivity extends AppCompatActivity {
         this.progressDialog.setCancelable(true);
         final ConfigurationActivity that = this;
 
-        confRef.child(mHome.user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+        if(confRef != null && mHome.user != null){
+            confRef.child(mHome.user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
 
-                if(dataSnapshot.getValue() != null){
-                    AUser user = dataSnapshot.getValue(AUser.class);
-                    String remoteName = user.getmUserName();
-                    String remoteGender = user.getmGender();
-                    String remoteWeight = user.getmWeight()+"";
-                    String photoUrl = user.getmPhotoUrl();
+                    if(dataSnapshot.getValue() != null){
+                        AUser user = dataSnapshot.getValue(AUser.class);
+                        String remoteName = user.getmUserName();
+                        String remoteGender = user.getmGender();
+                        String remoteWeight = user.getmWeight()+"";
+                        String photoUrl = user.getmPhotoUrl();
 
-                    if(!remoteWeight.equals(""))
-                        textInputEditWeight.setText(remoteWeight);
+                        if(!remoteWeight.equals(""))
+                            textInputEditWeight.setText(remoteWeight);
 
-                    if(remoteGender!=null && !remoteGender.equals("")){
-                        int pos = genderAdapter.getPosition(remoteGender);
-                        gender_spinner.setSelection(pos);
+                        if(remoteGender!=null && !remoteGender.equals("")){
+                            int pos = genderAdapter.getPosition(remoteGender);
+                            gender_spinner.setSelection(pos);
+                        }
+
+                        Glide.with(getBaseContext()).load(photoUrl).into(photo);
+                        textInputName.setText(remoteName);
                     }
 
-                    Glide.with(getBaseContext()).load(photoUrl).into(photo);
-                    textInputName.setText(remoteName);
+                    if(that != null && that.progressDialog!=null)
+                        that.progressDialog.dismiss();
                 }
 
-                if(that != null && that.progressDialog!=null)
-                    that.progressDialog.dismiss();
-            }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
+                }
+            });
+        }
 
     }
 

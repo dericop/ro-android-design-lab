@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -73,6 +74,8 @@ public class Simulation extends Fragment {
     private LinearLayout obesity_level_2_container;
     private LinearLayout severe_obesity_container;
 
+    private SwipeRefreshLayout swiperefresh;
+
     //Dialogo de progreso
     private ProgressDialog progress;
 
@@ -81,6 +84,16 @@ public class Simulation extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    //Firebase database
+    DatabaseReference firebaseDatabase;
+    DatabaseReference dbRef;
+    DatabaseReference quaDBRef;
+
+    Double totalAverage = 0.0;
+    Double goodHabitsAverage = 1.0;
+    Double mediumHabitsAverage = 1.0;
+    Double badHabitsAverages = 1.0;
 
     public Simulation() {
         // Required empty public constructor
@@ -147,171 +160,217 @@ public class Simulation extends Fragment {
     }*/
 
 
+    private boolean assignUserItemsDBReference() {
+        if (mHome.user != null && firebaseDatabase != null) {
+            if (WelcomeActivity.CURRENT_APP_VERSION.equals("A"))
+                dbRef = firebaseDatabase.child("user-data").child(mHome.user.getUid());
+            else
+                dbRef = firebaseDatabase.child("user-data-reflexive").child(mHome.user.getUid());
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean assignQualificationItemDBReference() {
+        if (mHome.user != null && firebaseDatabase != null) {
+            if (WelcomeActivity.CURRENT_APP_VERSION.equals("A"))
+                quaDBRef = firebaseDatabase.child("user-posts");
+            else
+                quaDBRef = firebaseDatabase.child("user-posts-reflexive");
+            return true;
+        }
+
+        return false;
+    }
 
     @Override
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         getGraphicalComponents(view); // Inicialización de componentes gráficos
+        loadData(view);
+    }
 
-        if(mHome.user != null){
+    private void loadData(final View view){
+        if (mHome.user != null) {
             final String[] foodsString = getResources().getStringArray(R.array.new_post_food_categories);
             final List<String> foodsCategories = Arrays.asList(foodsString);
-            DatabaseReference firebaseDatabase = FirebaseDatabase.getInstance().getReference().child("user-data").child(mHome.user.getUid());
-            final AtomicInteger countOfHealthy = new AtomicInteger(1);
-            final AtomicInteger countOfMedium = new AtomicInteger(1);
-            final AtomicInteger countOfBad = new AtomicInteger(1);
 
-            firebaseDatabase.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    /*progress = ProgressDialog.show(getContext(), "Creando simulación...",
-                            "Espera un momento", true);*/
+            firebaseDatabase = FirebaseDatabase.getInstance().getReference();
+            if (assignUserItemsDBReference() && assignQualificationItemDBReference()) {
+                final AtomicInteger countOfHealthy = new AtomicInteger(1);
+                final AtomicInteger countOfMedium = new AtomicInteger(1);
+                final AtomicInteger countOfBad = new AtomicInteger(1);
 
-                    Log.v("Simulation", "La simulación ha cambiado");
+                final List<String> frecuencies = Arrays.asList(getResources().getStringArray(R.array.frecuencies));
+                final List<String> frecuenciesCost = Arrays.asList(getResources().getStringArray(R.array.cost_frecuencies));
 
-                    double totalAverage = 0;
-                    double goodHabitsAverage = 1;
-                    double mediumHabitsAverage = 1;
-                    double badHabitsAverages = 1;
+                dbRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
 
-                    int sumOfFrecuencies = 0;
+                        final AtomicInteger sumOfFrecuencies = new AtomicInteger(0);
+                        totalAverage = 0.0;
+                        goodHabitsAverage = 1.0;
+                        mediumHabitsAverage = 1.0;
+                        badHabitsAverages = 1.0;
 
-                    List<String> frecuencies = Arrays.asList(getResources().getStringArray(R.array.frecuencies));
-                    List<String> frecuenciesCost = Arrays.asList(getResources().getStringArray(R.array.cost_frecuencies));
+                        Map<String, HashMap> data = (HashMap) dataSnapshot.getValue();
+                        if (data != null) {
 
-                    Map<String, HashMap> data = (HashMap) dataSnapshot.getValue();
-                    if(data != null){
-                        for(String key: data.keySet()){
+                            final LinkedList<String> keys = new LinkedList();
+                            keys.addAll(data.keySet());
 
-                            Map<String, Object> post = data.get(key);
-                            //String activityType = post.get("category")+"";
-                            //foodsCategories.contains(activityType) &&
+                            for (final String key : keys) {
 
-                            if(post.get("result") != null){
-                                long result = (long)post.get("result");
-                                long frecuency = Integer.parseInt(frecuenciesCost.get(frecuencies.indexOf(post.get("frecuency"))));
-                                Log.v("Simulation",frecuency+"");
-                                sumOfFrecuencies+=frecuency;
+                                Map<String, Object> post = data.get(key);
 
-                                double averagePon = Double.parseDouble(post.get("average")+"")*frecuency;
-
-                                if(result == 3){
-                                    goodHabitsAverage += averagePon;
-                                    countOfHealthy.incrementAndGet();
-                                }else if(result == 2){
-                                    mediumHabitsAverage += averagePon;
-                                    countOfMedium.incrementAndGet();
-                                }else{
-                                    badHabitsAverages += averagePon;
-                                    countOfBad.incrementAndGet();
-                                }
-
-                                if(post.get("average") != null) {
-                                    try {
-                                        totalAverage += (long) post.get("average")*frecuency;
-                                    }catch (NumberFormatException ex){
-                                        totalAverage += 0.0;
+                                quaDBRef.child(post.get("id") + "").addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        if (dataSnapshot.getValue() != null) {
+                                            Post post = dataSnapshot.getValue(Post.class);
+                                            if (post.getResult() != 0) {
+                                                calculatePostQualification(post, frecuenciesCost, frecuencies, sumOfFrecuencies, countOfHealthy, countOfMedium, countOfBad);
+                                                if (keys.indexOf(key) == (keys.size() - 1)){
+                                                    updateViewsAndRestarData(countOfHealthy, countOfMedium, countOfBad, view, sumOfFrecuencies);
+                                                    swiperefresh.setRefreshing(false);
+                                                }
+                                            }
+                                        }
                                     }
-                                }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
                             }
-                        }
 
-                        goodHabitsAverage =  goodHabitsAverage/countOfHealthy.get();
-                        mediumHabitsAverage = mediumHabitsAverage/countOfMedium.get();
-                        badHabitsAverages = badHabitsAverages/countOfBad.get();
-
-                        Log.v("Simulation", goodHabitsAverage+" Good");
-                        Log.v("Simulation", mediumHabitsAverage+" Medium");
-                        Log.v("Simulation", badHabitsAverages+" Bad");
-
-                        //Lógica para la sección superior de la interface
-
-                        healthyHabits.setText(countOfHealthy.get()+"");
-                        mediumHabits.setText(countOfMedium.get()+"");
-                        badHabits.setText(countOfBad.get()+"");
-
-                        ViewGroup.LayoutParams circleBox1Params = sim_circle_box_1.getLayoutParams();
-                        ViewGroup.LayoutParams circleBox2Params = sim_circle_box_2.getLayoutParams();
-                        ViewGroup.LayoutParams circleBox3Params = sim_circle_box_3.getLayoutParams();
-
-                        int newSizeBox1 = ((int) goodHabitsAverage);
-                        int newSizeBox2 = ((int) mediumHabitsAverage);
-                        int newSizeBox3 = ((int) badHabitsAverages);
-
-                        LinkedList orderedList = new LinkedList();
-                        orderedList.push(newSizeBox1);
-                        orderedList.push(newSizeBox2);
-                        orderedList.push(newSizeBox3);
-
-                        Collections.sort(orderedList);
-
-                        //Ubicación del tamaño para el componente 1
-                        if(orderedList.indexOf(newSizeBox1) == 2){
-                            newSizeBox1 = 80;
-
-                        } else if(orderedList.indexOf(newSizeBox1) == 1)
-                            newSizeBox1 = 60;
-                        else
-                            newSizeBox1 = 40;
-
-                        //Ubicación del tamaño para el componente 2
-                        if(orderedList.indexOf(newSizeBox2) == 2){
-                            newSizeBox2 = 80;
-
-                        } else if(orderedList.indexOf(newSizeBox2) == 1)
-                            newSizeBox2 = 60;
-                        else
-                            newSizeBox2 = 40;
-
-                        //Ubicación del tamaño para el componente 3
-                        if(orderedList.indexOf(newSizeBox3) == 2){
-                            newSizeBox3 = 80;
-
-                        }else if(orderedList.indexOf(newSizeBox3) == 1)
-                            newSizeBox3 = 60;
-                        else
-                            newSizeBox3 = 40;
-
-                        if(getActivity() != null){
-                            healthyHabits.setTextSize((newSizeBox1 * 14)/40);
-                            mediumHabits.setTextSize((newSizeBox2 * 14)/40);
-                            badHabits.setTextSize((newSizeBox3 * 14)/40);
-
-                            circleBox1Params.width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, newSizeBox1, getResources().getDisplayMetrics());
-                            circleBox1Params.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, newSizeBox1, getResources().getDisplayMetrics());;
-                            sim_circle_box_1.setLayoutParams(circleBox1Params);
-
-                            circleBox2Params.width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, newSizeBox2, getResources().getDisplayMetrics());
-                            circleBox2Params.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, newSizeBox2, getResources().getDisplayMetrics());
-                            sim_circle_box_2.setLayoutParams(circleBox2Params);
-
-                            circleBox3Params.width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, newSizeBox3, getResources().getDisplayMetrics());
-                            circleBox3Params.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, newSizeBox3, getResources().getDisplayMetrics());
-                            sim_circle_box_3.setLayoutParams(circleBox3Params);
-
-                            totalAverage /= sumOfFrecuencies;
-
-                            paintLevel(totalAverage, view);
 
                         }
-
-                        countOfHealthy.set(0);
-                        countOfMedium.set(0);
-                        countOfBad.set(0);
                     }
-                }
 
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
 
-                }
+                    }
 
-            });
+                });
+            }
         }
     }
 
-    private void paintLevel(double average, View view){
+    private void updateViewsAndRestarData(AtomicInteger countOfHealthy, AtomicInteger countOfMedium, AtomicInteger countOfBad, View view, AtomicInteger sumOfFrecuencies) {
+        goodHabitsAverage = goodHabitsAverage / countOfHealthy.get();
+        mediumHabitsAverage = mediumHabitsAverage / countOfMedium.get();
+        badHabitsAverages = badHabitsAverages / countOfBad.get();
+
+        updateCircleBoxSize(goodHabitsAverage, mediumHabitsAverage, badHabitsAverages, view, totalAverage, sumOfFrecuencies.get());
+
+        countOfHealthy.set(0);
+        countOfMedium.set(0);
+        countOfBad.set(0);
+    }
+
+    private void calculatePostQualification(Post post, List<String> frecuenciesCost, List<String> frecuencies, AtomicInteger sumOfFrecuencies,
+                                            AtomicInteger countOfHealthy, AtomicInteger countOfMedium, AtomicInteger countOfBad) {
+        long result = post.getResult();
+        long frecuency = Integer.parseInt(frecuenciesCost.get(frecuencies.indexOf(post.getFrecuency())));
+
+        sumOfFrecuencies.addAndGet((int) frecuency);
+
+        double averagePon = post.getAverage() * frecuency;
+
+        if (result == 3) {
+            goodHabitsAverage += averagePon;
+            countOfHealthy.incrementAndGet();
+        } else if (result == 2) {
+            mediumHabitsAverage += averagePon;
+            countOfMedium.incrementAndGet();
+        } else {
+            badHabitsAverages += averagePon;
+            countOfBad.incrementAndGet();
+        }
+
+        try {
+            totalAverage += post.getAverage() * frecuency;
+        } catch (NumberFormatException ex) {
+            totalAverage += 0.0;
+        }
+    }
+
+    private void updateCircleBoxSize(double goodHabitsAverage, double mediumHabitsAverage, double badHabitsAverages,
+                                     View view, double totalAverage, int sumOfFrecuencies) {
+
+        ViewGroup.LayoutParams circleBox1Params = sim_circle_box_1.getLayoutParams();
+        ViewGroup.LayoutParams circleBox2Params = sim_circle_box_2.getLayoutParams();
+        ViewGroup.LayoutParams circleBox3Params = sim_circle_box_3.getLayoutParams();
+
+        int newSizeBox1 = ((int) goodHabitsAverage);
+        int newSizeBox2 = ((int) mediumHabitsAverage);
+        int newSizeBox3 = ((int) badHabitsAverages);
+
+        LinkedList orderedList = new LinkedList();
+        orderedList.push(newSizeBox1);
+        orderedList.push(newSizeBox2);
+        orderedList.push(newSizeBox3);
+
+        Collections.sort(orderedList);
+
+        //Ubicación del tamaño para el componente 1
+        if (orderedList.indexOf(newSizeBox1) == 2) {
+            newSizeBox1 = 80;
+
+        } else if (orderedList.indexOf(newSizeBox1) == 1)
+            newSizeBox1 = 60;
+        else
+            newSizeBox1 = 40;
+
+        //Ubicación del tamaño para el componente 2
+        if (orderedList.indexOf(newSizeBox2) == 2) {
+            newSizeBox2 = 80;
+
+        } else if (orderedList.indexOf(newSizeBox2) == 1)
+            newSizeBox2 = 60;
+        else
+            newSizeBox2 = 40;
+
+        //Ubicación del tamaño para el componente 3
+        if (orderedList.indexOf(newSizeBox3) == 2) {
+            newSizeBox3 = 80;
+
+        } else if (orderedList.indexOf(newSizeBox3) == 1)
+            newSizeBox3 = 60;
+        else
+            newSizeBox3 = 40;
+
+        if (getActivity() != null) {
+            healthyHabits.setTextSize((newSizeBox1 * 14) / 40);
+            mediumHabits.setTextSize((newSizeBox2 * 14) / 40);
+            badHabits.setTextSize((newSizeBox3 * 14) / 40);
+
+            circleBox1Params.width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, newSizeBox1, getResources().getDisplayMetrics());
+            circleBox1Params.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, newSizeBox1, getResources().getDisplayMetrics());
+            ;
+            sim_circle_box_1.setLayoutParams(circleBox1Params);
+
+            circleBox2Params.width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, newSizeBox2, getResources().getDisplayMetrics());
+            circleBox2Params.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, newSizeBox2, getResources().getDisplayMetrics());
+            sim_circle_box_2.setLayoutParams(circleBox2Params);
+
+            circleBox3Params.width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, newSizeBox3, getResources().getDisplayMetrics());
+            circleBox3Params.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, newSizeBox3, getResources().getDisplayMetrics());
+            sim_circle_box_3.setLayoutParams(circleBox3Params);
+
+            totalAverage /= sumOfFrecuencies;
+
+            paintLevel(totalAverage, view);
+        }
+    }
+
+    private void paintLevel(double average, View view) {
         final RelativeLayout humanContainer = (RelativeLayout) view.findViewById(R.id.human_container);
         final ImageView humanImageView = (ImageView) view.findViewById(R.id.human_image_view);
 
@@ -321,7 +380,7 @@ public class Simulation extends Fragment {
         restartDefaultView(overweight_container);
         restartDefaultView(normal_weight_container);
 
-        if(average!=0 && average <= 2){
+        if (average != 0 && average <= 2) {
 
             Log.v("DBO", "Peso normal");
             normal_weight_container.getChildAt(0).setBackgroundColor(getResources().getColor(R.color.normal_weight));
@@ -331,7 +390,7 @@ public class Simulation extends Fragment {
             humanContainer.setBackgroundColor(getResources().getColor(R.color.normal_weight));
             humanImageView.setBackgroundDrawable(getResources().getDrawable(R.drawable.silueta_humano_2));
 
-        }else if(average > 2 && average <=4){
+        } else if (average > 2 && average <= 4) {
 
             overweight_container.getChildAt(0).setBackgroundColor(getResources().getColor(R.color.overweight));
             overweight_container.getChildAt(1).setBackgroundColor(getResources().getColor(R.color.overweight));
@@ -342,7 +401,7 @@ public class Simulation extends Fragment {
             Log.v("DBO", "Obesidad II");
 
 
-        }else if(average >4 && average <=6){
+        } else if (average > 4 && average <= 6) {
             Log.v("DBO", "Obesidad I");
 
             obesity_level_1_container.getChildAt(0).setBackgroundColor(getResources().getColor(R.color.obesity_1));
@@ -352,7 +411,7 @@ public class Simulation extends Fragment {
             humanContainer.setBackgroundColor(getResources().getColor(R.color.obesity_1));
             humanImageView.setBackgroundDrawable(getResources().getDrawable(R.drawable.silueta_humano_4));
 
-        }else if(average > 6 && average <= 8){
+        } else if (average > 6 && average <= 8) {
 
             Log.v("DBO", "Soprepeso");
 
@@ -363,7 +422,7 @@ public class Simulation extends Fragment {
             humanContainer.setBackgroundColor(getResources().getColor(R.color.obesity_2));
             humanImageView.setBackgroundDrawable(getResources().getDrawable(R.drawable.silueta_humano_5));
 
-        }else if(average > 8){
+        } else if (average > 8) {
             Log.v("DBO", "Obesidad severa");
             severe_obesity_container.getChildAt(0).setBackgroundColor(getResources().getColor(R.color.severe_obesity));
             severe_obesity_container.getChildAt(1).setBackgroundColor(getResources().getColor(R.color.severe_obesity));
@@ -374,13 +433,13 @@ public class Simulation extends Fragment {
         }
     }
 
-    private void restartDefaultView(LinearLayout view){
+    private void restartDefaultView(LinearLayout view) {
         view.getChildAt(0).setBackgroundColor(getResources().getColor(R.color.simuation_barItem_normal));
         view.getChildAt(1).setBackgroundColor(getResources().getColor(R.color.simuation_barItem_normal));
         view.getChildAt(2).setBackgroundColor(getResources().getColor(R.color.simuation_barItem_normal));
     }
 
-    private void getGraphicalComponents(View view){
+    private void getGraphicalComponents(final View view) {
 
         healthyHabits = (TextView) view.findViewById(R.id.healthyHabits);
         badHabits = (TextView) view.findViewById(R.id.bad_habits);
@@ -398,6 +457,20 @@ public class Simulation extends Fragment {
         obesity_level_1_container = (LinearLayout) view.findViewById(R.id.obesity_level_1_container);
         obesity_level_2_container = (LinearLayout) view.findViewById(R.id.obesity_level_2_container);
         severe_obesity_container = (LinearLayout) view.findViewById(R.id.severe_obesity_container);
+
+        swiperefresh = (SwipeRefreshLayout) view.findViewById(R.id.swiperefresh);
+
+        swiperefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                 totalAverage = 0.0;
+                 goodHabitsAverage = 1.0;
+                 mediumHabitsAverage = 1.0;
+                 badHabitsAverages = 1.0;
+
+                loadData(view);
+            }
+        });
     }
 
     @Override

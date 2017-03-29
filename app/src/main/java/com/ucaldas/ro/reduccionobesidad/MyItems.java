@@ -148,7 +148,7 @@ public class MyItems extends Fragment {
                                 post.setDuration(duration);
                             }
 
-                            itemsRef.addValueEventListener(new ValueEventListener() {
+                            itemsRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     Post rPost = dataSnapshot.getValue(Post.class);

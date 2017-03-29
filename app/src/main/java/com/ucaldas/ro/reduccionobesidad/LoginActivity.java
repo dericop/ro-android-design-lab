@@ -112,6 +112,11 @@ public class LoginActivity extends AppCompatActivity implements
                             mDatabase.child("users-reflexive").child(user.getUid()).setValue(newUser);
                     }
 
+                    if(FirebaseInstanceIDService.currentToken != null){
+                        Log.v("Notify",FirebaseInstanceIDService.currentToken);
+                        mDatabase.child("users").child(user.getUid()).child("notificationTokens").setValue(FirebaseInstanceIDService.currentToken);
+                    }
+
                     startActivity(new Intent(getBaseContext(), mHome.class));
 
                 } else {
@@ -130,6 +135,7 @@ public class LoginActivity extends AppCompatActivity implements
     protected void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
+        Log.v("Notify", "Siempre paso aca");
         /*progress = ProgressDialog.show(this, "Iniciando Sesión...",
                 "Espera un momento", true);*/
     }

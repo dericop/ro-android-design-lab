@@ -867,7 +867,7 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
         * */
 
         Log.v("CameraE", resultCode+"");
-        if (resultCode == RESULT_OK) { //¿Se retornó de tomar una foto?
+        if (resultCode == RESULT_OK) {
 
             if (requestCode == RESULT_LOAD_IMAGE) {
 
@@ -884,7 +884,7 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
                     loadImageResultInImageView(prev, data, orientation);
                 }
 
-            }else if(requestCode == REQUEST_IMAGE_CAPTURE){
+            }else if(requestCode == REQUEST_IMAGE_CAPTURE){//¿Se retornó de tomar una foto?
                 Bundle extras = data.getExtras();
                 Bitmap imageBitmap = (Bitmap) extras.get("data");
 
@@ -943,7 +943,6 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
         /*
         * Habilita la galería de fotos para adjuntar una foto.
         * */
-
         startMedia();
     }
 

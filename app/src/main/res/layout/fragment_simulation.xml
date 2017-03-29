@@ -4,86 +4,239 @@
     android:layout_height="match_parent"
     tools:context="com.ucaldas.ro.reduccionobesidad.Simulation">
 
-    <ScrollView
+    <android.support.v4.widget.SwipeRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/swiperefresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!-- Sección de puntajes -->
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
+            <!-- Sección de puntajes -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:id="@+id/score_container">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
                 <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight=".33"
-                    android:background="@drawable/home_item_shadow"
-                    android:layout_marginLeft="4dp"
-                    android:layout_height="120dp">
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:id="@+id/score_container">
 
                     <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="#fff"
-                        android:layout_marginTop="1dp"
-                        android:layout_marginRight="1dp"
-                        android:layout_marginLeft="1dp"
-                        android:layout_marginBottom="1dp"
-                        android:orientation="vertical">
+                        android:layout_width="0dp"
+                        android:layout_weight=".33"
+                        android:background="@drawable/home_item_shadow"
+                        android:layout_marginLeft="4dp"
+                        android:layout_height="120dp">
 
-                        <!-- Contenido caja 1 -->
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:gravity="center"
-                            android:layout_height="88dp">
+                            android:layout_height="match_parent"
+                            android:background="#fff"
+                            android:layout_marginTop="1dp"
+                            android:layout_marginRight="1dp"
+                            android:layout_marginLeft="1dp"
+                            android:layout_marginBottom="1dp"
+                            android:orientation="vertical">
 
+                            <!-- Contenido caja 1 -->
                             <LinearLayout
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:background="@drawable/circle_good"
-                                android:backgroundTint="#8ec549"
-                                android:id="@+id/sim_circle_box_1">
+                                android:layout_width="match_parent"
+                                android:gravity="center"
+                                android:layout_height="88dp">
 
-                                <TextView
-                                    android:visibility="invisible"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:textAlignment="center"
-                                    android:gravity="center"
-                                    android:text="0"
-                                    android:textColor="#fff"
-                                    android:textSize="14dp"
-                                    android:padding="3dp"
-                                    android:id="@+id/healthyHabits"/>
+                                <LinearLayout
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:background="@drawable/circle_good"
+                                    android:backgroundTint="#8ec549"
+                                    android:id="@+id/sim_circle_box_1">
+
+                                    <TextView
+                                        android:visibility="invisible"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:textAlignment="center"
+                                        android:gravity="center"
+                                        android:text="0"
+                                        android:textColor="#fff"
+                                        android:textSize="14dp"
+                                        android:padding="3dp"
+                                        android:id="@+id/healthyHabits"/>
+
+                                </LinearLayout>
+
 
                             </LinearLayout>
 
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="32dp"
+                                android:gravity="center">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/sim_hab_healthy"
+                                    android:maxWidth="80dp"
+                                    android:maxLines="2"
+                                    android:layout_gravity="center_horizontal"
+                                    android:textAlignment="center"
+                                    android:lineSpacingExtra="-1dp"
+                                    android:textSize="11dp" />
+
+                            </LinearLayout>
 
                         </LinearLayout>
 
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight=".33"
+                        android:background="@drawable/home_item_shadow"
+                        android:layout_marginLeft="4dp"
+                        android:layout_height="120dp">
+
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="32dp"
-                            android:gravity="center">
+                            android:layout_height="match_parent"
+                            android:background="#fff"
+                            android:layout_marginTop="1dp"
+                            android:layout_marginLeft="1dp"
+                            android:layout_marginRight="1dp"
+                            android:layout_marginBottom="1dp"
+                            android:orientation="vertical">
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/sim_hab_healthy"
-                                android:maxWidth="80dp"
-                                android:maxLines="2"
-                                android:layout_gravity="center_horizontal"
-                                android:textAlignment="center"
-                                android:lineSpacingExtra="-1dp"
-                                android:textSize="11dp" />
+
+                            <!-- Contenido caja 2 -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:gravity="center"
+                                android:layout_height="88dp">
+
+                                <LinearLayout
+                                    android:layout_width="60dp"
+                                    android:layout_height="60dp"
+                                    android:background="@drawable/circle_medium"
+                                    android:backgroundTint="#faaf4c"
+                                    android:id="@+id/sim_circle_box_2">
+
+                                    <TextView
+                                        android:visibility="invisible"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:textAlignment="center"
+                                        android:gravity="center"
+                                        android:text="0"
+                                        android:textSize="18dp"
+                                        android:textColor="#fff"
+                                        android:padding="3dp"
+                                        android:id="@+id/mediumHabits"/>
+
+                                </LinearLayout>
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="32dp"
+                                android:gravity="center">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/sim_hab_little_healthy"
+                                    android:maxWidth="90dp"
+                                    android:maxLines="2"
+                                    android:layout_gravity="center_horizontal"
+                                    android:textAlignment="center"
+                                    android:lineSpacingExtra="-1dp"
+                                    android:textSize="11dp" />
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight=".33"
+                        android:background="@drawable/home_item_shadow"
+                        android:layout_marginLeft="4dp"
+                        android:layout_marginRight="4dp"
+                        android:layout_height="120dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="#fff"
+                            android:layout_marginTop="1dp"
+                            android:layout_marginLeft="1dp"
+                            android:layout_marginRight="1dp"
+                            android:layout_marginBottom="1dp"
+                            android:orientation="vertical">
+
+
+                            <!-- Contenido caja 3 -->
+
+
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="88dp"
+                                android:gravity="center">
+
+                                <LinearLayout
+                                    android:id="@+id/sim_circle_box_3"
+                                    android:layout_width="80dp"
+                                    android:layout_height="80dp"
+                                    android:background="@drawable/circle_bad"
+                                    android:backgroundTint="#fc5356">
+
+                                    <TextView
+                                        android:id="@+id/bad_habits"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:gravity="center"
+                                        android:padding="3dp"
+                                        android:text="0"
+                                        android:textAlignment="center"
+                                        android:textColor="#fff"
+                                        android:textSize="22dp"
+                                        android:visibility="invisible" />
+
+                                </LinearLayout>
+
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="32dp"
+                                android:gravity="center">
+
+                                <TextView
+                                    android:id="@+id/textView3"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_horizontal"
+                                    android:lineSpacingExtra="-1dp"
+                                    android:maxLines="2"
+                                    android:maxWidth="90dp"
+                                    android:text="@string/sim_hab_non_healthy"
+                                    android:textAlignment="center"
+                                    android:textSize="11dp" />
+
+                            </LinearLayout>
+
 
                         </LinearLayout>
 
@@ -91,558 +244,417 @@
 
                 </LinearLayout>
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#d4d5d6"
+                    android:layout_marginTop="4dp">
+                </View>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/corus_simulation_message"
+                    android:textColor="@color/black_overlay"
+                    android:textSize="13sp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="12dp"
+                    android:layout_marginBottom="7dp"
+                    android:layout_marginTop="6dp"/>
+
+                <!-- Sección simulación de contextura-->
                 <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight=".33"
-                    android:background="@drawable/home_item_shadow"
-                    android:layout_marginLeft="4dp"
-                    android:layout_height="120dp">
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingBottom="8dp">
 
                     <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="#fff"
-                        android:layout_marginTop="1dp"
-                        android:layout_marginLeft="1dp"
-                        android:layout_marginRight="1dp"
-                        android:layout_marginBottom="1dp"
-                        android:orientation="vertical">
+                        android:layout_width="0dp"
+                        android:layout_height="350dp"
+                        android:layout_weight=".55"
+                        android:background="@drawable/home_item_shadow"
+                        android:layout_marginLeft="4dp"
+                        android:layout_marginRight="4dp"
+                        android:padding="7dp">
 
-
-                        <!-- Contenido caja 2 -->
-                        <LinearLayout
+                        <RelativeLayout
                             android:layout_width="match_parent"
-                            android:gravity="center"
-                            android:layout_height="88dp">
-
-                            <LinearLayout
-                                android:layout_width="60dp"
-                                android:layout_height="60dp"
-                                android:background="@drawable/circle_medium"
-                                android:backgroundTint="#faaf4c"
-                                android:id="@+id/sim_circle_box_2">
-
-                                <TextView
-                                    android:visibility="invisible"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:textAlignment="center"
-                                    android:gravity="center"
-                                    android:text="0"
-                                    android:textSize="18dp"
-                                    android:textColor="#fff"
-                                    android:padding="3dp"
-                                    android:id="@+id/mediumHabits"/>
-
-                            </LinearLayout>
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="32dp"
-                            android:gravity="center">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/sim_hab_little_healthy"
-                                android:maxWidth="90dp"
-                                android:maxLines="2"
-                                android:layout_gravity="center_horizontal"
-                                android:textAlignment="center"
-                                android:lineSpacingExtra="-1dp"
-                                android:textSize="11dp" />
-
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight=".33"
-                    android:background="@drawable/home_item_shadow"
-                    android:layout_marginLeft="4dp"
-                    android:layout_marginRight="4dp"
-                    android:layout_height="120dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="#fff"
-                        android:layout_marginTop="1dp"
-                        android:layout_marginLeft="1dp"
-                        android:layout_marginRight="1dp"
-                        android:layout_marginBottom="1dp"
-                        android:orientation="vertical">
-
-
-                        <!-- Contenido caja 3 -->
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:gravity="center"
-                            android:layout_height="88dp">
-
-                            <LinearLayout
-                                android:layout_width="80dp"
-                                android:layout_height="80dp"
-                                android:background="@drawable/circle_bad"
-                                android:backgroundTint="#fc5356"
-                                android:id="@+id/sim_circle_box_3">
-
-                                <TextView
-                                    android:visibility="invisible"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:textAlignment="center"
-                                    android:gravity="center"
-                                    android:text="0"
-                                    android:textSize="22dp"
-                                    android:textColor="#fff"
-                                    android:padding="3dp"
-                                    android:id="@+id/bad_habits"/>
-
-                            </LinearLayout>
-
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="32dp"
-                            android:gravity="center">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/sim_hab_non_healthy"
-                                android:maxWidth="90dp"
-                                android:maxLines="2"
-                                android:layout_gravity="center_horizontal"
-                                android:textAlignment="center"
-                                android:lineSpacingExtra="-1dp"
-                                android:textSize="11dp" />
-
-                        </LinearLayout>
-
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#d4d5d6"
-                android:layout_marginTop="4dp">
-            </View>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/corus_simulation_message"
-                android:textColor="@color/black_overlay"
-                android:textSize="13sp"
-                android:layout_marginLeft="12dp"
-                android:layout_marginRight="12dp"
-                android:layout_marginBottom="7dp"
-                android:layout_marginTop="6dp"/>
-
-            <!-- Sección simulación de contextura-->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingBottom="8dp">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="350dp"
-                    android:layout_weight=".55"
-                    android:background="@drawable/home_item_shadow"
-                    android:layout_marginLeft="4dp"
-                    android:layout_marginRight="4dp"
-                    android:padding="7dp">
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@color/habit_good"
-                        android:layout_marginTop="1dp"
-                        android:layout_marginLeft="1dp"
-                        android:layout_marginRight="1dp"
-                        android:layout_marginBottom="2dp"
-                        android:orientation="vertical"
-                        android:id="@+id/human_container">
-
-                        <ImageView
-                            android:layout_width="120dp"
-                            android:layout_height="270dp"
-                            android:layout_marginLeft="15dp"
-                            android:layout_marginRight="15dp"
-                            android:background="@drawable/silueta_humano_2"
-                            android:backgroundTint="#fff"
-                            android:layout_centerVertical="true"
-                            android:layout_centerHorizontal="true"
-                            android:id="@+id/human_image_view"/>
-
-                    </RelativeLayout>
-
-                </LinearLayout>
-
-                <!-- Sección de barras de clasificación-->
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="200dp"
-                    android:layout_weight=".45"
-                    android:background="@drawable/home_item_shadow"
-                    android:layout_marginRight="4dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="#fff"
-                        android:layout_marginTop="1dp"
-                        android:layout_marginLeft="1dp"
-                        android:layout_marginRight="1dp"
-                        android:layout_marginBottom="1dp"
-                        android:orientation="vertical">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
+                            android:background="@color/habit_good"
+                            android:layout_marginTop="1dp"
+                            android:layout_marginLeft="1dp"
+                            android:layout_marginRight="1dp"
+                            android:layout_marginBottom="2dp"
                             android:orientation="vertical"
-                            android:layout_marginTop="20dp"
-                            android:layout_marginRight="8dp">
+                            android:id="@+id/human_container">
 
-                            <!-- Items de clasificación -->
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal">
+                            <ImageView
+                                android:layout_width="120dp"
+                                android:layout_height="270dp"
+                                android:layout_marginLeft="15dp"
+                                android:layout_marginRight="15dp"
+                                android:background="@drawable/silueta_humano_2"
+                                android:backgroundTint="#fff"
+                                android:layout_centerVertical="true"
+                                android:layout_centerHorizontal="true"
+                                android:id="@+id/human_image_view"/>
 
-                                <LinearLayout
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight=".55"
-                                    android:orientation="vertical"
-                                    android:gravity="right"
-                                    android:id="@+id/severe_obesity_container">
+                        </RelativeLayout>
 
-                                    <View
-                                        android:layout_width="50dp"
-                                        android:layout_height="@dimen/dim_bar_item_height"
-                                        android:background="@color/simuation_barItem_normal">
-                                    </View>
+                    </LinearLayout>
 
-                                    <View
-                                        android:layout_width="50dp"
-                                        android:layout_height="@dimen/dim_bar_item_height"
-                                        android:background="@color/simuation_barItem_normal"
-                                        android:layout_marginTop="3dp">
-                                    </View>
+                    <!-- Sección de barras de clasificación-->
 
-                                    <View
-                                        android:layout_width="50dp"
-                                        android:layout_height="@dimen/dim_bar_item_height"
-                                        android:background="@color/simuation_barItem_normal"
-                                        android:layout_marginTop="3dp">
-                                    </View>
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="200dp"
+                        android:layout_weight=".45"
+                        android:background="@drawable/home_item_shadow"
+                        android:layout_marginRight="4dp">
 
-                                    <View
-                                        android:layout_width="50dp"
-                                        android:layout_height="@dimen/dim_bar_item_height"
-                                        android:background="@color/simuation_barItem_normal"
-                                        android:layout_marginTop="3dp">
-                                    </View>
-
-
-                                </LinearLayout>
-
-                                <LinearLayout
-                                    android:layout_width="0dp"
-                                    android:layout_weight=".45"
-                                    android:paddingLeft="10dp"
-                                    android:layout_height="wrap_content">
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:maxWidth="100dp"
-                                        android:text="Obesidad Severa"
-                                        android:textColor="#bcbdbe"
-                                        android:textSize="10dp" />
-
-
-                                </LinearLayout>
-
-                            </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="#fff"
+                            android:layout_marginTop="1dp"
+                            android:layout_marginLeft="1dp"
+                            android:layout_marginRight="1dp"
+                            android:layout_marginBottom="1dp"
+                            android:orientation="vertical">
 
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:orientation="horizontal">
+                                android:orientation="vertical"
+                                android:layout_marginTop="20dp"
+                                android:layout_marginRight="8dp">
+
+                                <!-- Items de clasificación -->
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal">
+
+                                    <LinearLayout
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight=".55"
+                                        android:orientation="vertical"
+                                        android:gravity="right"
+                                        android:id="@+id/severe_obesity_container">
+
+                                        <View
+                                            android:layout_width="50dp"
+                                            android:layout_height="@dimen/dim_bar_item_height"
+                                            android:background="@color/simuation_barItem_normal">
+                                        </View>
+
+                                        <View
+                                            android:layout_width="50dp"
+                                            android:layout_height="@dimen/dim_bar_item_height"
+                                            android:background="@color/simuation_barItem_normal"
+                                            android:layout_marginTop="3dp">
+                                        </View>
+
+                                        <View
+                                            android:layout_width="50dp"
+                                            android:layout_height="@dimen/dim_bar_item_height"
+                                            android:background="@color/simuation_barItem_normal"
+                                            android:layout_marginTop="3dp">
+                                        </View>
+
+                                        <View
+                                            android:layout_width="50dp"
+                                            android:layout_height="@dimen/dim_bar_item_height"
+                                            android:background="@color/simuation_barItem_normal"
+                                            android:layout_marginTop="3dp">
+                                        </View>
+
+
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:layout_width="0dp"
+                                        android:layout_weight=".45"
+                                        android:paddingLeft="10dp"
+                                        android:layout_height="wrap_content">
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:maxWidth="100dp"
+                                            android:text="Obesidad Severa"
+                                            android:textColor="#bcbdbe"
+                                            android:textSize="10dp" />
+
+
+                                    </LinearLayout>
+
+                                </LinearLayout>
 
                                 <LinearLayout
-                                    android:layout_width="0dp"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_weight=".55"
-                                    android:orientation="vertical"
-                                    android:gravity="right"
-                                    android:id="@+id/obesity_level_2_container">
+                                    android:orientation="horizontal">
 
-                                    <View
-                                        android:layout_width="50dp"
-                                        android:layout_height="@dimen/dim_bar_item_height"
-                                        android:background="@color/simuation_barItem_normal"
-                                        android:layout_marginTop="3dp">
-                                    </View>
+                                    <LinearLayout
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight=".55"
+                                        android:orientation="vertical"
+                                        android:gravity="right"
+                                        android:id="@+id/obesity_level_2_container">
 
-                                    <View
-                                        android:layout_width="50dp"
-                                        android:layout_height="@dimen/dim_bar_item_height"
-                                        android:background="@color/simuation_barItem_normal"
-                                        android:layout_marginTop="3dp">
-                                    </View>
+                                        <View
+                                            android:layout_width="50dp"
+                                            android:layout_height="@dimen/dim_bar_item_height"
+                                            android:background="@color/simuation_barItem_normal"
+                                            android:layout_marginTop="3dp">
+                                        </View>
 
-                                    <View
-                                        android:layout_width="50dp"
-                                        android:layout_height="@dimen/dim_bar_item_height"
-                                        android:background="@color/simuation_barItem_normal"
-                                        android:layout_marginTop="3dp">
-                                    </View>
+                                        <View
+                                            android:layout_width="50dp"
+                                            android:layout_height="@dimen/dim_bar_item_height"
+                                            android:background="@color/simuation_barItem_normal"
+                                            android:layout_marginTop="3dp">
+                                        </View>
 
-                                    <View
-                                        android:layout_width="50dp"
-                                        android:layout_height="@dimen/dim_bar_item_height"
-                                        android:background="@color/simuation_barItem_normal"
-                                        android:layout_marginTop="3dp">
-                                    </View>
+                                        <View
+                                            android:layout_width="50dp"
+                                            android:layout_height="@dimen/dim_bar_item_height"
+                                            android:background="@color/simuation_barItem_normal"
+                                            android:layout_marginTop="3dp">
+                                        </View>
+
+                                        <View
+                                            android:layout_width="50dp"
+                                            android:layout_height="@dimen/dim_bar_item_height"
+                                            android:background="@color/simuation_barItem_normal"
+                                            android:layout_marginTop="3dp">
+                                        </View>
+
+
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight=".45"
+                                        android:paddingLeft="10dp">
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:maxWidth="100dp"
+                                            android:text="Obesidad II"
+                                            android:textColor="#bcbdbe"
+                                            android:textSize="10dp"
+                                            android:layout_marginTop="7dp"/>
+
+
+                                    </LinearLayout>
 
 
                                 </LinearLayout>
 
                                 <LinearLayout
-                                    android:layout_width="0dp"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_weight=".45"
-                                    android:paddingLeft="10dp">
+                                    android:orientation="horizontal">
 
-                                    <TextView
-                                        android:layout_width="wrap_content"
+                                    <LinearLayout
+                                        android:layout_width="0dp"
                                         android:layout_height="wrap_content"
-                                        android:maxWidth="100dp"
-                                        android:text="Obesidad II"
-                                        android:textColor="#bcbdbe"
-                                        android:textSize="10dp"
-                                        android:layout_marginTop="7dp"/>
+                                        android:layout_weight=".55"
+                                        android:orientation="vertical"
+                                        android:gravity="right"
+                                        android:id="@+id/obesity_level_1_container">
+
+                                        <View
+                                            android:layout_width="50dp"
+                                            android:layout_height="@dimen/dim_bar_item_height"
+                                            android:background="@color/simuation_barItem_normal"
+                                            android:layout_marginTop="3dp">
+                                        </View>
+
+                                        <View
+                                            android:layout_width="50dp"
+                                            android:layout_height="@dimen/dim_bar_item_height"
+                                            android:background="@color/simuation_barItem_normal"
+                                            android:layout_marginTop="3dp">
+                                        </View>
+
+                                        <View
+                                            android:layout_width="50dp"
+                                            android:layout_height="@dimen/dim_bar_item_height"
+                                            android:background="@color/simuation_barItem_normal"
+                                            android:layout_marginTop="3dp">
+                                        </View>
+
+                                        <View
+                                            android:layout_width="50dp"
+                                            android:layout_height="@dimen/dim_bar_item_height"
+                                            android:background="@color/simuation_barItem_normal"
+                                            android:layout_marginTop="3dp">
+                                        </View>
+
+
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight=".45"
+                                        android:paddingLeft="10dp">
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:maxWidth="100dp"
+                                            android:text="Obesidad I"
+                                            android:textColor="#bcbdbe"
+                                            android:textSize="10dp"
+                                            android:layout_marginTop="7dp"/>
+
+
+                                    </LinearLayout>
+
+
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal">
+
+                                    <LinearLayout
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight=".55"
+                                        android:orientation="vertical"
+                                        android:gravity="right"
+                                        android:id="@+id/overweight_container">
+
+                                        <View
+                                            android:layout_width="50dp"
+                                            android:layout_height="@dimen/dim_bar_item_height"
+                                            android:background="@color/simuation_barItem_normal"
+                                            android:layout_marginTop="3dp">
+                                        </View>
+
+                                        <View
+                                            android:layout_width="50dp"
+                                            android:layout_height="@dimen/dim_bar_item_height"
+                                            android:background="@color/simuation_barItem_normal"
+                                            android:layout_marginTop="3dp">
+                                        </View>
+
+                                        <View
+                                            android:layout_width="50dp"
+                                            android:layout_height="@dimen/dim_bar_item_height"
+                                            android:background="@color/simuation_barItem_normal"
+                                            android:layout_marginTop="3dp">
+                                        </View>
+
+                                        <View
+                                            android:layout_width="50dp"
+                                            android:layout_height="@dimen/dim_bar_item_height"
+                                            android:background="@color/simuation_barItem_normal"
+                                            android:layout_marginTop="3dp">
+                                        </View>
+
+
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight=".45"
+                                        android:paddingLeft="10dp">
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:maxWidth="100dp"
+                                            android:text="Sobrepeso"
+                                            android:textColor="#bcbdbe"
+                                            android:textSize="10dp"
+                                            android:layout_marginTop="7dp"/>
+
+
+                                    </LinearLayout>
+
+
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal">
+
+                                    <LinearLayout
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight=".55"
+                                        android:orientation="vertical"
+                                        android:gravity="right"
+                                        android:id="@+id/normal_weight_container">
+
+                                        <View
+                                            android:layout_width="50dp"
+                                            android:layout_height="@dimen/dim_bar_item_height"
+                                            android:background="@color/simuation_barItem_normal"
+                                            android:layout_marginTop="3dp">
+                                        </View>
+
+                                        <View
+                                            android:layout_width="50dp"
+                                            android:layout_height="@dimen/dim_bar_item_height"
+                                            android:background="@color/simuation_barItem_normal"
+                                            android:layout_marginTop="3dp">
+                                        </View>
+
+                                        <View
+                                            android:layout_width="50dp"
+                                            android:layout_height="@dimen/dim_bar_item_height"
+                                            android:background="@color/simuation_barItem_normal"
+                                            android:layout_marginTop="3dp">
+                                        </View>
+
+                                        <View
+                                            android:layout_width="50dp"
+                                            android:layout_height="@dimen/dim_bar_item_height"
+                                            android:background="@color/simuation_barItem_normal"
+                                            android:layout_marginTop="3dp">
+                                        </View>
+
+
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight=".45"
+                                        android:paddingLeft="10dp">
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:maxWidth="100dp"
+                                            android:text="Peso normal"
+                                            android:textColor="#bcbdbe"
+                                            android:textSize="10dp"
+                                            android:layout_marginTop="7dp"/>
+
+
+                                    </LinearLayout>
 
 
                                 </LinearLayout>
 
 
                             </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal">
-
-                                <LinearLayout
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight=".55"
-                                    android:orientation="vertical"
-                                    android:gravity="right"
-                                    android:id="@+id/obesity_level_1_container">
-
-                                    <View
-                                        android:layout_width="50dp"
-                                        android:layout_height="@dimen/dim_bar_item_height"
-                                        android:background="@color/simuation_barItem_normal"
-                                        android:layout_marginTop="3dp">
-                                    </View>
-
-                                    <View
-                                        android:layout_width="50dp"
-                                        android:layout_height="@dimen/dim_bar_item_height"
-                                        android:background="@color/simuation_barItem_normal"
-                                        android:layout_marginTop="3dp">
-                                    </View>
-
-                                    <View
-                                        android:layout_width="50dp"
-                                        android:layout_height="@dimen/dim_bar_item_height"
-                                        android:background="@color/simuation_barItem_normal"
-                                        android:layout_marginTop="3dp">
-                                    </View>
-
-                                    <View
-                                        android:layout_width="50dp"
-                                        android:layout_height="@dimen/dim_bar_item_height"
-                                        android:background="@color/simuation_barItem_normal"
-                                        android:layout_marginTop="3dp">
-                                    </View>
-
-
-                                </LinearLayout>
-
-                                <LinearLayout
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight=".45"
-                                    android:paddingLeft="10dp">
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:maxWidth="100dp"
-                                        android:text="Obesidad I"
-                                        android:textColor="#bcbdbe"
-                                        android:textSize="10dp"
-                                        android:layout_marginTop="7dp"/>
-
-
-                                </LinearLayout>
-
-
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal">
-
-                                <LinearLayout
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight=".55"
-                                    android:orientation="vertical"
-                                    android:gravity="right"
-                                    android:id="@+id/overweight_container">
-
-                                    <View
-                                        android:layout_width="50dp"
-                                        android:layout_height="@dimen/dim_bar_item_height"
-                                        android:background="@color/simuation_barItem_normal"
-                                        android:layout_marginTop="3dp">
-                                    </View>
-
-                                    <View
-                                        android:layout_width="50dp"
-                                        android:layout_height="@dimen/dim_bar_item_height"
-                                        android:background="@color/simuation_barItem_normal"
-                                        android:layout_marginTop="3dp">
-                                    </View>
-
-                                    <View
-                                        android:layout_width="50dp"
-                                        android:layout_height="@dimen/dim_bar_item_height"
-                                        android:background="@color/simuation_barItem_normal"
-                                        android:layout_marginTop="3dp">
-                                    </View>
-
-                                    <View
-                                        android:layout_width="50dp"
-                                        android:layout_height="@dimen/dim_bar_item_height"
-                                        android:background="@color/simuation_barItem_normal"
-                                        android:layout_marginTop="3dp">
-                                    </View>
-
-
-                                </LinearLayout>
-
-                                <LinearLayout
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight=".45"
-                                    android:paddingLeft="10dp">
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:maxWidth="100dp"
-                                        android:text="Sobrepeso"
-                                        android:textColor="#bcbdbe"
-                                        android:textSize="10dp"
-                                        android:layout_marginTop="7dp"/>
-
-
-                                </LinearLayout>
-
-
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal">
-
-                                <LinearLayout
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight=".55"
-                                    android:orientation="vertical"
-                                    android:gravity="right"
-                                    android:id="@+id/normal_weight_container">
-
-                                    <View
-                                        android:layout_width="50dp"
-                                        android:layout_height="@dimen/dim_bar_item_height"
-                                        android:background="@color/simuation_barItem_normal"
-                                        android:layout_marginTop="3dp">
-                                    </View>
-
-                                    <View
-                                        android:layout_width="50dp"
-                                        android:layout_height="@dimen/dim_bar_item_height"
-                                        android:background="@color/simuation_barItem_normal"
-                                        android:layout_marginTop="3dp">
-                                    </View>
-
-                                    <View
-                                        android:layout_width="50dp"
-                                        android:layout_height="@dimen/dim_bar_item_height"
-                                        android:background="@color/simuation_barItem_normal"
-                                        android:layout_marginTop="3dp">
-                                    </View>
-
-                                    <View
-                                        android:layout_width="50dp"
-                                        android:layout_height="@dimen/dim_bar_item_height"
-                                        android:background="@color/simuation_barItem_normal"
-                                        android:layout_marginTop="3dp">
-                                    </View>
-
-
-                                </LinearLayout>
-
-                                <LinearLayout
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight=".45"
-                                    android:paddingLeft="10dp">
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:maxWidth="100dp"
-                                        android:text="Peso normal"
-                                        android:textColor="#bcbdbe"
-                                        android:textSize="10dp"
-                                        android:layout_marginTop="7dp"/>
-
-
-                                </LinearLayout>
-
-
-                            </LinearLayout>
-
 
                         </LinearLayout>
 
@@ -652,8 +664,8 @@
 
             </LinearLayout>
 
-        </LinearLayout>
+        </ScrollView>
 
-    </ScrollView>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </FrameLayout>
