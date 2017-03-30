@@ -102,6 +102,7 @@ public class LoginActivity extends AppCompatActivity implements
                     AUser newUser = new AUser(user.getUid(), user.getDisplayName(), user.getEmail(), user.getPhotoUrl().toString());
                     DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
+
                     PrefManager prefManager;
                     prefManager = new PrefManager(that);
 

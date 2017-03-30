@@ -219,13 +219,13 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="5dp">
 
-                    <TextView
+                    <!--<TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="19 min"
                         android:gravity="center"
                         android:maxWidth="75dp"
-                        android:layout_marginTop="3dp"/>
+                        android:layout_marginTop="3dp"/>-->
 
                 </RelativeLayout>
 

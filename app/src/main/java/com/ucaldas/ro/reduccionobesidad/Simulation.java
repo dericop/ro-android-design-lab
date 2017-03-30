@@ -5,6 +5,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -18,6 +19,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -85,6 +88,9 @@ public class Simulation extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+
     //Firebase database
     DatabaseReference firebaseDatabase;
     DatabaseReference dbRef;
@@ -124,7 +130,6 @@ public class Simulation extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
     }
 
     @Override
@@ -141,12 +146,6 @@ public class Simulation extends Fragment {
         }
     }
 
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        Log.v("Items", "paso");
-        super.onHiddenChanged(hidden);
-    }
-
     /*
     @Override
     public void onAttach(Context context) {
@@ -158,7 +157,6 @@ public class Simulation extends Fragment {
                     + " must implement OnFragmentInteractionListener");
         }
     }*/
-
 
     private boolean assignUserItemsDBReference() {
         if (mHome.user != null && firebaseDatabase != null) {
@@ -189,7 +187,36 @@ public class Simulation extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         getGraphicalComponents(view); // Inicialización de componentes gráficos
-        loadData(view);
+        loadItems(view);
+    }
+
+    private void loadItems(final View view){
+        if (mHome.user == null) {
+            mAuth = FirebaseAuth.getInstance();
+            mAuthListener = new FirebaseAuth.AuthStateListener() {
+                @Override
+                public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                    FirebaseUser user = firebaseAuth.getCurrentUser();
+                    if (user != null) {
+                        // AUser is signed in
+                        Log.d("AUser", "onAuthStateChanged:signed_in:" + user.getUid());
+
+                        mHome.user = user; //Asignación de usuario a la clase principal
+                        loadData(view);
+
+                    } else {
+                        // AUser is signed out
+                        Log.d("AUser", "onAuthStateChanged:signed_out");
+
+                    }
+                }
+            };
+
+            mAuth.addAuthStateListener(mAuthListener);
+
+        } else {
+            loadData(view);
+        }
     }
 
     private void loadData(final View view){

@@ -9,6 +9,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import com.getbase.floatingactionbutton.FloatingActionButton;
+
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -32,6 +34,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.getbase.floatingactionbutton.AddFloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
@@ -63,14 +66,55 @@ public class mHome extends AppCompatActivity
     private DatabaseReference mDatabase;
     private DatabaseReference userRef;
 
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+
     /* Atributos para el control de usuarios */
     static FirebaseUser user;
+
+    // Tab References
+    private Home home;
+    private Simulation simulation;
+    private Simulationv2 simulationv2;
+    private MyItems myItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_m_home);
 
+        if(mHome.user == null){
+            mAuth = FirebaseAuth.getInstance();
+            mAuthListener = new FirebaseAuth.AuthStateListener() {
+                @Override
+                public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                    FirebaseUser user = firebaseAuth.getCurrentUser();
+                    if (user != null) {
+                        // AUser is signed in
+                        Log.d("AUser", "onAuthStateChanged:signed_in:" + user.getUid());
+                        Toast.makeText(getBaseContext(), getString(R.string.login_successfull), Toast.LENGTH_LONG);
+
+                        mHome.user = user; //Asignación de usuario a la clase principal
+                        initMHome();
+
+
+                    } else {
+                        // AUser is signed out
+                        Log.d("AUser", "onAuthStateChanged:signed_out");
+                        //progress.dismiss();
+                        Toast.makeText(getBaseContext(), getString(R.string.login_fail), Toast.LENGTH_LONG);
+
+                    }
+                }
+            };
+
+            mAuth.addAuthStateListener(mAuthListener);
+        }else{
+            initMHome();
+        }
+    }
+
+    private void initMHome(){
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
         configureToolbarAndToggleActionBar();
@@ -227,21 +271,58 @@ public class mHome extends AppCompatActivity
         /*
         * Configuraciones necesarios para el uso de viewPager
         * */
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new Home(), "Inicio");
-        adapter.addFragment(new MyItems(), "Mis Items");
+        home = new Home();
+        myItems = new MyItems();
 
         if(WelcomeActivity.CURRENT_APP_VERSION.equals("A"))
-            adapter.addFragment(new Simulation(), "Simulación");
+            simulation = new Simulation();
         else
-            adapter.addFragment(new Simulationv2(), "Simulación");
+            simulationv2 = new Simulationv2();
+
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFragment(home, "Inicio");
+        adapter.addFragment(myItems, "Mis Items");
+
+        if(WelcomeActivity.CURRENT_APP_VERSION.equals("A"))
+            adapter.addFragment(simulation, "Simulación");
+        else
+            adapter.addFragment(simulationv2, "Simulación");
 
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(2);
 
+
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
         createTabIcons();
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                switch(tab.getPosition()) {
+                    case 0:
+                        Log.v("Items", "Home");
+                        break;
+                    case 1:
+                        Log.v("Items", "Mis items");
+                        //myItems.loadItems();
+                        break;
+                    case 2:
+
+                        Log.v("Items", "Simulación");
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
     }
 
     private void showAssitant(){
@@ -254,6 +335,7 @@ public class mHome extends AppCompatActivity
         tabOne.setText("Inicio");
         tabOne.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_action_home, 0, 0);
         tabLayout.getTabAt(0).setCustomView(tabOne);
+
 
         TextView tabTwo = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
         tabTwo.setText("Mis items");

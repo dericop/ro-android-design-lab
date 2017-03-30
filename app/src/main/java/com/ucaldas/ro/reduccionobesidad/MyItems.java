@@ -1,17 +1,23 @@
 package com.ucaldas.ro.reduccionobesidad;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
+import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -37,8 +43,6 @@ public class MyItems extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
     ArrayList<Post> myItems;
 
     private View refView;
@@ -48,25 +52,25 @@ public class MyItems extends Fragment {
     private DatabaseReference itemsRef = null;
     private DatabaseReference mDatabase = null;
 
+    private GridView grid_items;
+    private MyItemAdapter itemAdapter;
+
+    private DatabaseReference firebaseDatabase;
+
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
 
     public MyItems() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment MyItems.
-     */
+
     // TODO: Rename and change types and number of parameters
-    public static MyItems newInstance(String param1, String param2) {
+    public static MyItems newInstance() {
         MyItems fragment = new MyItems();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        //args.putString(ARG_PARAM1, param1);
+
         fragment.setArguments(args);
         return fragment;
     }
@@ -74,129 +78,149 @@ public class MyItems extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-        Log.v("Items", "Creando items");
 
-    }
+        myItems = new ArrayList<>();
+        itemAdapter = new MyItemAdapter(this.getContext(), myItems);
 
-    @Override
-    public void setMenuVisibility(boolean menuVisible) {
-        super.setMenuVisibility(menuVisible);
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        if(menuVisible && refView!=null){
-            //loadItems();
-        }
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+
         super.onSaveInstanceState(outState);
     }
 
-    private void loadItems(){
-        final GridView grid_items = (GridView) refView.findViewById(R.id.grid_items);
-        myItems = new ArrayList<>();
-        final MyItemAdapter itemAdapter = new MyItemAdapter(this.getContext(), myItems);
-        grid_items.setAdapter(itemAdapter);
 
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        // Instantiate a new fragment.
 
-        DatabaseReference firebaseDatabase = null;
-        if(mHome.user != null){
-            if(WelcomeActivity.CURRENT_APP_VERSION.equals("A"))
-                firebaseDatabase = mDatabase.child("user-data").child(mHome.user.getUid());
-            else
-                firebaseDatabase = mDatabase.child("user-data-reflexive").child(mHome.user.getUid());
-
-            firebaseDatabase.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    if(dataSnapshot.hasChildren()){
-                        myItems.clear();
-                        HashMap<String, HashMap<String, String>> map = (HashMap)dataSnapshot.getValue();
-
-                        for (String key: map.keySet()){
-                            HashMap<String, Object> values = (HashMap) map.get(key);
-
-                            String name = (String)values.get("name");
-                            String frecuency = (String)values.get("frecuency");
-                            String category = (String)values.get("category");
-                            String image = (String)values.get("image");
-                            String user = (String)values.get("user");
-                            String id = (String)values.get("id");
-
-                            getPostReference(id);
-
-                            final Post post = new Post();
-                            post.setName(name);
-                            post.setFrecuency(frecuency);
-                            post.setCategory(category);
-                            post.setImage(image);
-                            post.setUser(user);
-                            post.setId(id);
-
-                            if(values.get("duration") != null){
-                                String duration = (String)values.get("duration");
-                                post.setDuration(duration);
-                            }
-
-                            itemsRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    Post rPost = dataSnapshot.getValue(Post.class);
-
-                                    if(rPost!=null){
-                                        if(rPost.getResult()!=0)
-                                            post.setResult(rPost.getResult());
-
-                                        if(rPost.getR_aa() != 0)
-                                            post.setR_aa(rPost.getR_aa());
-
-                                        if(rPost.getR_pi() != 0)
-                                            post.setR_pi(rPost.getR_pi());
-
-                                        if(rPost.getR_ch() != 0)
-                                            post.setR_pi(rPost.getR_ch());
-
-                                        if(rPost.getR_gs() != 0)
-                                            post.setR_gs(rPost.getR_gs());
-
-                                        myItems.add(post);
-                                        itemAdapter.notifyDataSetChanged();
-                                        grid_items.setAdapter(itemAdapter);
-                                    }
-
-                                }
-
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-
-                                }
-                            });
-                        }
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-
-        }
+        //loadItems();
     }
 
-    private DatabaseReference getPostReference(String id){
-        if(!id.equals("")){
-            if(WelcomeActivity.CURRENT_APP_VERSION.equals("A"))
+
+    public void loadItems() {
+
+        if (mHome.user == null) {
+            mAuth = FirebaseAuth.getInstance();
+            mAuthListener = new FirebaseAuth.AuthStateListener() {
+                @Override
+                public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                    FirebaseUser user = firebaseAuth.getCurrentUser();
+                    if (user != null) {
+                        // AUser is signed in
+                        Log.d("AUser", "onAuthStateChanged:signed_in:" + user.getUid());
+
+                        mHome.user = user; //Asignación de usuario a la clase principal
+                        getDataFromDB();
+
+                    } else {
+                        // AUser is signed out
+                        Log.d("AUser", "onAuthStateChanged:signed_out");
+
+                    }
+                }
+            };
+
+            mAuth.addAuthStateListener(mAuthListener);
+
+        } else {
+            getDataFromDB();
+        }
+
+
+    }
+
+    private void getDataFromDB(){
+
+        if (WelcomeActivity.CURRENT_APP_VERSION.equals("A"))
+            firebaseDatabase = mDatabase.child("user-data").child(mHome.user.getUid());
+        else
+            firebaseDatabase = mDatabase.child("user-data-reflexive").child(mHome.user.getUid());
+
+
+        firebaseDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChildren()) {
+                    myItems.clear();
+                    HashMap<String, HashMap<String, String>> map = (HashMap) dataSnapshot.getValue();
+
+                    for (String key : map.keySet()) {
+                        HashMap<String, Object> values = (HashMap) map.get(key);
+
+                        String name = (String) values.get("name");
+                        String frecuency = (String) values.get("frecuency");
+                        String category = (String) values.get("category");
+                        String image = (String) values.get("image");
+                        String user = (String) values.get("user");
+                        String id = (String) values.get("id");
+
+                        getPostReference(id);
+
+                        final Post post = new Post();
+                        post.setName(name);
+                        post.setFrecuency(frecuency);
+                        post.setCategory(category);
+                        post.setImage(image);
+                        post.setUser(user);
+                        post.setId(id);
+
+                        if (values.get("duration") != null) {
+                            String duration = (String) values.get("duration");
+                            post.setDuration(duration);
+                        }
+
+                        itemsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                Post rPost = dataSnapshot.getValue(Post.class);
+
+                                if (rPost != null) {
+                                    if (rPost.getResult() != 0)
+                                        post.setResult(rPost.getResult());
+
+                                    if (rPost.getR_aa() != 0)
+                                        post.setR_aa(rPost.getR_aa());
+
+                                    if (rPost.getR_pi() != 0)
+                                        post.setR_pi(rPost.getR_pi());
+
+                                    if (rPost.getR_ch() != 0)
+                                        post.setR_pi(rPost.getR_ch());
+
+                                    if (rPost.getR_gs() != 0)
+                                        post.setR_gs(rPost.getR_gs());
+
+                                    myItems.add(post);
+                                    itemAdapter.notifyDataSetChanged();
+                                    grid_items.setAdapter(itemAdapter);
+                                }
+
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private DatabaseReference getPostReference(String id) {
+        if (!id.equals("")) {
+            if (WelcomeActivity.CURRENT_APP_VERSION.equals("A"))
                 itemsRef = mDatabase.child("user-posts").child(id);
             else
                 itemsRef = mDatabase.child("user-posts-reflexive").child(id);
@@ -209,50 +233,38 @@ public class MyItems extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        refView = view;
+        grid_items = (GridView) refView.findViewById(R.id.grid_items);
+        grid_items.setAdapter(itemAdapter);
+
         loadItems();
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_my_items, container, false);
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        Log.v("Items", hidden+"");
-
-    }
-
-    @Override
-    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
-
+        refView = inflater.inflate(R.layout.fragment_my_items, container, false);
+        return refView;
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        Activity activity;
 
-        Log.v("Pager", refView+" Attached!!");
-        if(refView != null)
-            loadItems();
+        if (context instanceof Activity) {
+            activity = (Activity) context;
+            //refView = activity.getCurrentFocus();
+        }
+
 
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        //mListener = null;
     }
 
     /**
