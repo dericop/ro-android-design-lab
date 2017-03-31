@@ -91,6 +91,7 @@ public class HomeAdapter extends ArrayAdapter<Post>{
         title.setText(post.getmUserName());
         otherUser.setText(post.getLast_share());
 
+
         if(post.getLast_share()!=null && post.getLast_share().equals("")){
             lbl_too.setVisibility(View.INVISIBLE);
         }else{

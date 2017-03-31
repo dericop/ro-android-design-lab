@@ -50,8 +50,6 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
     private static final String ARG_PARAM2 = "param2";
     private SwipeRefreshLayout mSwipeRefreshing;
     boolean isTheFirstLoad = true;
-    private DatabaseReference mDatabase = null;
-    private DatabaseReference postRef = null;
     private HomeAdapter mPostAdapter= null;
     private Button btn_new_posts = null;
     private String lastPostLoaded = "";
@@ -60,12 +58,19 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
 
     private boolean isTheFirstItem = true; //usado para obtener la primer clave en la paginación
 
+    private DatabaseReference mDatabase = null;
+    private DatabaseReference postRef = null;
+    private DatabaseReference userRef = null;
+    private DatabaseReference commentRef = null;
+
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
     LinkedList<Post> mPostList;
+
+    private int countOfPages = 0;
 
 
     public Home() {
@@ -101,17 +106,6 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
-        /*FloatingActionButton fab = (FloatingActionButton) getContext().findViewById(R.id.btn_addPost);
-
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
-
     }
 
     @Override
@@ -120,11 +114,6 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
         // Inflate the layout for this fragment
 
         return inflater.inflate(R.layout.fragment_home, container, false);
-    }
-
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        Log.v("Items", hidden+" asd");
     }
 
 
@@ -188,17 +177,17 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
 
     private void assignUsersReference(){
         if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
-            postRef = mDatabase.child("users");
+            userRef = mDatabase.child("users");
         }else{
-            postRef = mDatabase.child("users-reflexive");
+            userRef = mDatabase.child("users-reflexive");
         }
     }
 
     private void assignCommentsReference(){
         if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
-            postRef = mDatabase.child("user-comments");
+            commentRef = mDatabase.child("user-comments");
         }else{
-            postRef = mDatabase.child("user-comments-reflexive");
+            commentRef = mDatabase.child("user-comments-reflexive");
         }
     }
 
@@ -243,14 +232,26 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
         Log.v("Pagination",postMap.toString());
         final Post post = createBasePost(postMap);
 
+        Log.v("Pages", countOfPages*countOfItemsLoadedForTime+"");
+        Log.v("Pages", mPostList.size()+"");
+
         if(position == 0)
             mPostList.addFirst(post);
-        else
-            mPostList.add(10,post);
+        else{
+            mPostList.addLast(post);
+            /*int posTarget = countOfPages * countOfItemsLoadedForTime;
+            if(posTarget > mPostList.size()){
+                posTarget = mPostList.size() - 1;
+                mPostList.add(posTarget, post);
+            }else
+                mPostList.add((countOfPages * countOfItemsLoadedForTime), post);*/
+        }
+
+
         reloadData();
 
         assignUsersReference();
-        postRef.child(post.getUser()).addListenerForSingleValueEvent(new ValueEventListener() {
+        userRef.child(post.getUser()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot){
 
@@ -259,7 +260,7 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
                 post.setmUserName(userName);
                 mPostAdapter.notifyDataSetChanged();
 
-                postRef.child(post.getLast_share()).addListenerForSingleValueEvent(new ValueEventListener() {
+                userRef.child(post.getLast_share()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -267,6 +268,7 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
                             HashMap<String, Object> tooSharedMap = (HashMap) dataSnapshot.getValue();
 
                             final String tooSharedName = (String) tooSharedMap.get("mUserName");
+                            Log.v("TooShare", tooSharedName);
                             post.setLast_share(tooSharedName);
 
                             mPostAdapter.notifyDataSetChanged();
@@ -275,7 +277,7 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
                         assignCommentsReference();
 
                         Log.v("Counter", post.getId()+"");
-                        postRef.orderByChild("id").equalTo(post.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                        commentRef.orderByChild("id").equalTo(post.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -432,21 +434,22 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
         Log.v("Pagination", "last post: "+lastPostLoaded);
 
         if(!lastPostLoaded.equals("")){
+
             postRef.orderByKey().limitToLast(countOfItemsLoadedForTime).endAt(lastPostLoaded).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if(dataSnapshot.getValue()!=null){
                         final HashMap<String, Object> postMap = (HashMap)dataSnapshot.getValue();
                         isTheFirstItem = true;
-                        SortedSet<String> keys = new TreeSet<String>(postMap.keySet());
-
+                        SortedSet<String> keys = new TreeSet(postMap.keySet());
                         postMap.remove(keys.last());
-                        keys = new TreeSet<String>(postMap.keySet());
+                        keys = new TreeSet(postMap.keySet());
 
                         Log.v("PaginationData", keys.toString());
                         for (String key : keys) {
 
                             if(isTheFirstItem){
+                                countOfPages++;
                                 lastPostLoaded = key+"";
                                 Log.v("Pagination", "last page: "+key);
                                 isTheFirstItem = false;

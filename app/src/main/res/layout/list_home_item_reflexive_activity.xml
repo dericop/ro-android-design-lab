@@ -129,7 +129,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignLeft="@+id/post_name"
                     android:layout_below="@+id/lbl_too"
-                    android:text="Daniel Estiven Rico Posada"
+                    android:text=""
                     android:textSize="12dp"
                     android:maxLines="1"
                     android:ellipsize="end"

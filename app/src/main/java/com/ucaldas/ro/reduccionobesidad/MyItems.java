@@ -174,7 +174,7 @@ public class MyItems extends Fragment {
                                         post.setR_pi(rPost.getR_pi());
 
                                     if (rPost.getR_ch() != 0)
-                                        post.setR_pi(rPost.getR_ch());
+                                        post.setR_ch(rPost.getR_ch());
 
                                     if (rPost.getR_gs() != 0)
                                         post.setR_gs(rPost.getR_gs());

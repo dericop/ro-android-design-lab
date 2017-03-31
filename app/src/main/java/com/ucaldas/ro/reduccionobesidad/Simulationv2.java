@@ -174,6 +174,30 @@ public class Simulationv2 extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         swiperefresh = (SwipeRefreshLayout) view.findViewById(R.id.swiperefresh);
+        swiperefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                 piAverage = 0;
+                 aaAverage = 0;
+                 gsAverage = 0;
+                 chAverage = 0;
+                 afAverage = 0;
+
+                 piFrecuencies = 1;
+                 aaFrecuencies = 1;
+                 gsFrecuencies = 1;
+                 chFrecuencies = 1;
+                 afFrecuencies = 1;
+
+                 countOfPi = 0;
+                 countOfAa = 0;
+                 countOfGs = 0;
+                 countOfCh = 0;
+                 countOfAF = 0;
+
+                loadData(view);
+            }
+        });
 
         loadItems(view);
 
@@ -296,13 +320,13 @@ public class Simulationv2 extends Fragment {
             if(post.getR_pi() != 0){
                 piAverage+=Double.parseDouble(post.getR_pi()+"")*frecuency;
                 countOfPi++;
-                aaFrecuencies +=frecuency;
+                piFrecuencies +=frecuency;
             }
 
             if(post.getR_aa() != 0){
                 aaAverage+=Double.parseDouble(post.getR_aa()+"")*frecuency;
                 countOfAa++;
-                piFrecuencies +=frecuency;
+                aaFrecuencies +=frecuency;
             }
 
             if(post.getR_gs() != 0){
@@ -320,15 +344,17 @@ public class Simulationv2 extends Fragment {
     }
 
     private void updateViewsAndRestarData(View view) {
-
-        Log.v("Simulation", aaAverage+"");
-        Log.v("Simulation", aaFrecuencies+"");
-
         piAverage /= piFrecuencies;
         aaAverage /= aaFrecuencies;
         gsAverage /= gsFrecuencies;
         chAverage /= chFrecuencies;
         afAverage /= afFrecuencies;
+
+        Log.v("Simulation", piAverage+"");
+        Log.v("Simulation", aaAverage+"");
+        Log.v("Simulation", gsAverage+"");
+        Log.v("Simulation", chAverage+"");
+        Log.v("Simulation", aaFrecuencies+"");
 
         updatePiViews(view, countOfPi, piAverage);
         updateAAViews(view, countOfAa, aaAverage);
