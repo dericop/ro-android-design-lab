@@ -3,8 +3,10 @@ package com.ucaldas.ro.reduccionobesidad;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -12,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -46,6 +50,34 @@ public class Simulationv2 extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    private SwipeRefreshLayout swiperefresh;
+
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+
+    //Firebase database
+    DatabaseReference firebaseDatabase;
+    DatabaseReference dbRef;
+    DatabaseReference quaDBRef;
+
+    double piAverage = 0;
+    double aaAverage = 0;
+    double gsAverage = 0;
+    double chAverage = 0;
+    double afAverage = 0;
+
+    double piFrecuencies = 1;
+    double aaFrecuencies = 1;
+    double gsFrecuencies = 1;
+    double chFrecuencies = 1;
+    double afFrecuencies = 1;
+
+    int countOfPi = 0;
+    int countOfAa = 0;
+    int countOfGs = 0;
+    int countOfCh = 0;
+    int countOfAF = 0;
 
     public Simulationv2() {
         // Required empty public constructor
@@ -103,6 +135,30 @@ public class Simulationv2 extends Fragment {
         }
     }*/
 
+    private boolean assignUserItemsDBReference() {
+        if (mHome.user != null && firebaseDatabase != null) {
+            if (WelcomeActivity.CURRENT_APP_VERSION.equals("A"))
+                dbRef = firebaseDatabase.child("user-data").child(mHome.user.getUid());
+            else
+                dbRef = firebaseDatabase.child("user-data-reflexive").child(mHome.user.getUid());
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean assignQualificationItemDBReference() {
+        if (mHome.user != null && firebaseDatabase != null) {
+            if (WelcomeActivity.CURRENT_APP_VERSION.equals("A"))
+                quaDBRef = firebaseDatabase.child("user-posts");
+            else
+                quaDBRef = firebaseDatabase.child("user-posts-reflexive");
+            return true;
+        }
+
+        return false;
+    }
+
     @Override
     public void onDetach() {
         super.onDetach();
@@ -117,111 +173,187 @@ public class Simulationv2 extends Fragment {
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        swiperefresh = (SwipeRefreshLayout) view.findViewById(R.id.swiperefresh);
+
+        loadItems(view);
+
+    }
+
+    private void loadItems(final View view){
+        if(mHome.user == null){
+
+            mAuth = FirebaseAuth.getInstance();
+            mAuthListener = new FirebaseAuth.AuthStateListener() {
+                @Override
+                public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    // AUser is signed in
+                    Log.d("AUser", "onAuthStateChanged:signed_in:" + user.getUid());
+
+                    mHome.user = user; //Asignación de usuario a la clase principal
+                    loadData(view);
+
+                } else {
+                    // AUser is signed out
+                    Log.d("AUser", "onAuthStateChanged:signed_out");
+
+                }
+                }
+            };
+
+            mAuth.addAuthStateListener(mAuthListener);
+
+        }else{
+            loadData(view);
+        }
+    }
+
+    private void loadData(final View view){
         if(mHome.user != null){
             final String[] foodsString = getResources().getStringArray(R.array.new_post_food_categories);
             final List<String> foodsCategories = Arrays.asList(foodsString);
-            DatabaseReference firebaseDatabase = null;
+            final List<String> frecuencies = Arrays.asList(getResources().getStringArray(R.array.frecuencies));
+            final List<String> frecuenciesCost = Arrays.asList(getResources().getStringArray(R.array.cost_frecuencies));
 
             if(WelcomeActivity.CURRENT_APP_VERSION.equals("A"))
-                firebaseDatabase = FirebaseDatabase.getInstance().getReference().child("user-data").child(mHome.user.getUid());
+                firebaseDatabase = FirebaseDatabase.getInstance().getReference();
             else
-                firebaseDatabase = FirebaseDatabase.getInstance().getReference().child("user-data-reflexive").child(mHome.user.getUid());
+                firebaseDatabase = FirebaseDatabase.getInstance().getReference();
+
+            if(assignUserItemsDBReference() && assignQualificationItemDBReference()){
+
+                dbRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        final Map<String, HashMap> data = (HashMap) dataSnapshot.getValue();
+                        if(data != null){
 
 
-            firebaseDatabase.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
+                            final LinkedList<String> keys = new LinkedList();
+                            keys.addAll(data.keySet());
 
-                    Map<String, HashMap> data = (HashMap) dataSnapshot.getValue();
-                    if(data != null){
-                        double piAverage = 0;
-                        double aaAverage = 0;
-                        double gsAverage = 0;
-                        double chAverage = 0;
-                        double afAverage = 0;
 
-                        double piFrecuencies = 1;
-                        double aaFrecuencies = 1;
-                        double gsFrecuencies = 1;
-                        double chFrecuencies = 1;
-                        double afFrecuencies = 1;
+                            for(final String key: keys){
 
-                        int countOfPi = 0;
-                        int countOfAa = 0;
-                        int countOfGs = 0;
-                        int countOfCh = 0;
-                        int countOfAF = 0;
+                                Map<String, Object> post = data.get(key);
 
-                        List<String> frecuencies = Arrays.asList(getResources().getStringArray(R.array.frecuencies));
-                        List<String> frecuenciesCost = Arrays.asList(getResources().getStringArray(R.array.cost_frecuencies));
-                        for(String key: data.keySet()){
+                                quaDBRef.child(post.get("id") + "").addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        if (dataSnapshot.getValue() != null) {
+                                            Post post = dataSnapshot.getValue(Post.class);
+                                            if (post.getResult() != 0) {
+                                                calculatePostQualification(post, frecuenciesCost, frecuencies, foodsCategories);
 
-                            Map<String, Object> post = data.get(key);
-                            if(post.get("result")!=null){
-                                long frecuency = Integer.parseInt(frecuenciesCost.get(frecuencies.indexOf(post.get("frecuency"))));
-
-                                if(!foodsCategories.contains(post.get("category")+"")){
-                                    if(post.get("average") != null){
-                                        afAverage += Double.parseDouble(post.get("average")+"")*frecuency;
-                                        countOfAF++;
-                                        afFrecuencies +=frecuency;
+                                                if (keys.indexOf(key) == (keys.size() - 1)){
+                                                    updateViewsAndRestarData(view);
+                                                    swiperefresh.setRefreshing(false);
+                                                }
+                                            }
+                                        }
                                     }
 
-                                }else{
-                                    if(post.get("r_pi") != null){
-                                        piAverage+=Double.parseDouble(post.get("r_pi")+"")*frecuency;
-                                        countOfPi++;
-                                        aaFrecuencies +=frecuency;
-                                    }
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
 
-                                    if(post.get("r_aa") != null){
-                                        aaAverage+=Double.parseDouble(post.get("r_aa")+"")*frecuency;
-                                        countOfAa++;
-                                        piFrecuencies +=frecuency;
                                     }
+                                });
 
-                                    if(post.get("r_gs") != null){
-                                        gsAverage+=Double.parseDouble(post.get("r_gs")+"")*frecuency;
-                                        countOfGs++;
-                                        gsFrecuencies +=frecuency;
-                                    }
-
-                                    if(post.get("r_ch") != null){
-                                        chAverage+=Double.parseDouble(post.get("r_ch")+"")*frecuency;
-                                        countOfCh++;
-                                        chFrecuencies += frecuency;
-                                    }
-                                }
                             }
+
+
+
                         }
+                    }
 
-                        Log.v("Simulation", aaAverage+"");
-                        Log.v("Simulation", aaFrecuencies+"");
-
-                        piAverage /= piFrecuencies;
-
-                        aaAverage /= aaFrecuencies;
-                        gsAverage /= gsFrecuencies;
-                        chAverage /= chFrecuencies;
-                        afAverage /= afFrecuencies;
-
-                        updatePiViews(view, countOfPi, piAverage);
-                        updateAAViews(view, countOfAa, aaAverage);
-                        updateGSViews(view, countOfGs, gsAverage);
-                        updateCHViews(view, countOfCh, chAverage);
-                        updateAFViews(view, countOfAF, afAverage);
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
 
                     }
-                }
 
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
+                });
 
-                }
+            }
 
-            });
         }
 
+    }
+
+    private void calculatePostQualification(Post post, List<String> frecuenciesCost, List<String> frecuencies, List<String> foodsCategories) {
+
+        long frecuency = Integer.parseInt(frecuenciesCost.get(frecuencies.indexOf(post.getFrecuency())));
+
+        if(!foodsCategories.contains(post.getCategory())){
+            if(post.getAverage() != 0){
+                afAverage += Double.parseDouble(post.getAverage()+"")*frecuency;
+                countOfAF++;
+                afFrecuencies +=frecuency;
+            }
+
+        }else{
+            if(post.getR_pi() != 0){
+                piAverage+=Double.parseDouble(post.getR_pi()+"")*frecuency;
+                countOfPi++;
+                aaFrecuencies +=frecuency;
+            }
+
+            if(post.getR_aa() != 0){
+                aaAverage+=Double.parseDouble(post.getR_aa()+"")*frecuency;
+                countOfAa++;
+                piFrecuencies +=frecuency;
+            }
+
+            if(post.getR_gs() != 0){
+                gsAverage+=Double.parseDouble(post.getR_gs()+"")*frecuency;
+                countOfGs++;
+                gsFrecuencies +=frecuency;
+            }
+
+            if(post.getR_ch() != 0){
+                chAverage+=Double.parseDouble(post.getR_ch()+"")*frecuency;
+                countOfCh++;
+                chFrecuencies += frecuency;
+            }
+        }
+    }
+
+    private void updateViewsAndRestarData(View view) {
+
+        Log.v("Simulation", aaAverage+"");
+        Log.v("Simulation", aaFrecuencies+"");
+
+        piAverage /= piFrecuencies;
+        aaAverage /= aaFrecuencies;
+        gsAverage /= gsFrecuencies;
+        chAverage /= chFrecuencies;
+        afAverage /= afFrecuencies;
+
+        updatePiViews(view, countOfPi, piAverage);
+        updateAAViews(view, countOfAa, aaAverage);
+        updateGSViews(view, countOfGs, gsAverage);
+        updateCHViews(view, countOfCh, chAverage);
+        updateAFViews(view, countOfAF, afAverage);
+
+
+         piAverage = 0;
+         aaAverage = 0;
+         gsAverage = 0;
+         chAverage = 0;
+         afAverage = 0;
+
+         piFrecuencies = 1;
+         aaFrecuencies = 1;
+         gsFrecuencies = 1;
+         chFrecuencies = 1;
+         afFrecuencies = 1;
+
+         countOfPi = 0;
+         countOfAa = 0;
+         countOfGs = 0;
+         countOfCh = 0;
+         countOfAF = 0;
     }
 
     private void updatePiViews(View view, int countOfPi, double piAverage){

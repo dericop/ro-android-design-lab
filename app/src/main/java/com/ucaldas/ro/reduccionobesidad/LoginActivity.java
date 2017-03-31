@@ -150,7 +150,12 @@ public class LoginActivity extends AppCompatActivity implements
         //progress.dismiss();
     }
 
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(mHome.user != null)
+            startActivity(new Intent(getBaseContext(), mHome.class));
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

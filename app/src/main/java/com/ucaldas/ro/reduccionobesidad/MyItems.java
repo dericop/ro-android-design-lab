@@ -86,22 +86,6 @@ public class MyItems extends Fragment {
 
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-
-        super.onSaveInstanceState(outState);
-    }
-
-
-    @Override
-    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
-        // Instantiate a new fragment.
-
-        //loadItems();
-    }
-
-
     public void loadItems() {
 
         if (mHome.user == null) {
