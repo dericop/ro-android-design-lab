@@ -394,15 +394,12 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
 
         addSaveEventListener();
 
-
         changeStatusBarColor();
         if(getSupportActionBar() != null){
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
     }
-
-
 
     private Post getPostData(String key, String downloadUrl) {
         Post post = null;
@@ -629,7 +626,6 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
                 updateref = db.child("user-data-reflexive").child(mHome.user.getUid());
             }
 
-
             updateref.orderByChild("id").equalTo(idForUpdate).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -706,8 +702,6 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
         /*
         * Evento para guardar una nueva publicación
         * */
-
-
         Button btn_save = (Button) findViewById(R.id.btn_save);
         btn_save.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -896,22 +890,67 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
         /*
         * Este método es llamado cuando se obtiene un resultado de otra vista, ej: tomar foto, adjuntar foto de galería
         * */
+        super.onActivityResult(requestCode, resultCode, data);
 
         Log.v("CameraE", resultCode+"");
         if (resultCode == RESULT_OK) {
 
             if (requestCode == REQUEST_IMAGE_CAPTURE) {
 
-                setPic();
+                setPic(mCurrentPhotoPath);
                 //galleryAddPic();
 
             }else if(requestCode == RESULT_LOAD_IMAGE){//¿Se retornó de tomar una foto?
-                Bundle extras = data.getExtras();
-                Log.v("Extras", extras.get("data")+"");
-                Log.v("Extras", extras.toString());
-                Bitmap imageBitmap = (Bitmap) extras.get("data");
 
-                prev.setImageBitmap(imageBitmap);
+                //setPic(mCurrentPhotoPath);
+                //Uri targetUri = data.getData();
+                /*Bitmap bitmap;
+                try {
+                    bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(targetUri));
+
+                    prev.setImageBitmap(bitmap);
+
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }*/
+                /*String mMediaString = targetUri.toString();
+                BitmapFactory.Options bounds = new BitmapFactory.Options();
+                bounds.inJustDecodeBounds = true;
+                BitmapFactory.decodeFile(mMediaString, bounds);
+
+                BitmapFactory.Options opts = new BitmapFactory.Options();
+                Bitmap bm = BitmapFactory.decodeFile(mMediaString, opts);
+
+                prev.setImageBitmap(bm);*/
+                Bitmap bitmap;
+                try {
+                    bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(data.getData()));
+
+                    int targetW = 340;
+                    int targetH = 200;
+
+                    // Get the dimensions of the bitmap
+                    BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+                    bmOptions.inJustDecodeBounds = true;
+                    BitmapFactory.decodeFile(data.getData().toString(), bmOptions);
+                    int photoW = bmOptions.outWidth;
+                    int photoH = bmOptions.outHeight;
+
+                    // Determine how much to scale down the image
+                    int scaleFactor = Math.min(photoW/targetW, photoH/targetH);
+
+                    // Decode the image file into a Bitmap sized to fill the View
+                    bmOptions.inJustDecodeBounds = false;
+                    bmOptions.inSampleSize = scaleFactor;
+                    bmOptions.inPurgeable = true;
+
+
+                    prev.setImageBitmap(bitmap);
+
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+
             }
 
         } else {
@@ -919,7 +958,7 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
         }
     }
 
-    private void setPic() {
+    private void setPic(String path) {
         // Get the dimensions of the View
         int targetW = 340;
         int targetH = 200;
@@ -927,7 +966,7 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
         // Get the dimensions of the bitmap
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
         bmOptions.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
+        BitmapFactory.decodeFile(path, bmOptions);
         int photoW = bmOptions.outWidth;
         int photoH = bmOptions.outHeight;
 
@@ -939,31 +978,30 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
         bmOptions.inSampleSize = scaleFactor;
         bmOptions.inPurgeable = true;
 
-        Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
+        Bitmap bitmap = BitmapFactory.decodeFile(path, bmOptions);
 
         try {
-            ExifInterface exifReader = new ExifInterface(mCurrentPhotoPath);
+            ExifInterface exifReader = new ExifInterface(path);
             int orientation = exifReader.getAttributeInt(ExifInterface.TAG_ORIENTATION, -1);
 
             Bitmap rotated;
 
-            if(orientation == ExifInterface.ORIENTATION_ROTATE_90)
-                rotated = ConfigurationActivity.rotateBitmap(bitmap, 90);
-            else if(orientation == ExifInterface.ORIENTATION_ROTATE_270)
-                rotated = ConfigurationActivity.rotateBitmap(bitmap, 270);
-            else if(orientation == ExifInterface.ORIENTATION_ROTATE_180)
-                rotated = ConfigurationActivity.rotateBitmap(bitmap, 180);
-            else
-                rotated = ConfigurationActivity.rotateBitmap(bitmap, 0);
+            if(bitmap !=null){
+                if(orientation == ExifInterface.ORIENTATION_ROTATE_90)
+                    rotated = ConfigurationActivity.rotateBitmap(bitmap, 90);
+                else if(orientation == ExifInterface.ORIENTATION_ROTATE_270)
+                    rotated = ConfigurationActivity.rotateBitmap(bitmap, 270);
+                else if(orientation == ExifInterface.ORIENTATION_ROTATE_180)
+                    rotated = ConfigurationActivity.rotateBitmap(bitmap, 180);
+                else
+                    rotated = ConfigurationActivity.rotateBitmap(bitmap, 0);
 
-            prev.setImageBitmap(rotated);
-
+                prev.setImageBitmap(rotated);
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        //int orientation = getOrientation(mCurrentPhotoPath);
 
     }
 
@@ -1034,10 +1072,34 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
 
     private void startMedia(){
 
-        Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        /*Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         if(i.resolveActivity(getPackageManager()) != null){
             startActivityForResult(i, RESULT_LOAD_IMAGE);
+        }*/
+
+        Intent takePictureIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        takePictureIntent.setType("image/*");
+
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+            }
+
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        "com.ucaldas.android.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, RESULT_LOAD_IMAGE);
+            }
         }
+
+
     }
 
     private void startCamera(){
