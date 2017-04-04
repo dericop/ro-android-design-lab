@@ -17,10 +17,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.media.ExifInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
@@ -29,6 +31,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v13.app.ActivityCompat;
 import android.support.v13.app.FragmentCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -62,16 +65,23 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.security.acl.Permission;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
+
+import static android.os.Environment.getExternalStoragePublicDirectory;
 
 
 public class AddPost extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback{
@@ -109,12 +119,6 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
 
     private ArrayAdapter<CharSequence> categoryAdapter;
     private AppCompatActivity thisRef;
-
-    private final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1;
-
-
-
-    //Prueba
 
 
     @Override
@@ -860,6 +864,33 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
 
     }
 
+    String mCurrentPhotoPath;
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+    private void galleryAddPic() {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(mCurrentPhotoPath);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        this.sendBroadcast(mediaScanIntent);
+    }
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         /*
@@ -869,23 +900,15 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
         Log.v("CameraE", resultCode+"");
         if (resultCode == RESULT_OK) {
 
-            if (requestCode == RESULT_LOAD_IMAGE) {
+            if (requestCode == REQUEST_IMAGE_CAPTURE) {
 
-                Uri selectedImage = data.getData();
-                if(selectedImage != null){
-                    String[] orientationColumn = {MediaStore.Images.Media.ORIENTATION};
-                    Cursor cur = managedQuery(selectedImage, orientationColumn, null, null, null);
+                setPic();
+                //galleryAddPic();
 
-                    int orientation = -1;
-                    if (cur != null && cur.moveToFirst()) {
-                        orientation = cur.getInt(cur.getColumnIndex(orientationColumn[0]));
-                    }
-
-                    loadImageResultInImageView(prev, data, orientation);
-                }
-
-            }else if(requestCode == REQUEST_IMAGE_CAPTURE){//¿Se retornó de tomar una foto?
+            }else if(requestCode == RESULT_LOAD_IMAGE){//¿Se retornó de tomar una foto?
                 Bundle extras = data.getExtras();
+                Log.v("Extras", extras.get("data")+"");
+                Log.v("Extras", extras.toString());
                 Bitmap imageBitmap = (Bitmap) extras.get("data");
 
                 prev.setImageBitmap(imageBitmap);
@@ -896,7 +919,55 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
         }
     }
 
-    private void loadImageResultInImageView(ImageView imageView, Intent data, int orientation) {
+    private void setPic() {
+        // Get the dimensions of the View
+        int targetW = 340;
+        int targetH = 200;
+
+        // Get the dimensions of the bitmap
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        bmOptions.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
+        int photoW = bmOptions.outWidth;
+        int photoH = bmOptions.outHeight;
+
+        // Determine how much to scale down the image
+        int scaleFactor = Math.min(photoW/targetW, photoH/targetH);
+
+        // Decode the image file into a Bitmap sized to fill the View
+        bmOptions.inJustDecodeBounds = false;
+        bmOptions.inSampleSize = scaleFactor;
+        bmOptions.inPurgeable = true;
+
+        Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
+
+        try {
+            ExifInterface exifReader = new ExifInterface(mCurrentPhotoPath);
+            int orientation = exifReader.getAttributeInt(ExifInterface.TAG_ORIENTATION, -1);
+
+            Bitmap rotated;
+
+            if(orientation == ExifInterface.ORIENTATION_ROTATE_90)
+                rotated = ConfigurationActivity.rotateBitmap(bitmap, 90);
+            else if(orientation == ExifInterface.ORIENTATION_ROTATE_270)
+                rotated = ConfigurationActivity.rotateBitmap(bitmap, 270);
+            else if(orientation == ExifInterface.ORIENTATION_ROTATE_180)
+                rotated = ConfigurationActivity.rotateBitmap(bitmap, 180);
+            else
+                rotated = ConfigurationActivity.rotateBitmap(bitmap, 0);
+
+            prev.setImageBitmap(rotated);
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //int orientation = getOrientation(mCurrentPhotoPath);
+
+    }
+
+    private void loadImageResultInImageView(Intent data, int orientation) {
 
         try {
             final Uri imageUri = data.getData();
@@ -904,10 +975,10 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
             final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
 
             int nh = (int) (selectedImage.getHeight() * (512.0 / selectedImage.getWidth()));
-            Bitmap scaled = Bitmap.createScaledBitmap(selectedImage, 512, nh, true);
 
+
+            Bitmap scaled = Bitmap.createScaledBitmap(selectedImage, 512, nh, true);
             Bitmap rotated;
-            Log.v("photo", orientation+"");
 
             if(orientation == 90)
                 rotated = ConfigurationActivity.rotateBitmap(scaled, 90);
@@ -916,7 +987,7 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
             else
                 rotated = ConfigurationActivity.rotateBitmap(scaled, 0);
 
-            imageView.setImageBitmap(rotated);
+            prev.setImageBitmap(rotated);
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -970,11 +1041,32 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
     }
 
     private void startCamera(){
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        /*Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }*/
+
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+            }
+
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        "com.ucaldas.android.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            }
         }
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

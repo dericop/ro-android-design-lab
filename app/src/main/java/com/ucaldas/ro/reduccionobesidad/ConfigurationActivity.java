@@ -170,63 +170,68 @@ public class ConfigurationActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if(requestCode == RESULT_LOAD_IMAGE){
-            Uri selectedImage = data.getData();
-            String[] orientationColumn = {MediaStore.Images.Media.ORIENTATION};
-            Cursor cur = managedQuery(selectedImage, orientationColumn, null, null, null);
 
-            int orientation = -1;
-            if (cur != null && cur.moveToFirst()) {
-                orientation = cur.getInt(cur.getColumnIndex(orientationColumn[0]));
+            if(data != null){
+                Uri selectedImage = data.getData();
+                String[] orientationColumn = {MediaStore.Images.Media.ORIENTATION};
+                Cursor cur = managedQuery(selectedImage, orientationColumn, null, null, null);
+
+                int orientation = -1;
+                if (cur != null && cur.moveToFirst()) {
+                    orientation = cur.getInt(cur.getColumnIndex(orientationColumn[0]));
+                }
+
+                if(loadImageResultInImageView(photo, data, orientation)){
+
+                    FirebaseStorage storage = FirebaseStorage.getInstance();
+                    StorageReference storageRef = storage.getReferenceFromUrl("gs://reduccion-de-obesidad-7414c.appspot.com");
+
+                    Calendar cal = Calendar.getInstance();
+                    String date = cal.get(Calendar.YEAR) + "" + cal.get(Calendar.MONTH) + "" + cal.get(Calendar.DAY_OF_MONTH) + "" + cal.get(Calendar.HOUR) + "" + cal.get(Calendar.MINUTE) + "" + cal.get(Calendar.SECOND) + "";
+                    StorageReference imagesRef = storageRef.child("images/" + mHome.user.getUid() + "/" + date);
+
+
+                    photo.setDrawingCacheEnabled(true);
+                    photo.buildDrawingCache();
+                    Bitmap bitmap = photo.getDrawingCache();
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 60, baos);
+                    byte[] dat = baos.toByteArray();
+
+                    if (isOnline()) {
+                        configureDBReference();
+
+                        this.progressDialog = ProgressDialog.show(this, "Actualizando foto...", "Espera un momento", true);
+                        this.progressDialog.setCancelable(true);
+
+                        UploadTask uploadTask = imagesRef.putBytes(dat);
+                        uploadTask.addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+
+                                if(getCurrentFocus() != null)
+                                    Snackbar.make(getCurrentFocus(), "Revise su conexión a internet e intentelo más tarde", 2000).show();
+                                progressDialog.dismiss();
+
+                            }
+                        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                if(taskSnapshot != null){
+                                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                                    updateUserPhoto(downloadUrl);
+                                }
+                            }
+                        });
+                    } else {
+                        if(getCurrentFocus()!=null)
+                            Snackbar.make(getCurrentFocus(), "Revise su conexión a internet e intentelo más tarde", 2000).show();
+                        progressDialog.dismiss();
+                    }
+                }
+
             }
 
-            if(loadImageResultInImageView(photo, data, orientation)){
-
-                FirebaseStorage storage = FirebaseStorage.getInstance();
-                StorageReference storageRef = storage.getReferenceFromUrl("gs://reduccion-de-obesidad-7414c.appspot.com");
-
-                Calendar cal = Calendar.getInstance();
-                String date = cal.get(Calendar.YEAR) + "" + cal.get(Calendar.MONTH) + "" + cal.get(Calendar.DAY_OF_MONTH) + "" + cal.get(Calendar.HOUR) + "" + cal.get(Calendar.MINUTE) + "" + cal.get(Calendar.SECOND) + "";
-                StorageReference imagesRef = storageRef.child("images/" + mHome.user.getUid() + "/" + date);
-
-
-                photo.setDrawingCacheEnabled(true);
-                photo.buildDrawingCache();
-                Bitmap bitmap = photo.getDrawingCache();
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 60, baos);
-                byte[] dat = baos.toByteArray();
-
-                if (isOnline()) {
-                    configureDBReference();
-
-                    this.progressDialog = ProgressDialog.show(this, "Actualizando foto...", "Espera un momento", true);
-                    this.progressDialog.setCancelable(true);
-
-                    UploadTask uploadTask = imagesRef.putBytes(dat);
-                    uploadTask.addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-
-                            if(getCurrentFocus() != null)
-                                Snackbar.make(getCurrentFocus(), "Revise su conexión a internet e intentelo más tarde", 2000).show();
-                            progressDialog.dismiss();
-
-                        }
-                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            if(taskSnapshot != null){
-                                Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                                updateUserPhoto(downloadUrl);
-                            }
-                        }
-                    });
-                } else {
-                    if(getCurrentFocus()!=null)
-                        Snackbar.make(getCurrentFocus(), "Revise su conexión a internet e intentelo más tarde", 2000).show();
-                    progressDialog.dismiss();
-                }
-            };
         }
     }
 
