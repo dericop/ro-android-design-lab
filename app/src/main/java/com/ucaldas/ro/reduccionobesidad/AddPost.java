@@ -120,6 +120,11 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
     private ArrayAdapter<CharSequence> categoryAdapter;
     private AppCompatActivity thisRef;
 
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -900,62 +905,23 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
                 setPic(mCurrentPhotoPath);
                 //galleryAddPic();
 
-            }else if(requestCode == RESULT_LOAD_IMAGE){//¿Se retornó de tomar una foto?
+            }else if(requestCode == RESULT_LOAD_IMAGE){
 
-                //setPic(mCurrentPhotoPath);
-                //Uri targetUri = data.getData();
-                /*Bitmap bitmap;
-                try {
-                    bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(targetUri));
-
-                    prev.setImageBitmap(bitmap);
-
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }*/
-                /*String mMediaString = targetUri.toString();
-                BitmapFactory.Options bounds = new BitmapFactory.Options();
-                bounds.inJustDecodeBounds = true;
-                BitmapFactory.decodeFile(mMediaString, bounds);
-
-                BitmapFactory.Options opts = new BitmapFactory.Options();
-                Bitmap bm = BitmapFactory.decodeFile(mMediaString, opts);
-
-                prev.setImageBitmap(bm);*/
-                Bitmap bitmap;
-                try {
-                    bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(data.getData()));
-
-                    int targetW = 340;
-                    int targetH = 200;
-
-                    // Get the dimensions of the bitmap
-                    BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-                    bmOptions.inJustDecodeBounds = true;
-                    BitmapFactory.decodeFile(data.getData().toString(), bmOptions);
-                    int photoW = bmOptions.outWidth;
-                    int photoH = bmOptions.outHeight;
-
-                    // Determine how much to scale down the image
-                    int scaleFactor = Math.min(photoW/targetW, photoH/targetH);
-
-                    // Decode the image file into a Bitmap sized to fill the View
-                    bmOptions.inJustDecodeBounds = false;
-                    bmOptions.inSampleSize = scaleFactor;
-                    bmOptions.inPurgeable = true;
-
-
-                    prev.setImageBitmap(bitmap);
-
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
+                Uri targetUri = data.getData();
+                setPic(getRealPathFromURI(targetUri));
 
             }
 
         } else {
             finish();
         }
+    }
+
+    public String getRealPathFromURI(Uri uri) {
+        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+        cursor.moveToFirst();
+        int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+        return cursor.getString(idx);
     }
 
     private void setPic(String path) {
@@ -1052,6 +1018,15 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
         /*
         * Habilita la galería de fotos para adjuntar una foto.
         * */
+
+        if (Build.VERSION.SDK_INT >= 21) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+
+                requestMediaPermission();
+                return;
+            }
+        }
         startMedia();
     }
 
@@ -1171,7 +1146,6 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
                 }else{
                     ErrorDialog.newInstance(getString(R.string.permission_indication))
                             .show(getFragmentManager(), FRAGMENT_DIALOG);
-
                 }
                 break;
             }

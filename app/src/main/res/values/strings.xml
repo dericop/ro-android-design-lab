@@ -22,7 +22,10 @@
     <string name="play_again">Ver de nuevo</string>
 
     <string name="request_permission">El permiso de la cámara es requisito para realizar publicaciones.</string>
+    <string name="request_media_permission">El permiso de lectura y escritura es requerido para realizar publicaciones</string>
     <string name="permission_indication">El permiso de la cámara es requisito para realizar publicaciones y lo has deshabilitado permanentemente, si cambias de opinión ve a ajustes,
+        busca la aplicación y habilitalo.</string>
+    <string name="permission_media_indication">El permiso de lectura y escritura es requisito para realizar publicaciones y lo has deshabilitado permanentemente, si cambias de opinión ve a ajustes,
         busca la aplicación y habilitalo.</string>
     <string name="intro_message">Texto de introducción</string>
     <string name="camera_error">Es necesario el acceso a la camara</string>
