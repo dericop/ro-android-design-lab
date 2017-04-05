@@ -150,7 +150,6 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
         long result = 0;
         if(postMap.get("result") != null){
             result = (long)postMap.get("result");
-            Log.v("DB", result+":result");
         }
         return result;
     }
@@ -229,11 +228,7 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
     //Position: 0 -> ingresar al principio, 1 - ingresar al final
     private void updatePostsFeed(HashMap map, int position){
         final HashMap<String, Object> postMap = map;
-        Log.v("Pagination",postMap.toString());
         final Post post = createBasePost(postMap);
-
-        Log.v("Pages", countOfPages*countOfItemsLoadedForTime+"");
-        Log.v("Pages", mPostList.size()+"");
 
         if(position == 0)
             mPostList.addFirst(post);
@@ -260,41 +255,17 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
                 post.setmUserName(userName);
                 mPostAdapter.notifyDataSetChanged();
 
-                userRef.child(post.getLast_share()).addListenerForSingleValueEvent(new ValueEventListener() {
+                assignCommentsReference();
+                commentRef.orderByChild("id").equalTo(post.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
 
-                        if(dataSnapshot.getValue()!=null && !post.getLast_share().equals("")){
-                            HashMap<String, Object> tooSharedMap = (HashMap) dataSnapshot.getValue();
+                        if(dataSnapshot.getValue()!=null){
+                            long countOfComments = dataSnapshot.getChildrenCount();
 
-                            final String tooSharedName = (String) tooSharedMap.get("mUserName");
-                            Log.v("TooShare", tooSharedName);
-                            post.setLast_share(tooSharedName);
-
+                            post.setCountOfComments(countOfComments);
                             mPostAdapter.notifyDataSetChanged();
                         }
-
-                        assignCommentsReference();
-
-                        Log.v("Counter", post.getId()+"");
-                        commentRef.orderByChild("id").equalTo(post.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                                if(dataSnapshot.getValue()!=null){
-                                    long countOfComments = dataSnapshot.getChildrenCount();
-                                    Log.v("Counter", countOfComments+" cant");
-
-                                    post.setCountOfComments(countOfComments);
-                                    mPostAdapter.notifyDataSetChanged();
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-                        });
                     }
 
                     @Override
@@ -302,6 +273,30 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
 
                     }
                 });
+
+                if(post.getLast_share() != null && !post.getLast_share().equals("")){
+                    userRef.child(post.getLast_share()).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+
+                            if(dataSnapshot.getValue()!=null && !post.getLast_share().equals("")){
+                                HashMap<String, Object> tooSharedMap = (HashMap) dataSnapshot.getValue();
+
+                                final String tooSharedName = (String) tooSharedMap.get("mUserName");
+                                post.setLast_share(tooSharedName);
+
+                                mPostAdapter.notifyDataSetChanged();
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+
+
             }
 
             @Override
@@ -315,8 +310,6 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
     private void searchPostAndUpdate(DataSnapshot dataSnapshot){
 
         final Post postForSearch = dataSnapshot.getValue(Post.class);
-
-        Log.v("Change", "Prueba: "+postForSearch.getLast_share());
 
         DatabaseReference updateReference;
 
@@ -344,16 +337,32 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
 
                 mPostAdapter.notifyDataSetChanged();
 
+                commentRef.orderByChild("id").equalTo(p.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        if(dataSnapshot.getValue()!=null){
+                            long countOfComments = dataSnapshot.getChildrenCount();
+
+                            p.setCountOfComments(countOfComments);
+                            mPostAdapter.notifyDataSetChanged();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
                 if(postForSearch.getLast_share()!=null && !postForSearch.getLast_share().equals("")){
-                    Log.v("Change", postRef.toString());
+
                     updateReference.child(postForSearch.getLast_share()).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
 
                             if(dataSnapshot.getValue()!=null){
                                 HashMap<String, Object> tooSharedMap = (HashMap) dataSnapshot.getValue();
-
-                                Log.v("Counter", tooSharedMap.toString());
 
                                 final String tooSharedName = (String) tooSharedMap.get("mUserName");
                                 p.setLast_share(tooSharedName);
@@ -390,12 +399,10 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 final HashMap<String, Object> postMap = (HashMap)dataSnapshot.getValue();
-                Log.v("Postmap", postMap.toString());
 
                 updatePostsFeed(postMap, 0);
 
                 if(s!=null && isTheFirstItem){
-                    Log.v("Pagination", "last page: "+s);
                     lastPostLoaded = s;
                     isTheFirstItem = false;
                 }
@@ -403,8 +410,6 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-                Log.v("Change", "Changed");
 
                 searchPostAndUpdate(dataSnapshot);
 
@@ -429,13 +434,19 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
     }
 
     private void loadNextPage(){
-        assignPostsReference();
+        //assignPostsReference();
+        DatabaseReference pRef;
 
-        Log.v("Pagination", "last post: "+lastPostLoaded);
+        if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
+            pRef = mDatabase.child("user-posts");
+        }else{
+            pRef = mDatabase.child("user-posts-reflexive");
+        }
+
 
         if(!lastPostLoaded.equals("")){
 
-            postRef.orderByKey().limitToLast(countOfItemsLoadedForTime).endAt(lastPostLoaded).addListenerForSingleValueEvent(new ValueEventListener() {
+            pRef.orderByKey().limitToLast(countOfItemsLoadedForTime).endAt(lastPostLoaded).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if(dataSnapshot.getValue()!=null){
@@ -445,13 +456,11 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
                         postMap.remove(keys.last());
                         keys = new TreeSet(postMap.keySet());
 
-                        Log.v("PaginationData", keys.toString());
                         for (String key : keys) {
 
                             if(isTheFirstItem){
                                 countOfPages++;
                                 lastPostLoaded = key+"";
-                                Log.v("Pagination", "last page: "+key);
                                 isTheFirstItem = false;
                             }
 
@@ -559,7 +568,7 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        Log.v("Detalle", "Click");
+
     }
 
     /**

@@ -28,7 +28,7 @@ public class Post{
     private double r_aa;
     private double r_gs;
     private double r_ch;
-    private long countOfComments;
+    public long countOfComments;
     public long replyCount;
 
     public Post(){

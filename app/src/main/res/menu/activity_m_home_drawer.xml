@@ -7,10 +7,10 @@
             android:icon="@drawable/ic_action_configuration"
             android:title="Configuración"/>
 
-        <item
+        <!--<item
             android:id="@+id/nav_intro"
             android:icon="@drawable/ic_action_assistant"
-            android:title="Ver guía"/>
+            android:title="Ver guía"/>-->
     </group>
 
     <!--<item android:title="Communicate">

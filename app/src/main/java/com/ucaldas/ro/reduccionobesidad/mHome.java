@@ -301,15 +301,15 @@ public class mHome extends AppCompatActivity
             public void onTabSelected(TabLayout.Tab tab) {
                 switch(tab.getPosition()) {
                     case 0:
-                        Log.v("Items", "Home");
+                        //Log.v("Items", "Home");
                         break;
                     case 1:
-                        Log.v("Items", "Mis items");
+                        //Log.v("Items", "Mis items");
                         //myItems.loadItems();
                         break;
                     case 2:
-
-                        Log.v("Items", "Simulación");
+                        //Log.v("Items", "Simulación");
+                        break;
                 }
             }
 
@@ -323,10 +323,6 @@ public class mHome extends AppCompatActivity
 
             }
         });
-    }
-
-    private void showAssitant(){
-        Log.v("Assitant", "Click");
     }
 
     private void createTabIcons() {
@@ -396,9 +392,9 @@ public class mHome extends AppCompatActivity
         if (id == R.id.nav_manage) {
             Intent confIntent = new Intent(getContext(), ConfigurationActivity.class);
             startActivity(confIntent);
-        }else if(id == R.id.nav_intro){
-
-        }
+        }//else if(id == R.id.nav_intro){
+//
+       // }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

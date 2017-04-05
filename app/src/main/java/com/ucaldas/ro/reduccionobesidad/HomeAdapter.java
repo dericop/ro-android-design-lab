@@ -46,8 +46,6 @@ public class HomeAdapter extends ArrayAdapter<Post>{
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         final Post post = getItem(position);
-
-        Log.v("DBT", post.getCategory());
         // ¿Existe el view actual?
         //if (null == convertView) {
         List foodList = Arrays.asList(mContext.getResources().getStringArray(R.array.new_post_food_categories));
@@ -108,7 +106,6 @@ public class HomeAdapter extends ArrayAdapter<Post>{
 
 
         long result = post.getResult();
-        Log.v("DB", result+"");
         if(result == 0){
             if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
                 txtAverage.setVisibility(View.INVISIBLE);
@@ -273,7 +270,6 @@ public class HomeAdapter extends ArrayAdapter<Post>{
                 dialog.setOnShowListener(new DialogInterface.OnShowListener() {
                     @Override
                     public void onShow(DialogInterface d) {
-                        Log.v("PopUp", "Ingreso");
 
                      /* Bitmap icon = BitmapFactory.decodeResource("");
                     float imageWidthInPX = (float)image.getWidth();

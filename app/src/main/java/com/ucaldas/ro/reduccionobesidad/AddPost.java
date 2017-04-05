@@ -131,8 +131,6 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_post); //Asociar esta vista para el control de la interface
 
-        //Log.v("AUser", mHome.user.getUid());
-
         configureToolbarAndActions();
         assignActivitySourceAndInitData(savedInstanceState);
 
@@ -326,34 +324,33 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         assignUserDataReference();
+                                        if(mHome.user != null){
+                                            database.child(mHome.user.getUid()).orderByChild("id").equalTo(idForUpdate).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(DataSnapshot dataSnapshot) {
 
-                                        database.child(mHome.user.getUid()).orderByChild("id").equalTo(idForUpdate).addListenerForSingleValueEvent(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                                    if(dataSnapshot.hasChildren()){
+                                                        HashMap<String, Object> map = (HashMap)dataSnapshot.getValue();
+                                                        SortedSet<String> keys = new TreeSet<String>(map.keySet());
+                                                        String keyForDelete = keys.first();
 
-                                                if(dataSnapshot.hasChildren()){
-                                                    HashMap<String, Object> map = (HashMap)dataSnapshot.getValue();
-                                                    SortedSet<String> keys = new TreeSet<String>(map.keySet());
-                                                    String keyForDelete = keys.first();
-
-                                                    Log.v("Delete", keyForDelete);
-
-                                                    database.child(mHome.user.getUid()).child(keyForDelete).removeValue(new DatabaseReference.CompletionListener() {
-                                                        @Override
-                                                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                                                            //progress.dismiss();
-                                                        }
-                                                    });
+                                                        database.child(mHome.user.getUid()).child(keyForDelete).removeValue(new DatabaseReference.CompletionListener() {
+                                                            @Override
+                                                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                                                //progress.dismiss();
+                                                            }
+                                                        });
+                                                    }
                                                 }
-                                            }
 
-                                            @Override
-                                            public void onCancelled(DatabaseError databaseError) {
+                                                @Override
+                                                public void onCancelled(DatabaseError databaseError) {
 
-                                            }
-                                        });
-
+                                                }
+                                            });
+                                        }
                                         finish();
+
                                     }
 
                                 })
@@ -447,14 +444,12 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
         database.runTransaction(new Transaction.Handler() {
             @Override
             public Transaction.Result doTransaction(MutableData mutableData) {
-                Log.v("Reply", "Ingreso transaccion");
 
                 Post p = mutableData.getValue(Post.class);
 
                 if (p == null) {
                     return Transaction.success(mutableData);
                 }
-                Log.v("Reply", "Compartiendo");
                 p.replyCount = p.replyCount + 1;
 
                 // Set value and report transaction success
@@ -495,7 +490,6 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
             Post post = getPostData(idForReply, imageForReply);
             Map<String, Object> mapForItems = post.toMap();
 
-            Log.v("db", idForReply);
 
             Map<String, Object> mapForUpdate = new HashMap<>();
 
@@ -608,7 +602,6 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
                         finish();
 
                     } else {
-                        Log.v("DB", task.getResult() + "");
                         progress.dismiss();
                         if(getCurrentFocus()!=null)
                             Snackbar.make(getCurrentFocus(), "Revise su conexión a internet o intentelo más tarde", 2000).show();
@@ -634,7 +627,6 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
             updateref.orderByChild("id").equalTo(idForUpdate).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    Log.v("Update", dataSnapshot.getValue()+ "");
 
                     progress = ProgressDialog.show(that, "Actualizando Publicación...",
                             "Espera un momento", true);
@@ -677,7 +669,6 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
                                         finish();
 
                                     } else {
-                                        Log.v("DB", task.getResult() + "");
                                         progress.dismiss();
                                         if(getCurrentFocus()!=null)
                                             Snackbar.make(getCurrentFocus(), "Revise su conexión a internet o intentelo más tarde", 2000).show();
@@ -897,7 +888,6 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
         * */
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.v("CameraE", resultCode+"");
         if (resultCode == RESULT_OK) {
 
             if (requestCode == REQUEST_IMAGE_CAPTURE) {
@@ -1114,7 +1104,6 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    Log.v("Camera", "Tienes permiso");
                     startCamera();
 
                 } else if(ActivityCompat.shouldShowRequestPermissionRationale(this, permissions[0])){
@@ -1134,7 +1123,6 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    Log.v("Camera", "Tienes permiso");
                     startMedia();
 
                 } else if(ActivityCompat.shouldShowRequestPermissionRationale(this, permissions[0])){

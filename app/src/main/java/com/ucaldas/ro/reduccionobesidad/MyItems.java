@@ -96,14 +96,14 @@ public class MyItems extends Fragment {
                     FirebaseUser user = firebaseAuth.getCurrentUser();
                     if (user != null) {
                         // AUser is signed in
-                        Log.d("AUser", "onAuthStateChanged:signed_in:" + user.getUid());
+                        //Log.d("AUser", "onAuthStateChanged:signed_in:" + user.getUid());
 
                         mHome.user = user; //Asignación de usuario a la clase principal
                         getDataFromDB();
 
                     } else {
                         // AUser is signed out
-                        Log.d("AUser", "onAuthStateChanged:signed_out");
+                        //Log.d("AUser", "onAuthStateChanged:signed_out");
 
                     }
                 }

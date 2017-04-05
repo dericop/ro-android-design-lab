@@ -30,6 +30,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.DateFormat;
@@ -127,7 +129,6 @@ public class PostDetail extends AppCompatActivity {
             coconoQualificationContainer.setVisibility(View.GONE);
 
             LinearLayout resultItem = (LinearLayout) findViewById(R.id.result_item);
-            Log.v("Result", result+"result ");
 
             switch ((int)result) {
                 case 0:
@@ -175,7 +176,7 @@ public class PostDetail extends AppCompatActivity {
                 Calendar cal = Calendar.getInstance();
                 long timeInMillis = cal.getTimeInMillis();
 
-                Comment com = new Comment(comment, timeInMillis, postId);
+                final Comment com = new Comment(comment, timeInMillis, postId);
                 com.setUser(mHome.user.getUid());
                 com.setUserPhoto(mHome.user.getPhotoUrl().toString());
 
@@ -205,11 +206,11 @@ public class PostDetail extends AppCompatActivity {
 
                         if (task.isSuccessful()) {
                             updateComments();
+                            addCommentsCounterToPost(com.getId());
                             editMessage.setText("");
                             closeKeyboard();
 
                         } else {
-                            Log.v("DB", task.getResult() + "");
                             if(getCurrentFocus()!=null)
                                 Snackbar.make(getCurrentFocus(), "Revise su conexión a internet o intentelo más tarde", 2000).show();
                         }
@@ -223,6 +224,42 @@ public class PostDetail extends AppCompatActivity {
             View piContainer = findViewById(R.id.piContainer);
             Snackbar.make(piContainer, "No tienes conexión a internet", Snackbar.LENGTH_INDEFINITE).show();
         }
+    }
+
+    private void addCommentsCounterToPost(String idPost){
+
+        if(WelcomeActivity.CURRENT_APP_VERSION.equals("A"))
+            datRef = database.getReference().child("user-posts");
+        else
+            datRef = database.getReference().child("user-posts-reflexive");
+
+        datRef.child(idPost).runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(MutableData mutableData) {
+
+                Post p = mutableData.getValue(Post.class);
+
+                if (p == null) {
+                    return Transaction.success(mutableData);
+                }
+
+                p.countOfComments = p.countOfComments + 1;
+
+                mutableData.setValue(p);
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
+                if(databaseError!=null){
+                    if(getCurrentFocus()!=null){
+                        Snackbar.make(getCurrentFocus(), "Revise su conexión a internet o intentelo más tarde", 2000).show();
+                    }
+                }
+            }
+
+        });
+
     }
 
     private void getPostComments(){
@@ -315,7 +352,7 @@ public class PostDetail extends AppCompatActivity {
                     configureDatabase();
                     getCommentsDetail();
                 }catch (DatabaseException de){
-                    Log.v("Error", de.getMessage());
+                    //Log.v("Error", de.getMessage());
                 }
 
             }

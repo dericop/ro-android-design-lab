@@ -350,12 +350,6 @@ public class Simulationv2 extends Fragment {
         chAverage /= chFrecuencies;
         afAverage /= afFrecuencies;
 
-        Log.v("Simulation", piAverage+"");
-        Log.v("Simulation", aaAverage+"");
-        Log.v("Simulation", gsAverage+"");
-        Log.v("Simulation", chAverage+"");
-        Log.v("Simulation", aaFrecuencies+"");
-
         updatePiViews(view, countOfPi, piAverage);
         updateAAViews(view, countOfAa, aaAverage);
         updateGSViews(view, countOfGs, gsAverage);

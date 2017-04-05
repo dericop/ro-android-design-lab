@@ -102,7 +102,6 @@ public class LoginActivity extends AppCompatActivity implements
                     AUser newUser = new AUser(user.getUid(), user.getDisplayName(), user.getEmail(), user.getPhotoUrl().toString());
                     DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
-
                     PrefManager prefManager;
                     prefManager = new PrefManager(that);
 
@@ -114,15 +113,14 @@ public class LoginActivity extends AppCompatActivity implements
                     }
 
                     if(FirebaseInstanceIDService.currentToken != null){
-                        Log.v("Notify",FirebaseInstanceIDService.currentToken);
-                        mDatabase.child("users").child(user.getUid()).child("notificationTokens").setValue(FirebaseInstanceIDService.currentToken);
+                        //Log.v("Notify",FirebaseInstanceIDService.currentToken);
+                        //mDatabase.child("users").child(user.getUid()).child("notificationTokens").setValue(FirebaseInstanceIDService.currentToken);
                     }
 
                     startActivity(new Intent(getBaseContext(), mHome.class));
 
                 } else {
                     // AUser is signed out
-                    Log.d("AUser", "onAuthStateChanged:signed_out");
                     //progress.dismiss();
                     Toast.makeText(getBaseContext(), getString(R.string.login_fail), Toast.LENGTH_LONG);
 
@@ -136,7 +134,6 @@ public class LoginActivity extends AppCompatActivity implements
     protected void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
-        Log.v("Notify", "Siempre paso aca");
         /*progress = ProgressDialog.show(this, "Iniciando Sesión...",
                 "Espera un momento", true);*/
     }
@@ -206,7 +203,7 @@ public class LoginActivity extends AppCompatActivity implements
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Log.v("AUser", connectionResult.getErrorMessage());
+        //Log.v("AUser", connectionResult.getErrorMessage());
         Snackbar.make(getCurrentFocus(), "Revise su conexión a internet e intentelo más tarde", 2000).show();
     }
 
