@@ -1063,8 +1063,6 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
                 startActivityForResult(takePictureIntent, RESULT_LOAD_IMAGE);
             }
         }
-
-
     }
 
     private void startCamera(){

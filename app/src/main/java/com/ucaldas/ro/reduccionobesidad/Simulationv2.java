@@ -254,13 +254,12 @@ public class Simulationv2 extends Fragment {
                         final Map<String, HashMap> data = (HashMap) dataSnapshot.getValue();
                         if(data != null){
 
-
                             final LinkedList<String> keys = new LinkedList();
                             keys.addAll(data.keySet());
-
+                            final AtomicInteger countOfElements = new AtomicInteger(-1);
 
                             for(final String key: keys){
-
+                                countOfElements.incrementAndGet();
                                 Map<String, Object> post = data.get(key);
 
                                 quaDBRef.child(post.get("id") + "").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -270,7 +269,7 @@ public class Simulationv2 extends Fragment {
                                             Post post = dataSnapshot.getValue(Post.class);
                                             if (post.getResult() != 0) {
                                                 calculatePostQualification(post, frecuenciesCost, frecuencies, foodsCategories);
-
+                                                Log.v("Azucar", keys.indexOf(key)+" "+(keys.size() - 1)+ " "+countOfElements);
                                                 if (keys.indexOf(key) == (keys.size() - 1)){
                                                     updateViewsAndRestarData(view);
                                                     swiperefresh.setRefreshing(false);
@@ -286,9 +285,6 @@ public class Simulationv2 extends Fragment {
                                 });
 
                             }
-
-
-
                         }
                     }
 
@@ -308,12 +304,49 @@ public class Simulationv2 extends Fragment {
     private void calculatePostQualification(Post post, List<String> frecuenciesCost, List<String> frecuencies, List<String> foodsCategories) {
 
         long frecuency = Integer.parseInt(frecuenciesCost.get(frecuencies.indexOf(post.getFrecuency())));
+        List foodList = Arrays.asList(this.getResources().getStringArray(R.array.new_post_food_categories));
 
         if(!foodsCategories.contains(post.getCategory())){
             if(post.getAverage() != 0){
-                afAverage += Double.parseDouble(post.getAverage()+"")*frecuency;
+                int average = (int)post.getAverage();
+
                 countOfAF++;
                 afFrecuencies +=frecuency;
+
+                switch (average){
+                    case 1:
+                        average = 10;
+                        break;
+                    case 2:
+                        average = 9;
+                        break;
+                    case 3:
+                        average = 8;
+                        break;
+                    case 4:
+                        average = 7;
+                        break;
+                    case 5:
+                        average = 6;
+                        break;
+                    case 6:
+                        average = 5;
+                        break;
+                    case 7:
+                        average = 4;
+                        break;
+                    case 8:
+                        average = 3;
+                        break;
+                    case 9:
+                        average = 2;
+                        break;
+                    case 10:
+                        average = 1;
+                        break;
+                }
+
+                afAverage += average*frecuency;
             }
 
         }else{
@@ -350,12 +383,13 @@ public class Simulationv2 extends Fragment {
         chAverage /= chFrecuencies;
         afAverage /= afFrecuencies;
 
+        Log.v("Azucar", aaAverage+"");
+
         updatePiViews(view, countOfPi, piAverage);
         updateAAViews(view, countOfAa, aaAverage);
         updateGSViews(view, countOfGs, gsAverage);
         updateCHViews(view, countOfCh, chAverage);
         updateAFViews(view, countOfAF, afAverage);
-
 
          piAverage = 0;
          aaAverage = 0;

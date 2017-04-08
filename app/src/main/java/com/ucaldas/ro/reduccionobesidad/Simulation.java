@@ -248,19 +248,22 @@ public class Simulation extends Fragment {
 
                             final LinkedList<String> keys = new LinkedList();
                             keys.addAll(data.keySet());
+                            final AtomicInteger countOfElements = new AtomicInteger(-1);
 
                             for (final String key : keys) {
 
                                 Map<String, Object> post = data.get(key);
-
+                                countOfElements.incrementAndGet();
                                 quaDBRef.child(post.get("id") + "").addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         if (dataSnapshot.getValue() != null) {
                                             Post post = dataSnapshot.getValue(Post.class);
                                             if (post.getResult() != 0) {
+
                                                 calculatePostQualification(post, frecuenciesCost, frecuencies, sumOfFrecuencies, countOfHealthy, countOfMedium, countOfBad);
-                                                if (keys.indexOf(key) == (keys.size() - 1)){
+                                                Log.v("Total", countOfElements+"");
+                                                if (countOfElements.get() == (keys.size() - 1)){
                                                     updateViewsAndRestarData(countOfHealthy, countOfMedium, countOfBad, view, sumOfFrecuencies);
                                                     swiperefresh.setRefreshing(false);
                                                 }
@@ -306,9 +309,49 @@ public class Simulation extends Fragment {
         long result = post.getResult();
         long frecuency = Integer.parseInt(frecuenciesCost.get(frecuencies.indexOf(post.getFrecuency())));
 
-        sumOfFrecuencies.addAndGet((int) frecuency);
+        Log.v("Category", post.getCategory());
 
-        double averagePon = post.getAverage() * frecuency;
+        sumOfFrecuencies.addAndGet((int) frecuency);
+        List foodList = Arrays.asList(this.getResources().getStringArray(R.array.new_post_food_categories));
+        int average = (int)post.getAverage();
+
+        if(!foodList.contains(post.getCategory())){
+            switch (average){
+                case 1:
+                    average = 10;
+                    break;
+                case 2:
+                    average = 9;
+                    break;
+                case 3:
+                    average = 8;
+                    break;
+                case 4:
+                    average = 7;
+                    break;
+                case 5:
+                    average = 6;
+                    break;
+                case 6:
+                    average = 5;
+                    break;
+                case 7:
+                    average = 4;
+                    break;
+                case 8:
+                    average = 3;
+                    break;
+                case 9:
+                    average = 2;
+                    break;
+                case 10:
+                    average = 1;
+                    break;
+            }
+
+        }
+
+        double averagePon = average * frecuency;
 
         if (result == 3) {
             goodHabitsAverage += averagePon;
@@ -322,7 +365,7 @@ public class Simulation extends Fragment {
         }
 
         try {
-            totalAverage += post.getAverage() * frecuency;
+            totalAverage += average * frecuency;
         } catch (NumberFormatException ex) {
             totalAverage += 0.0;
         }
