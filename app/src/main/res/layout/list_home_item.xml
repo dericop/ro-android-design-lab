@@ -82,7 +82,7 @@
                     android:layout_alignLeft="@id/post_name"
                     android:textAppearance="?attr/textAppearanceListItem"
                     tools:text="Alexander Pierrot"
-                    android:textSize="18dp"
+                    android:textSize="18sp"
                     android:fontFamily="sans-serif"
                     android:textStyle="normal|bold"
                     android:textColor="#808285"

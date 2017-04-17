@@ -77,6 +77,8 @@ public class mHome extends AppCompatActivity
     private Simulation simulation;
     private Simulationv2 simulationv2;
     private MyItems myItems;
+    private TipsFragment tips;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -273,6 +275,7 @@ public class mHome extends AppCompatActivity
         * */
         home = new Home();
         myItems = new MyItems();
+        tips = new TipsFragment();
 
         if(WelcomeActivity.CURRENT_APP_VERSION.equals("A"))
             simulation = new Simulation();
@@ -288,8 +291,10 @@ public class mHome extends AppCompatActivity
         else
             adapter.addFragment(simulationv2, "Simulación");
 
+        adapter.addFragment(tips, "Detonantes");
+
         viewPager.setAdapter(adapter);
-        viewPager.setOffscreenPageLimit(2);
+        viewPager.setOffscreenPageLimit(3);
 
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
@@ -347,6 +352,12 @@ public class mHome extends AppCompatActivity
 
         tabThree.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_action_simulation, 0, 0);
         tabLayout.getTabAt(2).setCustomView(tabThree);
+
+        TextView tabFour = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        tabFour.setText("Tips");
+        tabFour.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_action_home, 0, 0);
+        tabLayout.getTabAt(3).setCustomView(tabFour);
+
     }
 
     @Override

@@ -120,6 +120,8 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
     private ArrayAdapter<CharSequence> categoryAdapter;
     private AppCompatActivity thisRef;
 
+    private final String FILE_PROVIDER = "com.ucaldas.android.cocono.fileprovider";
+
     private static String[] PERMISSIONS_STORAGE = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
@@ -1057,7 +1059,7 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
 
             if (photoFile != null) {
                 Uri photoURI = FileProvider.getUriForFile(this,
-                        "com.ucaldas.android.fileprovider",
+                        FILE_PROVIDER,
                         photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, RESULT_LOAD_IMAGE);
@@ -1084,7 +1086,7 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
 
             if (photoFile != null) {
                 Uri photoURI = FileProvider.getUriForFile(this,
-                        "com.ucaldas.android.fileprovider",
+                        FILE_PROVIDER,
                         photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);

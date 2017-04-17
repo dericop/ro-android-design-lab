@@ -250,10 +250,12 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
             @Override
             public void onDataChange(DataSnapshot dataSnapshot){
 
-                HashMap<String, Object> userMap = (HashMap)dataSnapshot.getValue();
-                final String userName = (String)userMap.get("mUserName");
-                post.setmUserName(userName);
-                mPostAdapter.notifyDataSetChanged();
+                if(dataSnapshot.getValue() != null){
+                    HashMap<String, Object> userMap = (HashMap)dataSnapshot.getValue();
+                    final String userName = (String)userMap.get("mUserName");
+                    post.setmUserName(userName);
+                    mPostAdapter.notifyDataSetChanged();
+                }
 
                 assignCommentsReference();
                 commentRef.orderByChild("id").equalTo(post.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -295,8 +297,6 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
                         }
                     });
                 }
-
-
             }
 
             @Override

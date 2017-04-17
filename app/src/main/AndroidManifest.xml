@@ -94,9 +94,10 @@
             android:label="Configuración"
             android:screenOrientation="portrait"/>
 
+        <!-- eliminar .cocono al exportar corus -->
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.ucaldas.android.fileprovider"
+            android:authorities="com.ucaldas.android.cocono.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
