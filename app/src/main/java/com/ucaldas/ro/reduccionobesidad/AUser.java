@@ -16,6 +16,7 @@ public class AUser {
     private String mPhotoUrl;
     private String mGender;
     private long mWeight;
+    private long isAdmin;
 
     public AUser(){
 
@@ -88,5 +89,13 @@ public class AUser {
 
     public void setmWeight(long mWeight) {
         this.mWeight = mWeight;
+    }
+
+    public long getIsAdmin() {
+        return isAdmin;
+    }
+
+    public void setIsAdmin(long isAdmin) {
+        this.isAdmin = isAdmin;
     }
 }

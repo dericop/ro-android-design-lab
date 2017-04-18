@@ -154,17 +154,20 @@
     <string name="title_activity_library_post">Nueva Publicación</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+
+    <string name="large_text1">
+        "A material metaphor is the unifying theory of a rationalized space and a system of motion."
+        "The material is grounded in tactile reality, inspired by the study of paper and ink, yet "
+        "technologically advanced and open to imagination and magic.\n"
+        "A material metaphor is the unifying theory of a rationalized space and a system of motion."
+        "The material is grounded in tactile reality, inspired by the study of paper and ink, yet "
+        "technologically advanced and open to imagination and magic.\n"
+    </string>
+
     <string name="medium_text">
         "A material metaphor is the unifying theory of a rationalized space and a system of motion."
         "The material is grounded in tactile reality, inspired by the study of paper and ink, yet "
         "technologically advanced and open to imagination and magic.\n"
-        "Surfaces and edges of the material provide visual cues that are grounded in reality. The "
-        "use of familiar tactile attributes helps users quickly understand affordances. Yet the "
-        "flexibility of the material creates new affordances that supercede those in the physical "
-        "world, without breaking the rules of physics.\n"
-        "The fundamentals of light, surface, and movement are key to conveying how objects move, "
-        "interact, and exist in space and in relation to each other. Realistic lighting shows "
-        "seams, divides space, and indicates moving parts.\n\n"
     </string>
 
     <string name="large_text">
@@ -285,7 +288,10 @@
     <string name="add_radio_activity">Actividad</string>
     <string name="add_radio_food">Alimento</string>
     <string name="add_name_label">Nombre</string>
+    <string name="add_tip_name_label">Nombre del anuncio</string>
     <string name="add_activity_duration">Duración de la actividad</string>
+    <string name="add_tip_type">Tipo de anuncio</string>
+    <string name="add_tip_description_label">Descripción</string>
     <string name="add_save_text">Guardar</string>
 
     <string name="conf_name">Nombre</string>
@@ -396,5 +402,6 @@
     <string name="terms_subtitle_paragraph9">8. Jurisdicción de Elección</string>
     <string name="terms_paragraph9">8.1 Las partes eligen como competente para resolver las controversias que puedan surgir de la interpretación y ejecución de estos términos al Departamento de Diseño Visual de la Universidad de Caldas.Última actualización: 31 de enero de 2017.</string>
     <string name="btn_agree">Acepto</string>
+    <string name="title_activity_tip_detail">TipDetailActivity</string>
 
 </resources>

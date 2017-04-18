@@ -37,8 +37,6 @@
 
     </RelativeLayout>
 
-
-
     <com.getbase.floatingactionbutton.FloatingActionsMenu
         android:id="@+id/btn_actions_menu"
         android:layout_width="wrap_content"
@@ -52,6 +50,32 @@
         android:layout_marginBottom="10dp"
         fab:fab_icon="@drawable/ic_action_camera"
         android:layout_gravity="bottom|end">
+
+        <LinearLayout
+            android:layout_width="264dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:id="@+id/tip_button_container">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:background="@drawable/label_border_radius"
+                android:text="Agregar Tip"
+                android:textColor="#fff" />
+
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                fab:fab_colorNormal="@color/colorPrimary"
+                fab:fab_title="Label on the right"
+                fab:fab_icon="@drawable/ic_add_tip"
+                fab:fab_colorPressed="@color/colorPrimary"
+                android:id="@+id/btn_add_tip"
+                fab:fab_size="normal"/>
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="264dp"

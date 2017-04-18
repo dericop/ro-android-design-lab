@@ -18,18 +18,18 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:paddingTop="3dp"
-        android:paddingBottom="10dp">
+        android:paddingBottom="15dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Este es un titulo largo, de alrededor de dos o mas renglones o quizá más"
+            android:text="Este es un titulo largo"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:paddingTop="8dp"
             android:paddingBottom="4dp"
             android:textStyle="bold"
-            android:textSize="15sp"
+            android:textSize="17sp"
             android:textColor="#e6e6e7"
             android:fontFamily="sans-serif"/>
 
@@ -63,7 +63,7 @@
 
                 <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="65dp"
+                    android:layout_height="match_parent"
                     android:id="@+id/top_data_container"
                     android:orientation="vertical">
 
@@ -71,10 +71,10 @@
                         android:id="@+id/txt_too"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/medium_text"
+                        android:text="@string/large_text1"
                         android:textColor="#dadada"
                         android:textSize="13sp"
-                        android:maxLines="4"
+                        android:maxLines="6"
                         android:paddingLeft="12dp"
                         android:paddingStart="12dp"
                         android:paddingRight="16dp"
@@ -83,55 +83,6 @@
                         android:ellipsize="end"/>
 
                 </LinearLayout>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginRight="16dp"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginStart="14dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginTop="10dp"
-                    android:background="#8b8989"/>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:paddingLeft="12dp"
-                    android:paddingRight="5dp"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="5dp">
-
-                    <RelativeLayout
-                        android:layout_width="50dp"
-                        android:layout_height="match_parent"
-                        android:id="@+id/commentsContainer"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true">
-
-                        <ImageButton
-                            android:id="@+id/action_comment"
-                            android:layout_width="23dp"
-                            android:layout_height="23dp"
-                            android:background="@drawable/ic_action_comment"
-                            android:layout_gravity="center"
-                            android:layout_marginTop="2dp"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="0"
-                            android:textColor="#dadada"
-                            android:layout_alignTop="@+id/action_comment"
-                            android:layout_marginLeft="25dp"
-                            android:layout_marginStart="25dp"
-                            android:textSize="12sp"
-                            android:id="@+id/commentCounter"
-                            android:textStyle="normal|bold" />
-
-                    </RelativeLayout>
-
-                </RelativeLayout>
 
             </LinearLayout>
 

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -32,6 +33,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,6 +49,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+import com.ucaldas.ro.reduccionobesidad.dummy.DummyContent;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -58,7 +61,7 @@ import co.mobiwise.materialintro.shape.ShapeType;
 import co.mobiwise.materialintro.view.MaterialIntroView;
 
 public class mHome extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, TipsFragment.OnListFragmentInteractionListener {
 
     private TabLayout tabLayout;
 
@@ -78,6 +81,8 @@ public class mHome extends AppCompatActivity
     private Simulationv2 simulationv2;
     private MyItems myItems;
     private TipsFragment tips;
+
+    private FloatingActionButton btn_add_tip;
 
 
     @Override
@@ -177,6 +182,12 @@ public class mHome extends AppCompatActivity
                             String displayName = user.getmUserName();
                             String image = user.getmPhotoUrl();
 
+                            LinearLayout tipBtnContainer = (LinearLayout) findViewById(R.id.tip_button_container);
+                            if(user.getIsAdmin() == 1)
+                                tipBtnContainer.setVisibility(View.VISIBLE);
+                            else
+                                tipBtnContainer.setVisibility(View.GONE);
+
                             navHeaderTitle.setText(displayName);
                             Picasso.with(getBaseContext()).load(image).into(imageView);
                         }
@@ -204,9 +215,8 @@ public class mHome extends AppCompatActivity
         * Configuración de las acciones del botón flotante.
         * */
         final FloatingActionsMenu btn_actions_menu = (FloatingActionsMenu) findViewById(R.id.btn_actions_menu);
-
-
         final FloatingActionButton camera_action = (FloatingActionButton) findViewById(R.id.btn_add_post_camera);
+
 
         camera_action.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -230,18 +240,15 @@ public class mHome extends AppCompatActivity
         });
 
 
-        /*new MaterialIntroView.Builder(this)
-                .enableDotAnimation(false)
-                .enableIcon(true)
-                .setMaskColor(R.color.black_overlay)
-                .setFocusGravity(FocusGravity.CENTER)
-                .setFocusType(Focus.NORMAL)
-                .enableFadeAnimation(true)
-                .performClick(false)
-                .setInfoText("Hi There! Click this card and see what happens.")
-                .setTarget(camera_action)
-                .setUsageId("intro_card") //THIS SHOULD BE UNIQUE ID
-                .show();*/
+        btn_add_tip = (FloatingActionButton) findViewById(R.id.btn_add_tip);
+        btn_add_tip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent addTipIntent = new Intent(getBaseContext(), AddTipActivity.class);
+                startActivity(addTipIntent);
+                btn_actions_menu.collapse();
+            }
+        });
 
         /*TutoShowcase.from(this)
                 .setContentView(R.layout.list_home_item_reflexive)
@@ -304,6 +311,7 @@ public class mHome extends AppCompatActivity
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+
                 switch(tab.getPosition()) {
                     case 0:
                         //Log.v("Items", "Home");
@@ -358,6 +366,8 @@ public class mHome extends AppCompatActivity
         tabFour.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_action_home, 0, 0);
         tabLayout.getTabAt(3).setCustomView(tabFour);
 
+
+
     }
 
     @Override
@@ -410,6 +420,13 @@ public class mHome extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+        Intent tipDetailIntent = new Intent(this, TipDetailActivity.class);
+        startActivity(tipDetailIntent);
+
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
