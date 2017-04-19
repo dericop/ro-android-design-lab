@@ -395,7 +395,6 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
         addSaveEventListener();
 
         changeStatusBarColor();

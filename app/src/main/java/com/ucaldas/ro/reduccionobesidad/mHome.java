@@ -75,6 +75,8 @@ public class mHome extends AppCompatActivity
     /* Atributos para el control de usuarios */
     static FirebaseUser user;
 
+    static boolean isAdmin = false;
+
     // Tab References
     private Home home;
     private Simulation simulation;
@@ -183,11 +185,14 @@ public class mHome extends AppCompatActivity
                             String image = user.getmPhotoUrl();
 
                             LinearLayout tipBtnContainer = (LinearLayout) findViewById(R.id.tip_button_container);
-                            if(user.getIsAdmin() == 1)
+                            if(user.getIsAdmin() == 1){
                                 tipBtnContainer.setVisibility(View.VISIBLE);
-                            else
-                                tipBtnContainer.setVisibility(View.GONE);
+                                isAdmin = true;
 
+                            } else {
+                                tipBtnContainer.setVisibility(View.GONE);
+                                isAdmin = false;
+                            }
                             navHeaderTitle.setText(displayName);
                             Picasso.with(getBaseContext()).load(image).into(imageView);
                         }

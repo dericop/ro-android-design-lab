@@ -14,15 +14,19 @@ public class Tip {
     private String id;
     private String name;
     private String type;
+    private String description;
     private String image;
+    private String app;
 
     public Tip(){}
 
-    public Tip(String id, String name, String type, String image){
+    public Tip(String id, String name, String type, String description, String image, String app){
         this.id = id;
         this.name = name;
         this.type = type;
         this.image = image;
+        this.description = description;
+        this.app = app;
     }
 
     public String getId() {
@@ -57,6 +61,22 @@ public class Tip {
         this.image = image;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getApp() {
+        return app;
+    }
+
+    public void setApp(String app) {
+        this.app = app;
+    }
+
     @Exclude
     public Map<String, String> toMap(){
         HashMap<String, String> map = new HashMap<>();
@@ -64,12 +84,10 @@ public class Tip {
         map.put("name", name);
         map.put("type", type);
         map.put("image", image);
+        map.put("description", description);
 
         return map;
     }
-
-
-
 
 
 }

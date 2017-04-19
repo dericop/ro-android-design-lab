@@ -404,4 +404,10 @@
     <string name="btn_agree">Acepto</string>
     <string name="title_activity_tip_detail">TipDetailActivity</string>
 
+    <string-array name="tips_types">
+        <item>Psicológico</item>
+        <item>Alimentos</item>
+        <item>Actividad Física</item>
+    </string-array>
+
 </resources>

@@ -40,6 +40,9 @@ public class TipDetailActivity extends AppCompatActivity {
                 
             }
         });
+
+        if(!mHome.isAdmin)
+            delete.setVisibility(View.GONE);
     }
 
     private void changeStatusBarColor() {
