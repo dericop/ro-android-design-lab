@@ -1,6 +1,8 @@
 package com.ucaldas.ro.reduccionobesidad;
 
 import android.*;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -8,6 +10,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -30,13 +34,24 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AddTipActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
@@ -51,6 +66,9 @@ public class AddTipActivity extends AppCompatActivity implements ActivityCompat.
     private static final int REQUEST_STORAGE_PERMISSION = 2;
     static final int RESULT_LOAD_IMAGE = 2;
     private static final String FRAGMENT_DIALOG = "dialog";
+
+    private ProgressDialog progress;
+    final AppCompatActivity that = this;
 
     //Atributos de base de datos
     private DatabaseReference database;
@@ -109,23 +127,101 @@ public class AddTipActivity extends AppCompatActivity implements ActivityCompat.
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String name = title.getText().toString();
-                String type = tipType.getSelectedItem().toString();
-                String description = descriptionC.getText().toString();
-                Drawable image = imagePreview.getDrawable();
-                String app;
-
-                if(WelcomeActivity.CURRENT_APP_VERSION.equals("A"))
-                    app = "A";
-                else
-                    app = "R";
+                final String name = title.getText().toString();
+                final String type = tipType.getSelectedItem().toString();
+                final String description = descriptionC.getText().toString();
+                final Drawable image = imagePreview.getDrawable();
+                final String app = WelcomeActivity.CURRENT_APP_VERSION;
 
                 if (formIsValid(name, type, description, image)) {
-                    Tip tip = new Tip("", name, type, description, "", app);
-                    
+                    saveButton.setEnabled(false);
+                    progress = ProgressDialog.show(that, "Agregando anuncio...",
+                            "Espera un momento", true);
+
+                    FirebaseStorage storage = FirebaseStorage.getInstance();
+                    StorageReference storageRef = storage.getReferenceFromUrl("gs://reduccion-de-obesidad-7414c.appspot.com");
+
+                    imagePreview.setDrawingCacheEnabled(true);
+                    imagePreview.buildDrawingCache();
+                    Bitmap bitmap = imagePreview.getDrawingCache();
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 60, baos);
+                    byte[] data = baos.toByteArray();
+
+
+                    Calendar cal = Calendar.getInstance();
+                    String date = cal.get(Calendar.YEAR) + "" + cal.get(Calendar.MONTH) + "" + cal.get(Calendar.DAY_OF_MONTH) + "" + cal.get(Calendar.HOUR) + "" + cal.get(Calendar.MINUTE) + "" + cal.get(Calendar.SECOND) + "";
+
+                    StorageReference imagesRef = storageRef.child("tips/" +  date);
+
+                    if (isOnline()) {
+                        UploadTask uploadTask = imagesRef.putBytes(data);
+                        uploadTask.addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                                // Handle unsuccessful uploads
+                                if(getCurrentFocus() != null)
+                                    Snackbar.make(getCurrentFocus(), "Revise su conexión a internet e intentelo más tarde", 2000).show();
+                                progress.dismiss();
+
+                            }
+                        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                                @SuppressWarnings("VisibleForTests") final Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                                addTip(name, type, description, downloadUrl, app);
+
+                            }
+                        });
+                    } else {
+                        if(getCurrentFocus()!=null)
+                            Snackbar.make(getCurrentFocus(), "Revise su conexión a internet e intentelo más tarde", 2000).show();
+                        progress.dismiss();
+                    }
+
+
                 }
             }
         });
+    }
+
+    private void addTip(String name, String type, String description, Uri downloadUrl, String app){
+
+        String key = database.push().getKey();
+        Tip tip = new Tip(key, name, type, description, downloadUrl.toString(), app);
+
+        Map<String, Object> postValues = tip.toMap();
+        Map<String, Object> childUpdates = new HashMap<>();
+
+        childUpdates.put(key, postValues);
+
+        OnCompleteListener saveListener = new OnCompleteListener() {
+            @Override
+            public void onComplete(@NonNull Task task) {
+
+                if (task.isSuccessful()) {
+                    progress.dismiss();
+                    saveButton.setEnabled(true);
+                    finish();
+
+                } else {
+                    progress.dismiss();
+                    saveButton.setEnabled(true);
+                    if(getCurrentFocus()!=null)
+                        Snackbar.make(getCurrentFocus(), "Revise su conexión a internet o intentelo más tarde", 2000).show();
+                }
+            }
+        };
+
+        database.updateChildren(childUpdates).addOnCompleteListener(saveListener);
+    }
+
+    public boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
     private boolean formIsValid(String name, String type, String description, Drawable image) {

@@ -428,8 +428,12 @@ public class mHome extends AppCompatActivity
     }
 
     @Override
-    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+    public void onListFragmentInteraction(Tip item) {
         Intent tipDetailIntent = new Intent(this, TipDetailActivity.class);
+        tipDetailIntent.putExtra("title", item.getName());
+        tipDetailIntent.putExtra("description", item.getDescription());
+        tipDetailIntent.putExtra("image", item.getImage());
+        
         startActivity(tipDetailIntent);
 
     }

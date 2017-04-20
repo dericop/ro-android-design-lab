@@ -10,9 +10,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.ucaldas.ro.reduccionobesidad.dummy.DummyContent;
 import com.ucaldas.ro.reduccionobesidad.dummy.DummyContent.DummyItem;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -28,6 +34,9 @@ public class TipsFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
+
+    private DatabaseReference database;
+    private LinkedList<Tip> mTips;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -69,9 +78,49 @@ public class TipsFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new TipsRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+
+            loadTips(recyclerView);
         }
         return view;
+    }
+
+    private void loadTips(final RecyclerView recyclerView){
+        database = FirebaseDatabase.getInstance().getReference();
+        database = database.child("tips");
+        mTips = new LinkedList<>();
+
+        database.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                if(dataSnapshot.getValue() != null){
+
+                    Tip tip = dataSnapshot.getValue(Tip.class);
+                    mTips.addFirst(tip);
+                    recyclerView.setAdapter(new TipsRecyclerViewAdapter(mTips, mListener));
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
 
@@ -105,6 +154,6 @@ public class TipsFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyItem item);
+        void onListFragmentInteraction(Tip item);
     }
 }

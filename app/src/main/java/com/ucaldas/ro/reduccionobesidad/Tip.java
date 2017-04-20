@@ -78,13 +78,14 @@ public class Tip {
     }
 
     @Exclude
-    public Map<String, String> toMap(){
-        HashMap<String, String> map = new HashMap<>();
+    public Map<String, Object> toMap(){
+        HashMap<String, Object> map = new HashMap<>();
         map.put("id", id);
         map.put("name", name);
         map.put("type", type);
         map.put("image", image);
         map.put("description", description);
+        map.put("app", app);
 
         return map;
     }

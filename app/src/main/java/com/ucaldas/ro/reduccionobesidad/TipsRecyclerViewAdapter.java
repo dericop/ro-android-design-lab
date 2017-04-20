@@ -4,10 +4,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.ucaldas.ro.reduccionobesidad.TipsFragment.OnListFragmentInteractionListener;
 import com.ucaldas.ro.reduccionobesidad.dummy.DummyContent.DummyItem;
+
+import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -18,10 +22,10 @@ import java.util.List;
  */
 public class TipsRecyclerViewAdapter extends RecyclerView.Adapter<TipsRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private final List<Tip> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public TipsRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
+    public TipsRecyclerViewAdapter(List<Tip> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -36,8 +40,9 @@ public class TipsRecyclerViewAdapter extends RecyclerView.Adapter<TipsRecyclerVi
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        //holder.mIdView.setText(mValues.get(position).id);
-        //holder.mContentView.setText(mValues.get(position).content);
+        holder.mTitle.setText(holder.mItem.getName());
+        holder.mDescription.setText(holder.mItem.getDescription());
+        Glide.with(holder.mImage.getContext()).load(holder.mItem.getImage()).into(holder.mImage);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,20 +63,22 @@ public class TipsRecyclerViewAdapter extends RecyclerView.Adapter<TipsRecyclerVi
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView = null;
-        public final TextView mContentView = null;
-        public DummyItem mItem;
+        public TextView mTitle = null;
+        public TextView mDescription = null;
+        public ImageView mImage = null;
+        public Tip mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            //mIdView = (TextView) view.findViewById(R.id.id);
-            //mContentView = (TextView) view.findViewById(R.id.content);
+            mTitle = (TextView) view.findViewById(R.id.title);
+            mDescription = (TextView) view.findViewById(R.id.description);
+            mImage = (ImageView) view.findViewById(R.id.image);
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString() + " '" + mTitle.getText() + "'";
         }
     }
 }

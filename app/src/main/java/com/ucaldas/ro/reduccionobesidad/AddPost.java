@@ -583,7 +583,6 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
 
         if (post != null) {
             Map<String, Object> postValues = post.toMap();
-
             Map<String, Object> childUpdates = new HashMap<>();
 
             if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){

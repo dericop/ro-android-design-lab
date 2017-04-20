@@ -11,17 +11,36 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 
 public class TipDetailActivity extends AppCompatActivity {
 
     private Button delete;
+    private TextView descriptionC;
+    private ImageView imageC;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tip_detail);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Título dinámico de prueba");
+
+        String title = getIntent().getStringExtra("title");
+        String description = getIntent().getStringExtra("description");
+        String image = getIntent().getStringExtra("image");
+
+        descriptionC = (TextView) findViewById(R.id.description);
+        imageC = (ImageView) findViewById(R.id.image);
+
+        descriptionC.setText(description);
+        Glide.with(getApplicationContext()).load(image).into(imageC);
+
+        toolbar.setTitle(title);
+
+
         setSupportActionBar(toolbar);
         configureToolbarAndActions();
     }
