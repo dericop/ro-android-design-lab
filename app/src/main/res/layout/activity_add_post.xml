@@ -164,12 +164,13 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:id="@+id/textView4"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/new_post_frecuency"
                             android:textColor="@color/form_labels"
-                            android:textStyle="italic"
-                            android:textSize="10dp"/>
+                            android:textSize="10dp"
+                            android:textStyle="italic" />
 
                         <Spinner
                             android:id="@+id/frecuency_spinner"

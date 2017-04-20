@@ -217,6 +217,9 @@ public class MyItems extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        myItems = new ArrayList<>();
+        itemAdapter = new MyItemAdapter(this.getContext(), myItems);
+        mDatabase = FirebaseDatabase.getInstance().getReference();
         grid_items = (GridView) refView.findViewById(R.id.grid_items);
         grid_items.setAdapter(itemAdapter);
 

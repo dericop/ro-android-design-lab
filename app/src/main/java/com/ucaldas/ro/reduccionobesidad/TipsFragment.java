@@ -38,6 +38,10 @@ public class TipsFragment extends Fragment {
     private DatabaseReference database;
     private LinkedList<Tip> mTips;
 
+    private TipsRecyclerViewAdapter recyclerViewAdapter;
+
+
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -93,10 +97,13 @@ public class TipsFragment extends Fragment {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 if(dataSnapshot.getValue() != null){
-
                     Tip tip = dataSnapshot.getValue(Tip.class);
-                    mTips.addFirst(tip);
-                    recyclerView.setAdapter(new TipsRecyclerViewAdapter(mTips, mListener));
+                    if(tip.getApp().equals(WelcomeActivity.CURRENT_APP_VERSION)){
+                        mTips.addFirst(tip);
+                        recyclerViewAdapter = new TipsRecyclerViewAdapter(mTips, mListener);
+                        recyclerView.setAdapter(recyclerViewAdapter);
+                    }
+
                 }
             }
 
@@ -107,7 +114,16 @@ public class TipsFragment extends Fragment {
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.getValue() != null){
 
+                    Tip tipForDelete = dataSnapshot.getValue(Tip.class);
+                    for (int i =0; i< mTips.size(); i++){
+                        if(mTips.get(i).getId().equals(tipForDelete.getId())){
+                            mTips.remove(i);
+                            recyclerViewAdapter.notifyDataSetChanged();
+                        }
+                    }
+                }
             }
 
             @Override

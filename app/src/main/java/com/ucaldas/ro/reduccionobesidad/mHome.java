@@ -433,7 +433,8 @@ public class mHome extends AppCompatActivity
         tipDetailIntent.putExtra("title", item.getName());
         tipDetailIntent.putExtra("description", item.getDescription());
         tipDetailIntent.putExtra("image", item.getImage());
-        
+        tipDetailIntent.putExtra("id", item.getId());
+
         startActivity(tipDetailIntent);
 
     }

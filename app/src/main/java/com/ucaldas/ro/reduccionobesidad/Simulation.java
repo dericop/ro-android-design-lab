@@ -101,6 +101,8 @@ public class Simulation extends Fragment {
     Double mediumHabitsAverage = 1.0;
     Double badHabitsAverages = 1.0;
 
+    List foodList;
+
     public Simulation() {
         // Required empty public constructor
     }
@@ -185,12 +187,19 @@ public class Simulation extends Fragment {
     @Override
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        foodList = Arrays.asList(this.getResources().getStringArray(R.array.new_post_food_categories));
         getGraphicalComponents(view); // Inicialización de componentes gráficos
+
+        totalAverage = 0.0;
+        goodHabitsAverage = 1.0;
+        mediumHabitsAverage = 1.0;
+        badHabitsAverages = 1.0;
+
         loadItems(view);
     }
 
     private void loadItems(final View view){
+
         if (mHome.user == null) {
             mAuth = FirebaseAuth.getInstance();
             mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -312,7 +321,7 @@ public class Simulation extends Fragment {
         Log.v("Category", post.getCategory());
 
         sumOfFrecuencies.addAndGet((int) frecuency);
-        List foodList = Arrays.asList(this.getResources().getStringArray(R.array.new_post_food_categories));
+
         int average = (int)post.getAverage();
 
         if(!foodList.contains(post.getCategory())){

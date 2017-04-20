@@ -60,8 +60,12 @@ public class AddTipActivity extends AppCompatActivity implements ActivityCompat.
     private EditText descriptionC;
     private Spinner tipType;
     private ImageView imagePreview;
+    private Spinner appSpinner;
+
 
     private ArrayAdapter<CharSequence> typesAdapter;
+    private ArrayAdapter<CharSequence> appAdapter;
+
     private final String FILE_PROVIDER = "com.ucaldas.android.cocono.fileprovider";
     private static final int REQUEST_STORAGE_PERMISSION = 2;
     static final int RESULT_LOAD_IMAGE = 2;
@@ -116,11 +120,16 @@ public class AddTipActivity extends AppCompatActivity implements ActivityCompat.
         tipType = (Spinner) findViewById(R.id.spinner_tip_type);
         descriptionC = (EditText) findViewById(R.id.desc_edit);
         imagePreview = (ImageView) findViewById(R.id.imagePreview);
+        appSpinner = (Spinner) findViewById(R.id.app_spinner);
 
         typesAdapter = ArrayAdapter.createFromResource(this,
                 R.array.tips_types, android.R.layout.simple_spinner_dropdown_item);
 
+        appAdapter = ArrayAdapter.createFromResource(this,
+                R.array.app_types, android.R.layout.simple_spinner_dropdown_item);
+
         tipType.setAdapter(typesAdapter);
+        appSpinner.setAdapter(appAdapter);
     }
 
     private void createSaveButtonListener() {
@@ -131,7 +140,7 @@ public class AddTipActivity extends AppCompatActivity implements ActivityCompat.
                 final String type = tipType.getSelectedItem().toString();
                 final String description = descriptionC.getText().toString();
                 final Drawable image = imagePreview.getDrawable();
-                final String app = WelcomeActivity.CURRENT_APP_VERSION;
+                final String app = appSpinner.getSelectedItem().toString();
 
                 if (formIsValid(name, type, description, image)) {
                     saveButton.setEnabled(false);

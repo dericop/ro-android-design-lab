@@ -122,8 +122,6 @@ public class PostDetail extends AppCompatActivity {
         LinearLayout corusQualificationContainer = (LinearLayout)  findViewById(R.id.corus_qualification);
         LinearLayout coconoQualificationContainer = (LinearLayout)  findViewById(R.id.cocono_qualification);
 
-
-
         if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
             corusQualificationContainer.setVisibility(View.VISIBLE);
             coconoQualificationContainer.setVisibility(View.GONE);
@@ -152,7 +150,6 @@ public class PostDetail extends AppCompatActivity {
             updateQualificationInfo(r_pi, r_aa, r_gs, r_ch);
 
         }
-
 
         //Consultar los comentarios de la base de datos
         getPostComments();
