@@ -284,6 +284,8 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
                 final String mImage= getIntent().getStringExtra("image");
                 idForUpdate = getIntent().getStringExtra("id");
 
+                Log.v("Total", idForUpdate);
+
                 if(mName!=null){
                     txt_name.setText(mName);
                     txt_name.setEnabled(false);
@@ -632,10 +634,10 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
                             "Espera un momento", true);
 
                     if(dataSnapshot.hasChildren()){
-                        HashMap<String, Object> userMap = (HashMap)dataSnapshot.getValue();
-                        SortedSet<String> keys = new TreeSet<String>(userMap.keySet());
+                        final HashMap<String, Object> userMap = (HashMap)dataSnapshot.getValue();
+                        final SortedSet<String> keys = new TreeSet<String>(userMap.keySet());
 
-                        HashMap postMap = (HashMap)userMap.get(keys.first());
+                        final HashMap postMap = (HashMap)userMap.get(keys.first());
 
                         if (postMap != null) {
                             if (isActivity) {
@@ -663,10 +665,23 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
                             OnCompleteListener saveListener = new OnCompleteListener() {
                                 @Override
                                 public void onComplete(@NonNull Task task) {
+                                    Map<String, Object> updates = new HashMap<>();
+                                    if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
+                                        updates.put("/user-posts/" + idForUpdate +"/frecuency", frecuency.toString());
+                                    }else{
+                                        updates.put("/user-posts-reflexive/" + idForUpdate +"/frecuency", frecuency.toString());
+                                    }
 
                                     if (task.isSuccessful()) {
-                                        progress.dismiss();
-                                        finish();
+                                        //Log.v("Total", )
+                                        //db.updateChildren()
+                                        db.updateChildren(updates).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                progress.dismiss();
+                                                finish();
+                                            }
+                                        });
 
                                     } else {
                                         progress.dismiss();
@@ -676,6 +691,7 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
                                 }
                             };
                             db.updateChildren(childUpdates).addOnCompleteListener(saveListener);
+
                         }
                     }else{
 

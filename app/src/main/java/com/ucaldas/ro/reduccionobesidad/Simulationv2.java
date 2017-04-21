@@ -199,8 +199,25 @@ public class Simulationv2 extends Fragment {
             }
         });
 
-        loadItems(view);
+        piAverage = 0;
+        aaAverage = 0;
+        gsAverage = 0;
+        chAverage = 0;
+        afAverage = 0;
 
+        piFrecuencies = 1;
+        aaFrecuencies = 1;
+        gsFrecuencies = 1;
+        chFrecuencies = 1;
+        afFrecuencies = 1;
+
+        countOfPi = 0;
+        countOfAa = 0;
+        countOfGs = 0;
+        countOfCh = 0;
+        countOfAF = 0;
+
+        loadItems(view);
     }
 
     private void loadItems(final View view){
@@ -221,7 +238,6 @@ public class Simulationv2 extends Fragment {
                 } else {
                     // AUser is signed out
                     Log.d("AUser", "onAuthStateChanged:signed_out");
-
                 }
                 }
             };
@@ -258,8 +274,8 @@ public class Simulationv2 extends Fragment {
                             keys.addAll(data.keySet());
                             final AtomicInteger countOfElements = new AtomicInteger(-1);
 
+
                             for(final String key: keys){
-                                countOfElements.incrementAndGet();
                                 Map<String, Object> post = data.get(key);
 
                                 quaDBRef.child(post.get("id") + "").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -268,9 +284,12 @@ public class Simulationv2 extends Fragment {
                                         if (dataSnapshot.getValue() != null) {
                                             Post post = dataSnapshot.getValue(Post.class);
                                             if (post.getResult() != 0) {
+                                                countOfElements.incrementAndGet();
+
                                                 calculatePostQualification(post, frecuenciesCost, frecuencies, foodsCategories);
-                                                Log.v("Azucar", keys.indexOf(key)+" "+(keys.size() - 1)+ " "+countOfElements);
+
                                                 if (keys.indexOf(key) == (keys.size() - 1)){
+                                                    Log.v("Total", countOfElements.get()+"");
                                                     updateViewsAndRestarData(view);
                                                     swiperefresh.setRefreshing(false);
                                                 }
@@ -377,6 +396,16 @@ public class Simulationv2 extends Fragment {
     }
 
     private void updateViewsAndRestarData(View view) {
+        Log.v("Total", piAverage+"");
+        Log.v("Total", aaAverage+"");
+        Log.v("Total", gsAverage+"");
+        Log.v("Total", chAverage+"");
+        Log.v("Total", afAverage+"");
+        Log.v("Total", " ");
+        Log.v("Total", piFrecuencies+"");
+        Log.v("Total", aaFrecuencies+"");
+        Log.v("Total", gsFrecuencies+"");
+
         piAverage /= piFrecuencies;
         aaAverage /= aaFrecuencies;
         gsAverage /= gsFrecuencies;

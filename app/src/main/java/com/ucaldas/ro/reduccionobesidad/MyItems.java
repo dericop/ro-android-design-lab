@@ -222,6 +222,7 @@ public class MyItems extends Fragment {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         grid_items = (GridView) refView.findViewById(R.id.grid_items);
         grid_items.setAdapter(itemAdapter);
+        itemAdapter.notifyDataSetChanged();
 
         loadItems();
 

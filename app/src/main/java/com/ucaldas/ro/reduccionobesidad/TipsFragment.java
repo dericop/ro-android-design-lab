@@ -83,6 +83,7 @@ public class TipsFragment extends Fragment {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
 
+
             loadTips(recyclerView);
         }
         return view;
@@ -92,6 +93,9 @@ public class TipsFragment extends Fragment {
         database = FirebaseDatabase.getInstance().getReference();
         database = database.child("tips");
         mTips = new LinkedList<>();
+        recyclerViewAdapter = new TipsRecyclerViewAdapter(mTips, mListener);
+        recyclerView.setAdapter(recyclerViewAdapter);
+        recyclerViewAdapter.notifyDataSetChanged();
 
         database.addChildEventListener(new ChildEventListener() {
             @Override
@@ -100,10 +104,8 @@ public class TipsFragment extends Fragment {
                     Tip tip = dataSnapshot.getValue(Tip.class);
                     if(tip.getApp().equals(WelcomeActivity.CURRENT_APP_VERSION)){
                         mTips.addFirst(tip);
-                        recyclerViewAdapter = new TipsRecyclerViewAdapter(mTips, mListener);
-                        recyclerView.setAdapter(recyclerViewAdapter);
+                        recyclerViewAdapter.notifyDataSetChanged();
                     }
-
                 }
             }
 

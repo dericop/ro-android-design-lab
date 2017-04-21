@@ -97,9 +97,9 @@ public class Simulation extends Fragment {
     DatabaseReference quaDBRef;
 
     Double totalAverage = 0.0;
-    Double goodHabitsAverage = 1.0;
-    Double mediumHabitsAverage = 1.0;
-    Double badHabitsAverages = 1.0;
+    Double goodHabitsAverage = 0.0;
+    Double mediumHabitsAverage = 0.0;
+    Double badHabitsAverages = 0.0;
 
     List foodList;
 
@@ -198,7 +198,7 @@ public class Simulation extends Fragment {
         loadItems(view);
     }
 
-    private void loadItems(final View view){
+    private void loadItems(final View view) {
 
         if (mHome.user == null) {
             mAuth = FirebaseAuth.getInstance();
@@ -216,7 +216,6 @@ public class Simulation extends Fragment {
                     } else {
                         // AUser is signed out
                         Log.d("AUser", "onAuthStateChanged:signed_out");
-
                     }
                 }
             };
@@ -228,16 +227,16 @@ public class Simulation extends Fragment {
         }
     }
 
-    private void loadData(final View view){
+    private void loadData(final View view) {
         if (mHome.user != null) {
             final String[] foodsString = getResources().getStringArray(R.array.new_post_food_categories);
             final List<String> foodsCategories = Arrays.asList(foodsString);
 
             firebaseDatabase = FirebaseDatabase.getInstance().getReference();
             if (assignUserItemsDBReference() && assignQualificationItemDBReference()) {
-                final AtomicInteger countOfHealthy = new AtomicInteger(1);
-                final AtomicInteger countOfMedium = new AtomicInteger(1);
-                final AtomicInteger countOfBad = new AtomicInteger(1);
+                final AtomicInteger countOfHealthy = new AtomicInteger(0);
+                final AtomicInteger countOfMedium = new AtomicInteger(0);
+                final AtomicInteger countOfBad = new AtomicInteger(0);
 
                 final List<String> frecuencies = Arrays.asList(getResources().getStringArray(R.array.frecuencies));
                 final List<String> frecuenciesCost = Arrays.asList(getResources().getStringArray(R.array.cost_frecuencies));
@@ -248,31 +247,31 @@ public class Simulation extends Fragment {
 
                         final AtomicInteger sumOfFrecuencies = new AtomicInteger(0);
                         totalAverage = 0.0;
-                        goodHabitsAverage = 1.0;
-                        mediumHabitsAverage = 1.0;
-                        badHabitsAverages = 1.0;
+                        goodHabitsAverage = 0.0;
+                        mediumHabitsAverage = 0.0;
+                        badHabitsAverages = 0.0;
 
                         Map<String, HashMap> data = (HashMap) dataSnapshot.getValue();
                         if (data != null) {
 
                             final LinkedList<String> keys = new LinkedList();
                             keys.addAll(data.keySet());
-                            final AtomicInteger countOfElements = new AtomicInteger(-1);
+                            final AtomicInteger countOfElements = new AtomicInteger(0);
 
                             for (final String key : keys) {
 
                                 Map<String, Object> post = data.get(key);
-                                countOfElements.incrementAndGet();
+
                                 quaDBRef.child(post.get("id") + "").addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         if (dataSnapshot.getValue() != null) {
                                             Post post = dataSnapshot.getValue(Post.class);
                                             if (post.getResult() != 0) {
-
+                                                countOfElements.incrementAndGet();
                                                 calculatePostQualification(post, frecuenciesCost, frecuencies, sumOfFrecuencies, countOfHealthy, countOfMedium, countOfBad);
-                                                Log.v("Total", countOfElements+"");
-                                                if (countOfElements.get() == (keys.size() - 1)){
+
+                                                if (countOfElements.get() == (keys.size() - 1)) {
                                                     updateViewsAndRestarData(countOfHealthy, countOfMedium, countOfBad, view, sumOfFrecuencies);
                                                     swiperefresh.setRefreshing(false);
                                                 }
@@ -302,9 +301,22 @@ public class Simulation extends Fragment {
     }
 
     private void updateViewsAndRestarData(AtomicInteger countOfHealthy, AtomicInteger countOfMedium, AtomicInteger countOfBad, View view, AtomicInteger sumOfFrecuencies) {
-        goodHabitsAverage = goodHabitsAverage / countOfHealthy.get();
-        mediumHabitsAverage = mediumHabitsAverage / countOfMedium.get();
-        badHabitsAverages = badHabitsAverages / countOfBad.get();
+        Log.v("Total", "Good: "+countOfHealthy.get());
+        Log.v("Total", "Medium "+countOfMedium.get());
+        Log.v("Total", "Bad "+countOfBad.get());
+
+        Log.v("Total", "Good Average: "+goodHabitsAverage);
+        Log.v("Total", "Medium Average: "+mediumHabitsAverage);
+        Log.v("Total", "Bad Average: "+badHabitsAverages);
+
+        /*if(countOfHealthy.get() != 0)
+            //goodHabitsAverage = goodHabitsAverage / countOfHealthy.get();
+
+        if(countOfMedium.get() != 0)
+            mediumHabitsAverage = mediumHabitsAverage / countOfMedium.get();
+
+        if(countOfBad.get() != 0)
+            badHabitsAverages = badHabitsAverages / countOfBad.get();*/
 
         updateCircleBoxSize(goodHabitsAverage, mediumHabitsAverage, badHabitsAverages, view, totalAverage, sumOfFrecuencies.get());
 
@@ -322,10 +334,10 @@ public class Simulation extends Fragment {
 
         sumOfFrecuencies.addAndGet((int) frecuency);
 
-        int average = (int)post.getAverage();
+        int average = (int) post.getAverage();
 
-        if(!foodList.contains(post.getCategory())){
-            switch (average){
+        if (!foodList.contains(post.getCategory())) {
+            switch (average) {
                 case 1:
                     average = 10;
                     break;
@@ -398,6 +410,8 @@ public class Simulation extends Fragment {
 
         Collections.sort(orderedList);
 
+        Log.v("Total", orderedList.toString());
+
         //Ubicación del tamaño para el componente 1
         if (orderedList.indexOf(newSizeBox1) == 2) {
             newSizeBox1 = 80;
@@ -406,6 +420,7 @@ public class Simulation extends Fragment {
             newSizeBox1 = 60;
         else
             newSizeBox1 = 40;
+
 
         //Ubicación del tamaño para el componente 2
         if (orderedList.indexOf(newSizeBox2) == 2) {
@@ -432,7 +447,7 @@ public class Simulation extends Fragment {
 
             circleBox1Params.width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, newSizeBox1, getResources().getDisplayMetrics());
             circleBox1Params.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, newSizeBox1, getResources().getDisplayMetrics());
-            ;
+
             sim_circle_box_1.setLayoutParams(circleBox1Params);
 
             circleBox2Params.width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, newSizeBox2, getResources().getDisplayMetrics());
@@ -536,10 +551,10 @@ public class Simulation extends Fragment {
         swiperefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                 totalAverage = 0.0;
-                 goodHabitsAverage = 1.0;
-                 mediumHabitsAverage = 1.0;
-                 badHabitsAverages = 1.0;
+                totalAverage = 0.0;
+                goodHabitsAverage = 1.0;
+                mediumHabitsAverage = 1.0;
+                badHabitsAverages = 1.0;
 
                 loadData(view);
             }

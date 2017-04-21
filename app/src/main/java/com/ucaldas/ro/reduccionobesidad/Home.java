@@ -116,7 +116,6 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
-
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -134,6 +133,17 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        isTheFirstLoad = true;
+        lastPostLoaded = "";
+        flag_loading = false;
+        isTheFirstItem = true;
+
+        mPostList = new LinkedList<>();
+
+        mPostAdapter = new HomeAdapter(
+                getActivity(),
+                mPostList);
+        setListAdapter(mPostAdapter);
 
         if(mSwipeRefreshing == null){
             //Inicialización
@@ -143,7 +153,6 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
             //Consultar los primeros posts
             refreshPostList();
         }
-
     }
 
     private long getResult(HashMap postMap){
