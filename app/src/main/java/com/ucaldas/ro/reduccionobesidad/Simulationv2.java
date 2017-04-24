@@ -1,6 +1,5 @@
 package com.ucaldas.ro.reduccionobesidad;
 
-import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,11 +7,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -23,7 +20,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -67,17 +63,19 @@ public class Simulationv2 extends Fragment {
     double chAverage = 0;
     double afAverage = 0;
 
-    double piFrecuencies = 1;
-    double aaFrecuencies = 1;
-    double gsFrecuencies = 1;
-    double chFrecuencies = 1;
-    double afFrecuencies = 1;
+    double piFrecuencies = 0;
+    double aaFrecuencies = 0;
+    double gsFrecuencies = 0;
+    double chFrecuencies = 0;
+    double afFrecuencies = 0;
 
     int countOfPi = 0;
     int countOfAa = 0;
     int countOfGs = 0;
     int countOfCh = 0;
     int countOfAF = 0;
+
+    public View tView;
 
     public Simulationv2() {
         // Required empty public constructor
@@ -177,39 +175,29 @@ public class Simulationv2 extends Fragment {
         swiperefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                 piAverage = 0;
-                 aaAverage = 0;
-                 gsAverage = 0;
-                 chAverage = 0;
-                 afAverage = 0;
-
-                 piFrecuencies = 1;
-                 aaFrecuencies = 1;
-                 gsFrecuencies = 1;
-                 chFrecuencies = 1;
-                 afFrecuencies = 1;
-
-                 countOfPi = 0;
-                 countOfAa = 0;
-                 countOfGs = 0;
-                 countOfCh = 0;
-                 countOfAF = 0;
-
+                restartData();
                 loadData(view);
             }
         });
 
+        restartData();
+
+        tView = view;
+        loadItems(view);
+    }
+
+    private void restartData() {
         piAverage = 0;
         aaAverage = 0;
         gsAverage = 0;
         chAverage = 0;
         afAverage = 0;
 
-        piFrecuencies = 1;
-        aaFrecuencies = 1;
-        gsFrecuencies = 1;
-        chFrecuencies = 1;
-        afFrecuencies = 1;
+        piFrecuencies = 0;
+        aaFrecuencies = 0;
+        gsFrecuencies = 0;
+        chFrecuencies = 0;
+        afFrecuencies = 0;
 
         countOfPi = 0;
         countOfAa = 0;
@@ -217,65 +205,66 @@ public class Simulationv2 extends Fragment {
         countOfCh = 0;
         countOfAF = 0;
 
-        loadItems(view);
     }
 
-    private void loadItems(final View view){
-        if(mHome.user == null){
+    public void loadItems(final View view) {
+        restartData();
+
+        if (mHome.user == null) {
 
             mAuth = FirebaseAuth.getInstance();
             mAuthListener = new FirebaseAuth.AuthStateListener() {
                 @Override
                 public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    // AUser is signed in
-                    Log.d("AUser", "onAuthStateChanged:signed_in:" + user.getUid());
+                    FirebaseUser user = firebaseAuth.getCurrentUser();
+                    if (user != null) {
+                        // AUser is signed in
+                        Log.d("AUser", "onAuthStateChanged:signed_in:" + user.getUid());
 
-                    mHome.user = user; //Asignación de usuario a la clase principal
-                    loadData(view);
+                        mHome.user = user; //Asignación de usuario a la clase principal
+                        loadData(view);
 
-                } else {
-                    // AUser is signed out
-                    Log.d("AUser", "onAuthStateChanged:signed_out");
-                }
+                    } else {
+                        // AUser is signed out
+                        Log.d("AUser", "onAuthStateChanged:signed_out");
+                    }
                 }
             };
 
             mAuth.addAuthStateListener(mAuthListener);
 
-        }else{
+        } else {
             loadData(view);
         }
     }
 
-    private void loadData(final View view){
-        if(mHome.user != null){
+    private void loadData(final View view) {
+        if (mHome.user != null) {
             final String[] foodsString = getResources().getStringArray(R.array.new_post_food_categories);
             final List<String> foodsCategories = Arrays.asList(foodsString);
             final List<String> frecuencies = Arrays.asList(getResources().getStringArray(R.array.frecuencies));
             final List<String> frecuenciesCost = Arrays.asList(getResources().getStringArray(R.array.cost_frecuencies));
 
-            if(WelcomeActivity.CURRENT_APP_VERSION.equals("A"))
+            if (WelcomeActivity.CURRENT_APP_VERSION.equals("A"))
                 firebaseDatabase = FirebaseDatabase.getInstance().getReference();
             else
                 firebaseDatabase = FirebaseDatabase.getInstance().getReference();
 
-            if(assignUserItemsDBReference() && assignQualificationItemDBReference()){
+            if (assignUserItemsDBReference() && assignQualificationItemDBReference()) {
 
-                dbRef.addValueEventListener(new ValueEventListener() {
+                dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
 
                         final Map<String, HashMap> data = (HashMap) dataSnapshot.getValue();
-                        if(data != null){
+                        if (data != null) {
 
                             final LinkedList<String> keys = new LinkedList();
                             keys.addAll(data.keySet());
-                            final AtomicInteger countOfElements = new AtomicInteger(-1);
+                            final AtomicInteger countOfElements = new AtomicInteger(0);
 
 
-                            for(final String key: keys){
+                            for (final String key : keys) {
                                 Map<String, Object> post = data.get(key);
 
                                 quaDBRef.child(post.get("id") + "").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -288,8 +277,10 @@ public class Simulationv2 extends Fragment {
 
                                                 calculatePostQualification(post, frecuenciesCost, frecuencies, foodsCategories);
 
-                                                if (keys.indexOf(key) == (keys.size() - 1)){
-                                                    Log.v("Total", countOfElements.get()+"");
+                                                //Log.v("Total", countOfElements.get()+" "+keys.indexOf(key)+" "+(keys.size() - 1)+"");
+
+                                                if (countOfElements.get() == (keys.size() - 1)) {
+
                                                     updateViewsAndRestarData(view);
                                                     swiperefresh.setRefreshing(false);
                                                 }
@@ -325,14 +316,14 @@ public class Simulationv2 extends Fragment {
         long frecuency = Integer.parseInt(frecuenciesCost.get(frecuencies.indexOf(post.getFrecuency())));
         List foodList = Arrays.asList(this.getResources().getStringArray(R.array.new_post_food_categories));
 
-        if(!foodsCategories.contains(post.getCategory())){
-            if(post.getAverage() != 0){
-                int average = (int)post.getAverage();
+        if (!foodsCategories.contains(post.getCategory())) {
+            if (post.getAverage() != 0) {
+                int average = (int) post.getAverage();
 
                 countOfAF++;
-                afFrecuencies +=frecuency;
+                afFrecuencies += frecuency;
 
-                switch (average){
+                switch (average) {
                     case 1:
                         average = 10;
                         break;
@@ -365,30 +356,30 @@ public class Simulationv2 extends Fragment {
                         break;
                 }
 
-                afAverage += average*frecuency;
+                afAverage += average * frecuency;
             }
 
-        }else{
-            if(post.getR_pi() != 0){
-                piAverage+=Double.parseDouble(post.getR_pi()+"")*frecuency;
+        } else {
+            if (post.getR_pi() != 0) {
+                piAverage += Double.parseDouble(post.getR_pi() + "") * frecuency;
                 countOfPi++;
-                piFrecuencies +=frecuency;
+                piFrecuencies += frecuency;
             }
 
-            if(post.getR_aa() != 0){
-                aaAverage+=Double.parseDouble(post.getR_aa()+"")*frecuency;
+            if (post.getR_aa() != 0) {
+                aaAverage += Double.parseDouble(post.getR_aa() + "") * frecuency;
                 countOfAa++;
-                aaFrecuencies +=frecuency;
+                aaFrecuencies += frecuency;
             }
 
-            if(post.getR_gs() != 0){
-                gsAverage+=Double.parseDouble(post.getR_gs()+"")*frecuency;
+            if (post.getR_gs() != 0) {
+                gsAverage += Double.parseDouble(post.getR_gs() + "") * frecuency;
                 countOfGs++;
-                gsFrecuencies +=frecuency;
+                gsFrecuencies += frecuency;
             }
 
-            if(post.getR_ch() != 0){
-                chAverage+=Double.parseDouble(post.getR_ch()+"")*frecuency;
+            if (post.getR_ch() != 0) {
+                chAverage += Double.parseDouble(post.getR_ch() + "") * frecuency;
                 countOfCh++;
                 chFrecuencies += frecuency;
             }
@@ -396,23 +387,23 @@ public class Simulationv2 extends Fragment {
     }
 
     private void updateViewsAndRestarData(View view) {
-        Log.v("Total", piAverage+"");
-        Log.v("Total", aaAverage+"");
-        Log.v("Total", gsAverage+"");
-        Log.v("Total", chAverage+"");
-        Log.v("Total", afAverage+"");
-        Log.v("Total", " ");
-        Log.v("Total", piFrecuencies+"");
-        Log.v("Total", aaFrecuencies+"");
-        Log.v("Total", gsFrecuencies+"");
+        Log.v("Total", chAverage + " pi");
+        Log.v("Total", chFrecuencies + " piFrecuencies");
 
-        piAverage /= piFrecuencies;
-        aaAverage /= aaFrecuencies;
-        gsAverage /= gsFrecuencies;
-        chAverage /= chFrecuencies;
-        afAverage /= afFrecuencies;
+        if (piFrecuencies != 0)
+            piAverage /= piFrecuencies;
 
-        Log.v("Azucar", aaAverage+"");
+        if (aaFrecuencies != 0)
+            aaAverage /= aaFrecuencies;
+
+        if (gsFrecuencies != 0)
+            gsAverage /= gsFrecuencies;
+
+        if (chFrecuencies != 0)
+            chAverage /= chFrecuencies;
+
+        if (afFrecuencies != 0)
+            afAverage /= afFrecuencies;
 
         updatePiViews(view, countOfPi, piAverage);
         updateAAViews(view, countOfAa, aaAverage);
@@ -420,26 +411,10 @@ public class Simulationv2 extends Fragment {
         updateCHViews(view, countOfCh, chAverage);
         updateAFViews(view, countOfAF, afAverage);
 
-         piAverage = 0;
-         aaAverage = 0;
-         gsAverage = 0;
-         chAverage = 0;
-         afAverage = 0;
-
-         piFrecuencies = 1;
-         aaFrecuencies = 1;
-         gsFrecuencies = 1;
-         chFrecuencies = 1;
-         afFrecuencies = 1;
-
-         countOfPi = 0;
-         countOfAa = 0;
-         countOfGs = 0;
-         countOfCh = 0;
-         countOfAF = 0;
+        restartData();
     }
 
-    private void updatePiViews(View view, int countOfPi, double piAverage){
+    private void updatePiViews(View view, int countOfPi, double piAverage) {
 
         final View pi_without = view.findViewById(R.id.pi_without);
         final View pi_bottom = view.findViewById(R.id.pi_bottom);
@@ -457,28 +432,28 @@ public class Simulationv2 extends Fragment {
         pi_top.setVisibility(View.INVISIBLE);
 
 
-        if(piAverage == 0){
+        if (piAverage == 0) {
             pi_without.setVisibility(View.VISIBLE);
 
-        }else if(piAverage!=0 && piAverage <= 2){
+        } else if (piAverage != 0 && piAverage <= 2) {
             pi_bottom.setVisibility(View.VISIBLE);
 
-        }else if(piAverage > 2 && piAverage <=4){
+        } else if (piAverage > 2 && piAverage <= 4) {
             pi_bottom_medium.setVisibility(View.VISIBLE);
 
-        }else if(piAverage >4 && piAverage <=6){
+        } else if (piAverage > 4 && piAverage <= 6) {
             pi_medium.setVisibility(View.VISIBLE);
 
-        }else if(piAverage > 6 && piAverage <= 8){
+        } else if (piAverage > 6 && piAverage <= 8) {
             pi_medium_top.setVisibility(View.VISIBLE);
 
-        }else if(piAverage > 8){
+        } else if (piAverage > 8) {
             pi_top.setVisibility(View.VISIBLE);
         }
 
     }
 
-    private void updateAAViews(View view, int countOfAA, double aaAverage){
+    private void updateAAViews(View view, int countOfAA, double aaAverage) {
 
         final View aa_without = view.findViewById(R.id.aa_without);
         final View aa_bottom = view.findViewById(R.id.aa_bottom);
@@ -494,29 +469,29 @@ public class Simulationv2 extends Fragment {
         aa_medium_top.setVisibility(View.INVISIBLE);
         aa_top.setVisibility(View.INVISIBLE);
 
-        if(aaAverage == 0){
+        if (aaAverage == 0) {
             aa_without.setVisibility(View.VISIBLE);
 
-        }else if(aaAverage!=0 && aaAverage <= 2){
+        } else if (aaAverage != 0 && aaAverage <= 0.6) {
             aa_bottom.setVisibility(View.VISIBLE);
 
-        }else if(aaAverage > 2 && aaAverage <=4){
+        } else if (aaAverage > 0.6 && aaAverage <= 1.2) {
             aa_bottom_medium.setVisibility(View.VISIBLE);
 
-        }else if(aaAverage >4 && aaAverage <=6){
+        } else if (aaAverage > 1.2 && aaAverage <= 1.8) {
             aa_medium.setVisibility(View.VISIBLE);
 
-        }else if(aaAverage > 6 && aaAverage <= 8){
+        } else if (aaAverage > 1.8 && aaAverage <= 2.4) {
             aa_medium_top.setVisibility(View.VISIBLE);
 
-        }else if(aaAverage > 8){
+        } else if (aaAverage > 2.4) {
             aa_top.setVisibility(View.VISIBLE);
         }
 
 
     }
 
-    private void updateGSViews(View view, int countOfGS, double gsAverage){
+    private void updateGSViews(View view, int countOfGS, double gsAverage) {
 
         final View gs_without = view.findViewById(R.id.gs_without);
         final View gs_bottom = view.findViewById(R.id.gs_bottom);
@@ -533,28 +508,28 @@ public class Simulationv2 extends Fragment {
         gs_top.setVisibility(View.INVISIBLE);
 
 
-        if(gsAverage == 0){
+        if (gsAverage == 0) {
             gs_without.setVisibility(View.VISIBLE);
 
-        }else if(gsAverage!=0 && gsAverage <= 2){
+        } else if (gsAverage != 0 && gsAverage <= 0.6) {
             gs_bottom.setVisibility(View.VISIBLE);
 
-        }else if(gsAverage > 2 && gsAverage <=4){
+        } else if (gsAverage > 0.6 && gsAverage <= 1.2) {
             gs_bottom_medium.setVisibility(View.VISIBLE);
 
-        }else if(gsAverage >4 && gsAverage <=6){
+        } else if (gsAverage > 1.2 && gsAverage <= 1.8) {
             gs_medium.setVisibility(View.VISIBLE);
 
-        }else if(gsAverage > 6 && gsAverage <= 8){
+        } else if (gsAverage > 1.8 && gsAverage <= 2.4) {
             gs_medium_top.setVisibility(View.VISIBLE);
 
-        }else if(gsAverage > 8){
+        } else if (gsAverage > 2.4) {
             gs_top.setVisibility(View.VISIBLE);
         }
 
     }
 
-    private void updateCHViews(View view, int countOfCH, double chAverage){
+    private void updateCHViews(View view, int countOfCH, double chAverage) {
 
         final View ch_without = view.findViewById(R.id.ch_without);
         final View ch_bottom = view.findViewById(R.id.ch_bottom);
@@ -571,28 +546,28 @@ public class Simulationv2 extends Fragment {
         ch_top.setVisibility(View.INVISIBLE);
 
 
-        if(chAverage == 0){
+        if (chAverage == 0) {
             ch_without.setVisibility(View.VISIBLE);
 
-        }else if(chAverage!=0 && chAverage <= 2){
+        } else if (chAverage != 0 && chAverage <= 0.6) {
             ch_bottom.setVisibility(View.VISIBLE);
 
-        }else if(chAverage > 2 && chAverage <=4){
+        } else if (chAverage > 0.6 && chAverage <= 1.2) {
             ch_bottom_medium.setVisibility(View.VISIBLE);
 
-        }else if(chAverage >4 && chAverage <=6){
+        } else if (chAverage > 1.2 && chAverage <= 1.8) {
             ch_medium.setVisibility(View.VISIBLE);
 
-        }else if(chAverage > 6 && chAverage <= 8){
+        } else if (chAverage > 1.8 && chAverage <= 2.4) {
             ch_medium_top.setVisibility(View.VISIBLE);
 
-        }else if(chAverage > 8){
+        } else if (chAverage > 2.4) {
             ch_top.setVisibility(View.VISIBLE);
         }
 
     }
 
-    private void updateAFViews(View view, int countOfAF, double afAverage){
+    private void updateAFViews(View view, int countOfAF, double afAverage) {
         final View af_without = view.findViewById(R.id.af_without);
         final View af_bottom = view.findViewById(R.id.af_bottom);
         final View af_bottom_medium = view.findViewById(R.id.af_bottom_medium);
@@ -607,22 +582,22 @@ public class Simulationv2 extends Fragment {
         af_medium_top.setVisibility(View.INVISIBLE);
         af_top.setVisibility(View.INVISIBLE);
 
-        if(afAverage == 0){
+        if (afAverage == 0) {
             af_without.setVisibility(View.VISIBLE);
 
-        }else if(afAverage!=0 && afAverage <= 2){
+        } else if (afAverage > 0 && afAverage <= 2) {
             af_bottom.setVisibility(View.VISIBLE);
 
-        }else if(afAverage > 2 && afAverage <=4){
+        } else if (afAverage > 2 && afAverage <= 4) {
             af_bottom_medium.setVisibility(View.VISIBLE);
 
-        }else if(afAverage >4 && afAverage <=6){
+        } else if (afAverage > 4 && afAverage <= 6) {
             af_medium.setVisibility(View.VISIBLE);
 
-        }else if(afAverage > 6 && afAverage <= 8){
+        } else if (afAverage > 6 && afAverage <= 8) {
             af_medium_top.setVisibility(View.VISIBLE);
 
-        }else if(afAverage > 8){
+        } else if (afAverage > 8) {
             af_top.setVisibility(View.VISIBLE);
         }
 

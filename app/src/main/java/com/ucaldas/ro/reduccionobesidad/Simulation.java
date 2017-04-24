@@ -1,9 +1,7 @@
 package com.ucaldas.ro.reduccionobesidad;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -27,12 +25,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.io.IOException;
-import java.text.Collator;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -184,6 +178,8 @@ public class Simulation extends Fragment {
         return false;
     }
 
+    public View tView;
+
     @Override
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -195,6 +191,7 @@ public class Simulation extends Fragment {
         mediumHabitsAverage = 1.0;
         badHabitsAverages = 1.0;
 
+        tView = view;
         loadItems(view);
     }
 
@@ -227,7 +224,9 @@ public class Simulation extends Fragment {
         }
     }
 
-    private void loadData(final View view) {
+    private boolean rendered = true;
+
+    public void loadData(final View view) {
         if (mHome.user != null) {
             final String[] foodsString = getResources().getStringArray(R.array.new_post_food_categories);
             final List<String> foodsCategories = Arrays.asList(foodsString);
@@ -241,53 +240,68 @@ public class Simulation extends Fragment {
                 final List<String> frecuencies = Arrays.asList(getResources().getStringArray(R.array.frecuencies));
                 final List<String> frecuenciesCost = Arrays.asList(getResources().getStringArray(R.array.cost_frecuencies));
 
-                dbRef.addValueEventListener(new ValueEventListener() {
+                dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
 
-                        final AtomicInteger sumOfFrecuencies = new AtomicInteger(0);
-                        totalAverage = 0.0;
-                        goodHabitsAverage = 0.0;
-                        mediumHabitsAverage = 0.0;
-                        badHabitsAverages = 0.0;
+                        if(rendered){
 
-                        Map<String, HashMap> data = (HashMap) dataSnapshot.getValue();
-                        if (data != null) {
+                            rendered = false;
+                            final AtomicInteger sumOfFrecuencies = new AtomicInteger(0);
+                            totalAverage = 0.0;
+                            goodHabitsAverage = 0.0;
+                            mediumHabitsAverage = 0.0;
+                            badHabitsAverages = 0.0;
 
-                            final LinkedList<String> keys = new LinkedList();
-                            keys.addAll(data.keySet());
-                            final AtomicInteger countOfElements = new AtomicInteger(0);
+                            final Map<String, HashMap> data = (HashMap) dataSnapshot.getValue();
+                            if (data != null) {
 
-                            for (final String key : keys) {
+                                final LinkedList<String> keys = new LinkedList();
+                                keys.addAll(data.keySet());
+                                final AtomicInteger countOfElements = new AtomicInteger(0);
 
-                                Map<String, Object> post = data.get(key);
+                                for (final String key : keys) {
 
-                                quaDBRef.child(post.get("id") + "").addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                        if (dataSnapshot.getValue() != null) {
-                                            Post post = dataSnapshot.getValue(Post.class);
-                                            if (post.getResult() != 0) {
-                                                countOfElements.incrementAndGet();
-                                                calculatePostQualification(post, frecuenciesCost, frecuencies, sumOfFrecuencies, countOfHealthy, countOfMedium, countOfBad);
+                                    Map<String, Object> post = data.get(key);
 
-                                                if (countOfElements.get() == (keys.size() - 1)) {
-                                                    updateViewsAndRestarData(countOfHealthy, countOfMedium, countOfBad, view, sumOfFrecuencies);
-                                                    swiperefresh.setRefreshing(false);
+                                    quaDBRef.child(post.get("id") + "").addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            if (dataSnapshot.getValue() != null) {
+
+                                                Post post = dataSnapshot.getValue(Post.class);
+                                                if (post.getResult() != 0) {
+                                                    countOfElements.incrementAndGet();
+                                                    calculatePostQualification(post, frecuenciesCost, frecuencies, sumOfFrecuencies, countOfHealthy, countOfMedium, countOfBad);
+
+                                                    //Log.v("Simulation", "cantidad: "+ countOfElements+" keys.size: "+(keys.size()-1)+"");
+                                                    if (countOfElements.get() == (keys.size() - 1)) {
+                                                        updateViewsAndRestarData(countOfHealthy, countOfMedium, countOfBad, view, sumOfFrecuencies);
+                                                        swiperefresh.setRefreshing(false);
+
+                                                        sumOfFrecuencies.set(0);
+                                                        totalAverage = 0.0;
+                                                        goodHabitsAverage = 0.0;
+                                                        mediumHabitsAverage = 0.0;
+                                                        badHabitsAverages = 0.0;
+                                                        rendered = true;
+                                                    }
                                                 }
                                             }
                                         }
-                                    }
 
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
 
-                                    }
-                                });
+                                        }
+                                    });
+                                }
+
+
                             }
-
-
                         }
+
+
                     }
 
                     @Override
@@ -299,6 +313,7 @@ public class Simulation extends Fragment {
             }
         }
     }
+
 
     private void updateViewsAndRestarData(AtomicInteger countOfHealthy, AtomicInteger countOfMedium, AtomicInteger countOfBad, View view, AtomicInteger sumOfFrecuencies) {
         Log.v("Total", "Good: "+countOfHealthy.get());
@@ -330,11 +345,11 @@ public class Simulation extends Fragment {
         long result = post.getResult();
         long frecuency = Integer.parseInt(frecuenciesCost.get(frecuencies.indexOf(post.getFrecuency())));
 
-        Log.v("Category", post.getCategory());
-
         sumOfFrecuencies.addAndGet((int) frecuency);
 
         int average = (int) post.getAverage();
+
+        Log.v("Simulation", frecuency+"");
 
         if (!foodList.contains(post.getCategory())) {
             switch (average) {
@@ -465,6 +480,7 @@ public class Simulation extends Fragment {
     }
 
     private void paintLevel(double average, View view) {
+        Log.v("Simulation", "Pintate "+average);
         final RelativeLayout humanContainer = (RelativeLayout) view.findViewById(R.id.human_container);
         final ImageView humanImageView = (ImageView) view.findViewById(R.id.human_image_view);
 
@@ -519,6 +535,8 @@ public class Simulation extends Fragment {
             humanContainer.setBackgroundColor(getResources().getColor(R.color.severe_obesity));
             humanImageView.setBackgroundDrawable(getResources().getDrawable(R.drawable.silueta_humano_6));
         }
+
+
     }
 
     private void restartDefaultView(LinearLayout view) {

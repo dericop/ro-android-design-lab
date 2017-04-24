@@ -11,8 +11,6 @@ import com.bumptech.glide.Glide;
 import com.ucaldas.ro.reduccionobesidad.TipsFragment.OnListFragmentInteractionListener;
 import com.ucaldas.ro.reduccionobesidad.dummy.DummyContent.DummyItem;
 
-import org.w3c.dom.Text;
-
 import java.util.List;
 
 /**

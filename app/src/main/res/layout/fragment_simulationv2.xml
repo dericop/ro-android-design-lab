@@ -251,7 +251,8 @@
                                             android:layout_width="match_parent"
                                             android:layout_height="9dp"
                                             android:layout_marginTop="1.5dp"
-                                            android:background="#f05a29" />
+                                            android:background="#f05a29"
+                                            android:visibility="invisible"/>
 
                                     </LinearLayout>
 
@@ -1533,7 +1534,8 @@
                                             android:layout_width="match_parent"
                                             android:layout_height="9dp"
                                             android:layout_marginTop="1.5dp"
-                                            android:background="#00adee" />
+                                            android:background="#00adee"
+                                            android:visibility="invisible"/>
 
                                     </LinearLayout>
 

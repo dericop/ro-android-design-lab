@@ -15,11 +15,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.ucaldas.ro.reduccionobesidad.dummy.DummyContent;
-import com.ucaldas.ro.reduccionobesidad.dummy.DummyContent.DummyItem;
 
 import java.util.LinkedList;
-import java.util.List;
 
 /**
  * A fragment representing a list of Items.
