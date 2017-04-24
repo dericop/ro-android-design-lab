@@ -239,6 +239,7 @@ public class Simulationv2 extends Fragment {
     }
 
     private void loadData(final View view) {
+
         if (mHome.user != null) {
             final String[] foodsString = getResources().getStringArray(R.array.new_post_food_categories);
             final List<String> foodsCategories = Arrays.asList(foodsString);
@@ -272,12 +273,12 @@ public class Simulationv2 extends Fragment {
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         if (dataSnapshot.getValue() != null) {
                                             Post post = dataSnapshot.getValue(Post.class);
+                                            countOfElements.incrementAndGet();
                                             if (post.getResult() != 0) {
-                                                countOfElements.incrementAndGet();
 
                                                 calculatePostQualification(post, frecuenciesCost, frecuencies, foodsCategories);
 
-                                                //Log.v("Total", countOfElements.get()+" "+keys.indexOf(key)+" "+(keys.size() - 1)+"");
+                                                Log.v("Total", countOfElements.get()+" "+(keys.size() - 1)+"");
 
                                                 if (countOfElements.get() == (keys.size() - 1)) {
 

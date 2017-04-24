@@ -2,6 +2,7 @@ package com.ucaldas.ro.reduccionobesidad;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -36,6 +37,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -425,7 +427,6 @@ public class mHome extends AppCompatActivity
         tipDetailIntent.putExtra("id", item.getId());
 
         startActivity(tipDetailIntent);
-
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {

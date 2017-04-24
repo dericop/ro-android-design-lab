@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -37,7 +38,7 @@ public class TipsFragment extends Fragment {
 
     private TipsRecyclerViewAdapter recyclerViewAdapter;
 
-
+    private String lastTipLoaded = "";
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -79,6 +80,7 @@ public class TipsFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
+
 
 
             loadTips(recyclerView);

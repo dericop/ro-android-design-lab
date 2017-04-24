@@ -224,8 +224,6 @@ public class Simulation extends Fragment {
         }
     }
 
-    private boolean rendered = true;
-
     public void loadData(final View view) {
         if (mHome.user != null) {
             final String[] foodsString = getResources().getStringArray(R.array.new_post_food_categories);
@@ -244,64 +242,57 @@ public class Simulation extends Fragment {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
 
-                        if(rendered){
+                        final AtomicInteger sumOfFrecuencies = new AtomicInteger(0);
+                        totalAverage = 0.0;
+                        goodHabitsAverage = 0.0;
+                        mediumHabitsAverage = 0.0;
+                        badHabitsAverages = 0.0;
 
-                            rendered = false;
-                            final AtomicInteger sumOfFrecuencies = new AtomicInteger(0);
-                            totalAverage = 0.0;
-                            goodHabitsAverage = 0.0;
-                            mediumHabitsAverage = 0.0;
-                            badHabitsAverages = 0.0;
+                        final Map<String, HashMap> data = (HashMap) dataSnapshot.getValue();
+                        if (data != null) {
 
-                            final Map<String, HashMap> data = (HashMap) dataSnapshot.getValue();
-                            if (data != null) {
+                            final LinkedList<String> keys = new LinkedList();
+                            keys.addAll(data.keySet());
+                            final AtomicInteger countOfElements = new AtomicInteger(0);
 
-                                final LinkedList<String> keys = new LinkedList();
-                                keys.addAll(data.keySet());
-                                final AtomicInteger countOfElements = new AtomicInteger(0);
+                            for (final String key : keys) {
 
-                                for (final String key : keys) {
+                                Map<String, Object> post = data.get(key);
 
-                                    Map<String, Object> post = data.get(key);
+                                quaDBRef.child(post.get("id") + "").addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        if (dataSnapshot.getValue() != null) {
 
-                                    quaDBRef.child(post.get("id") + "").addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(DataSnapshot dataSnapshot) {
-                                            if (dataSnapshot.getValue() != null) {
+                                            Post post = dataSnapshot.getValue(Post.class);
+                                            countOfElements.incrementAndGet();
+                                            if (post.getResult() != 0) {
+                                                calculatePostQualification(post, frecuenciesCost, frecuencies, sumOfFrecuencies, countOfHealthy, countOfMedium, countOfBad);
 
-                                                Post post = dataSnapshot.getValue(Post.class);
-                                                if (post.getResult() != 0) {
-                                                    countOfElements.incrementAndGet();
-                                                    calculatePostQualification(post, frecuenciesCost, frecuencies, sumOfFrecuencies, countOfHealthy, countOfMedium, countOfBad);
+                                                //Log.v("Simulation", "cantidad: "+ countOfElements+" keys.size: "+(keys.size()-1)+"");
+                                                if (countOfElements.get() == (keys.size() - 1)) {
+                                                    updateViewsAndRestarData(countOfHealthy, countOfMedium, countOfBad, view, sumOfFrecuencies);
+                                                    swiperefresh.setRefreshing(false);
 
-                                                    //Log.v("Simulation", "cantidad: "+ countOfElements+" keys.size: "+(keys.size()-1)+"");
-                                                    if (countOfElements.get() == (keys.size() - 1)) {
-                                                        updateViewsAndRestarData(countOfHealthy, countOfMedium, countOfBad, view, sumOfFrecuencies);
-                                                        swiperefresh.setRefreshing(false);
-
-                                                        sumOfFrecuencies.set(0);
-                                                        totalAverage = 0.0;
-                                                        goodHabitsAverage = 0.0;
-                                                        mediumHabitsAverage = 0.0;
-                                                        badHabitsAverages = 0.0;
-                                                        rendered = true;
-                                                    }
+                                                    sumOfFrecuencies.set(0);
+                                                    totalAverage = 0.0;
+                                                    goodHabitsAverage = 0.0;
+                                                    mediumHabitsAverage = 0.0;
+                                                    badHabitsAverages = 0.0;
                                                 }
                                             }
                                         }
+                                    }
 
-                                        @Override
-                                        public void onCancelled(DatabaseError databaseError) {
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
 
-                                        }
-                                    });
-                                }
-
-
+                                    }
+                                });
                             }
+
+
                         }
-
-
                     }
 
                     @Override
@@ -316,13 +307,13 @@ public class Simulation extends Fragment {
 
 
     private void updateViewsAndRestarData(AtomicInteger countOfHealthy, AtomicInteger countOfMedium, AtomicInteger countOfBad, View view, AtomicInteger sumOfFrecuencies) {
-        Log.v("Total", "Good: "+countOfHealthy.get());
-        Log.v("Total", "Medium "+countOfMedium.get());
-        Log.v("Total", "Bad "+countOfBad.get());
+        Log.v("Total", "Good: " + countOfHealthy.get());
+        Log.v("Total", "Medium " + countOfMedium.get());
+        Log.v("Total", "Bad " + countOfBad.get());
 
-        Log.v("Total", "Good Average: "+goodHabitsAverage);
-        Log.v("Total", "Medium Average: "+mediumHabitsAverage);
-        Log.v("Total", "Bad Average: "+badHabitsAverages);
+        Log.v("Total", "Good Average: " + goodHabitsAverage);
+        Log.v("Total", "Medium Average: " + mediumHabitsAverage);
+        Log.v("Total", "Bad Average: " + badHabitsAverages);
 
         /*if(countOfHealthy.get() != 0)
             //goodHabitsAverage = goodHabitsAverage / countOfHealthy.get();
@@ -349,7 +340,7 @@ public class Simulation extends Fragment {
 
         int average = (int) post.getAverage();
 
-        Log.v("Simulation", frecuency+"");
+        Log.v("Simulation", frecuency + "");
 
         if (!foodList.contains(post.getCategory())) {
             switch (average) {
@@ -480,7 +471,7 @@ public class Simulation extends Fragment {
     }
 
     private void paintLevel(double average, View view) {
-        Log.v("Simulation", "Pintate "+average);
+        Log.v("Simulation", "Pintate " + average);
         final RelativeLayout humanContainer = (RelativeLayout) view.findViewById(R.id.human_container);
         final ImageView humanImageView = (ImageView) view.findViewById(R.id.human_image_view);
 
