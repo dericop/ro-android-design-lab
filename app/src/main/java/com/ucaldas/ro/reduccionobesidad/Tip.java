@@ -20,6 +20,9 @@ public class Tip {
 
     public Tip(){}
 
+    /*
+    * @param id
+    * */
     public Tip(String id, String name, String type, String description, String image, String app){
         this.id = id;
         this.name = name;

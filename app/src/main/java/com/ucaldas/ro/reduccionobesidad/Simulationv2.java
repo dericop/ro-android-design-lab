@@ -180,7 +180,6 @@ public class Simulationv2 extends Fragment {
             }
         });
 
-        restartData();
 
         tView = view;
         loadItems(view);

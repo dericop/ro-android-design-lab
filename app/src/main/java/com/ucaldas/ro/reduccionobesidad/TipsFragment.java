@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +17,13 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * A fragment representing a list of Items.
@@ -39,6 +45,10 @@ public class TipsFragment extends Fragment {
     private TipsRecyclerViewAdapter recyclerViewAdapter;
 
     private String lastTipLoaded = "";
+    private boolean isTheFirstItem = true; //usado para obtener la primer clave en la paginación
+    private boolean flag_loading = false;
+
+    private int countOfElementsByPage = 10;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -80,12 +90,85 @@ public class TipsFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-
-
+            lastTipLoaded = "";
+            isTheFirstItem = true;
+            flag_loading = false;
 
             loadTips(recyclerView);
         }
         return view;
+    }
+
+    private void loadNextPage(){
+        database = FirebaseDatabase.getInstance().getReference();
+        database = database.child("tips");
+
+        database.orderByKey().limitToLast(countOfElementsByPage).endAt(lastTipLoaded).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.getValue()!=null){
+                    final HashMap<String, Object> tipMap = (HashMap)dataSnapshot.getValue();
+                    isTheFirstItem = true;
+                    SortedSet<String> keys = new TreeSet(tipMap.keySet());
+                    tipMap.remove(keys.last());
+                    keys = new TreeSet(tipMap.keySet());
+
+                    for (String key : keys) {
+
+                        if(isTheFirstItem){
+                            lastTipLoaded = key+"";
+                            isTheFirstItem = false;
+                        }
+
+                        updateTipsFeed((HashMap)tipMap.get(key), 1);
+                    }
+
+                    recyclerViewAdapter.notifyDataSetChanged();
+                    flag_loading = false;
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    private Tip createBaseTip(HashMap tipMap){
+
+        final String app = (String)tipMap.get("app");
+        final String description =(String) tipMap.get("description");
+        final String id = (String)tipMap.get("id");
+        final String image = (String)tipMap.get("image");
+        final String name = (String)tipMap.get("name");
+        final String type = (String)tipMap.get("type");
+
+        Tip tip = new Tip(id, name, type, description, image, app);
+        return tip;
+    }
+
+    private void reloadData(){
+
+        recyclerViewAdapter.notifyDataSetChanged();
+        //mSwipeRefreshing.setRefreshing(false);
+    }
+
+    //Position: 0 -> ingresar al principio, 1 - ingresar al final
+    private void updateTipsFeed(HashMap map, int position){
+        final HashMap<String, Object> postMap = map;
+        final Tip tip = createBaseTip(postMap);
+
+        if(tip.getApp().equals(WelcomeActivity.CURRENT_APP_VERSION)){
+            if(position == 0)
+                mTips.addFirst(tip);
+            else{
+                mTips.addLast(tip);
+            }
+        }
+
+        reloadData();
     }
 
     private void loadTips(final RecyclerView recyclerView){
@@ -96,7 +179,7 @@ public class TipsFragment extends Fragment {
         recyclerView.setAdapter(recyclerViewAdapter);
         recyclerViewAdapter.notifyDataSetChanged();
 
-        database.addChildEventListener(new ChildEventListener() {
+        database.orderByKey().limitToLast(countOfElementsByPage).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 if(dataSnapshot.getValue() != null){
@@ -105,6 +188,11 @@ public class TipsFragment extends Fragment {
                         mTips.addFirst(tip);
                         recyclerViewAdapter.notifyDataSetChanged();
                     }
+                }
+
+                if(s!=null && isTheFirstItem){
+                    lastTipLoaded = s;
+                    isTheFirstItem = false;
                 }
             }
 
@@ -138,6 +226,32 @@ public class TipsFragment extends Fragment {
             }
         });
 
+        final LinearLayoutManager layoutManager=new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layoutManager);
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if(layoutManager.findLastCompletelyVisibleItemPosition() == (mTips.size() -1)){
+                    Log.v("Scrolled", flag_loading+"");
+
+                    if(!flag_loading)
+                    {
+                        flag_loading = true;
+                        loadNextPage();
+
+                        Log.v("Scrolled", "Next page");
+                    }
+
+                }
+            }
+        });
+
     }
 
 
@@ -156,6 +270,14 @@ public class TipsFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        mTips = new LinkedList<>();
+        lastTipLoaded = "";
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
     }
 
 

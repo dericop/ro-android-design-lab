@@ -1,5 +1,7 @@
 package com.ucaldas.ro.reduccionobesidad;
 
+import android.app.Activity;
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -190,6 +192,17 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
         }
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        Activity activity;
+
+        if (context instanceof Activity) {
+
+        }
+    }
+
     private Post createBasePost(HashMap postMap){
 
         final String name = (String)postMap.get("name");
@@ -234,12 +247,6 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
             mPostList.addFirst(post);
         else{
             mPostList.addLast(post);
-            /*int posTarget = countOfPages * countOfItemsLoadedForTime;
-            if(posTarget > mPostList.size()){
-                posTarget = mPostList.size() - 1;
-                mPostList.add(posTarget, post);
-            }else
-                mPostList.add((countOfPages * countOfItemsLoadedForTime), post);*/
         }
 
 
@@ -443,7 +450,6 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
             pRef = mDatabase.child("user-posts-reflexive");
         }
 
-
         if(!lastPostLoaded.equals("")){
 
             pRef.orderByKey().limitToLast(countOfItemsLoadedForTime).endAt(lastPostLoaded).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -521,11 +527,10 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
 
                 if(firstVisibleItem+visibleItemCount == totalItemCount && totalItemCount!=0)
                 {
-                    if(flag_loading == false)
+                    if(!flag_loading)
                     {
                         flag_loading = true;
                         loadNextPage();
-
                     }
                 }
             }
@@ -564,6 +569,7 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
     @Override
     public void onDetach() {
         super.onDetach();
+        lastPostLoaded = "";
     }
 
     @Override
