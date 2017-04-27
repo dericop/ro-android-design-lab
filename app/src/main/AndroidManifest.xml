@@ -109,7 +109,8 @@
         <activity
             android:name=".TipDetailActivity"
             android:label="@string/title_activity_tip_detail"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"/>
 
         <activity android:name=".AddTipActivity"
             android:label="Nuevo anuncio"/>

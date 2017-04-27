@@ -247,7 +247,6 @@ public class TipsFragment extends Fragment {
 
                         Log.v("Scrolled", "Next page");
                     }
-
                 }
             }
         });
@@ -271,6 +270,7 @@ public class TipsFragment extends Fragment {
         super.onDetach();
         mListener = null;
         mTips = new LinkedList<>();
+        recyclerViewAdapter.notifyDataSetChanged();
         lastTipLoaded = "";
     }
 

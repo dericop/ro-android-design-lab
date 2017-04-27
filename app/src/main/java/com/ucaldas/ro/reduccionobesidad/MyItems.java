@@ -241,6 +241,7 @@ public class MyItems extends Fragment {
         mListener = null;
 
         myItems = new ArrayList<>();
+        itemAdapter.notifyDataSetChanged();
     }
 
     @Override
