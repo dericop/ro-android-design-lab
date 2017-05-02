@@ -29,7 +29,6 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         // ...
 
         // TODO(developer): Handle FCM messages here.
-        // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
         Log.d(TAG, "From: " + remoteMessage.getFrom());
 
         // Check if message contains a data payload.
@@ -39,6 +38,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
             String type = remoteMessage.getData().get("type");
             String title = remoteMessage.getData().get("title");
             String body = remoteMessage.getData().get("body");
+            String data = remoteMessage.getData().get("data");
 
             Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
@@ -52,35 +52,52 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
                             .setStyle(new NotificationCompat.BigTextStyle().bigText(body))
                             .setContentText(body);
 
-            // Creates an explicit intent for an Activity in your app
-            Intent resultIntent = new Intent(this, mHome.class);
+            Intent detailIntent = null;
 
-            // The stack builder object will contain an artificial back stack for the
-            // started Activity.
-            // This ensures that navigating backward from the Activity leads out of
-            // your application to the Home screen.
-            TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-            // Adds the back stack for the Intent (but not the Intent itself)
-            stackBuilder.addParentStack(mHome.class);
-            // Adds the Intent that starts the Activity to the top of the stack
-            stackBuilder.addNextIntent(resultIntent);
-            PendingIntent resultPendingIntent =
-                    stackBuilder.getPendingIntent(
-                            0,
-                            PendingIntent.FLAG_UPDATE_CURRENT
-                    );
-            mBuilder.setContentIntent(resultPendingIntent);
-            NotificationManager mNotificationManager =
-                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            // mId allows you to update the notification later on.
-            mNotificationManager.notify(1, mBuilder.build());
+            switch(type){
+                case "detail":
+
+                    detailIntent = new Intent(getApplicationContext(), PostDetail.class);
+                    detailIntent.putExtra("id", data);
+                    detailIntent.putExtra("notificationType", "qualification");
+
+                    break;
+
+                case "Tip":
+
+                    detailIntent = new Intent(getApplicationContext(), TipDetailActivity.class);
+                    detailIntent.putExtra("id", data);
+                    detailIntent.putExtra("notificationType", "tip");
+
+                    break;
+            }
+
+            if(detailIntent != null){
+
+                TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+                // Adds the back stack for the Intent (but not the Intent itself)
+                stackBuilder.addParentStack(mHome.class);
+                // Adds the Intent that starts the Activity to the top of the stack
+                stackBuilder.addNextIntent(detailIntent);
+
+                Intent backIntent = new Intent(getApplicationContext(), mHome.class);
+                backIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                final PendingIntent resultPendingIntent = PendingIntent.getActivities(
+                        getApplicationContext(), 0,
+                        new Intent[]{backIntent, detailIntent}, PendingIntent.FLAG_ONE_SHOT);
+
+                mBuilder.setContentIntent(resultPendingIntent);
+
+                NotificationManager mNotificationManager =
+                        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                // mId allows you to update the notification later on.
+                mNotificationManager.notify(1, mBuilder.build());
+            }
         }
 
         // Check if message contains a notification payload.
         if (remoteMessage.getNotification() != null) {
             Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
-
-
         }
 
 

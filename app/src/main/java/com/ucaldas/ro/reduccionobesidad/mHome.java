@@ -88,7 +88,6 @@ public class mHome extends AppCompatActivity
                         mHome.user = user; //Asignación de usuario a la clase principal
                         initMHome();
 
-
                     } else {
                         // AUser is signed out
                         Log.d("AUser", "onAuthStateChanged:signed_out");

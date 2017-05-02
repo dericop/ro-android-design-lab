@@ -63,11 +63,20 @@
             android:label="@string/title_activity_library_post"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
+
         <activity
             android:name=".PostDetail"
             android:label="Comentar"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:parentActivityName=".mHome">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".mHome" />
+
+        </activity>
+
         <activity
             android:name=".LibraryActivity"
             android:screenOrientation="portrait" />
@@ -110,7 +119,13 @@
             android:name=".TipDetailActivity"
             android:label="@string/title_activity_tip_detail"
             android:theme="@style/AppTheme"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".mHome" />
+
+        </activity>
 
         <activity android:name=".AddTipActivity"
             android:label="Nuevo anuncio"/>

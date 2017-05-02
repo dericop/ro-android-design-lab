@@ -66,6 +66,17 @@ public class PostDetail extends AppCompatActivity {
 
     }
 
+    private void configureDatabaseForGetDetail(){
+        database = FirebaseDatabase.getInstance();
+        if(database != null && mHome.user!=null){
+            if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
+                datRef = database.getReference().child("user-posts");
+            }else{
+                datRef = database.getReference().child("user-posts-reflexive");
+            }
+        }
+    }
+
 
     private void init(){
 
@@ -81,25 +92,62 @@ public class PostDetail extends AppCompatActivity {
         commentListView.setEmptyView(findViewById(android.R.id.empty));
 
         mComments = new LinkedList();
-
-
         comAdapter = new CommentsAdapter(
                 getBaseContext(),
                 mComments);
 
         commentListView.setAdapter(comAdapter);
 
+        String type = getIntent().getStringExtra("notificationType");
+        if(type != null && !type.equals("")){
+            configureDatabaseForGetDetail();
+            postId = getIntent().getStringExtra("id");
 
-        //Recuperación de datos de la vista anterior
-        String name = getIntent().getStringExtra("name");
-        String imageForComment = getIntent().getStringExtra("image");
-        String user = getIntent().getStringExtra("userName");
-        postId = getIntent().getStringExtra("id");
-        double r_pi = getIntent().getDoubleExtra("r_pi", 0);
-        double r_aa = getIntent().getDoubleExtra("r_aa", 0);
-        double r_gs = getIntent().getDoubleExtra("r_gs", 0);
-        double r_ch = getIntent().getDoubleExtra("r_ch", 0);
-        long result = getIntent().getLongExtra("result", 0);
+            if(postId!=null && postId!=""){
+
+                DatabaseReference db =  FirebaseDatabase.getInstance().getReference();
+               if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
+                   db = database.getReference().child("user-posts");
+               }else{
+                   db = database.getReference().child("user-posts-reflexive");
+               }
+
+                db.child(postId).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        if(dataSnapshot.getValue() != null) {
+                            Post post = dataSnapshot.getValue(Post.class);
+                            listData(post.getName(), post.getImage(), post.getUser(), post.getR_pi(), post.getR_aa(), post.getR_ch(), post.getR_gs(), post.getResult());
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+        }else{
+            //Recuperación de datos de la vista anterior
+            String name = getIntent().getStringExtra("name");
+            String imageForComment = getIntent().getStringExtra("image");
+            String user = getIntent().getStringExtra("userName");
+            postId = getIntent().getStringExtra("id");
+            double r_pi = getIntent().getDoubleExtra("r_pi", 0);
+            double r_aa = getIntent().getDoubleExtra("r_aa", 0);
+            double r_gs = getIntent().getDoubleExtra("r_gs", 0);
+            double r_ch = getIntent().getDoubleExtra("r_ch", 0);
+            long result = getIntent().getLongExtra("result", 0);
+
+            listData(name, imageForComment, user, r_pi, r_aa, r_gs, r_ch, result);
+        }
+
+    }
+
+    private void listData(String name, String imageForComment, String user, double r_pi, double r_aa, double r_gs, double r_ch, long result){
+
 
         //Actualización componentes gráficos
         ImageView imgPreview = (ImageView) findViewById(R.id.imgPreview);
@@ -144,7 +192,6 @@ public class PostDetail extends AppCompatActivity {
 
         //Consultar los comentarios de la base de datos
         getPostComments();
-
     }
 
     private void closeKeyboard(){
@@ -177,7 +224,6 @@ public class PostDetail extends AppCompatActivity {
                 }else{
                     key = database.child("user-comments-reflexive").push().getKey();
                 }
-
 
                 Map<String, Object> commentValues = com.toMap();
                 Map<String, Object> childUpdates = new HashMap<>();
