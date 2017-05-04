@@ -4,6 +4,7 @@ import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 /**
@@ -30,6 +31,7 @@ public class Post{
     private double r_ch;
     public long countOfComments;
     public long replyCount;
+    public HashMap<String, Object> notificationTokens;
 
     public Post(){
 
@@ -165,16 +167,17 @@ public class Post{
             result.put("duration", duration);
 
         if(this.r_pi != 0)
-            result.put("pi", r_pi);
+            result.put("r_pi", r_pi);
 
         if(this.r_pi != 0)
-            result.put("aa", r_aa);
+            result.put("r_aa", r_aa);
 
         if(this.r_pi != 0)
-            result.put("gs", r_gs);
+            result.put("r_gs", r_gs);
 
         if(this.r_pi != 0)
-            result.put("ch", r_ch);
+            result.put("r_ch", r_ch);
+
 
         return result;
     }

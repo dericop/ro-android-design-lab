@@ -269,6 +269,7 @@ public class TipsFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        mTips.clear();
         mTips = new LinkedList<>();
         recyclerViewAdapter.notifyDataSetChanged();
         lastTipLoaded = "";

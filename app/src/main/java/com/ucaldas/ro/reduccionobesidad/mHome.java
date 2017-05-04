@@ -307,12 +307,14 @@ public class mHome extends AppCompatActivity
                         break;
                     case 1:
                         //Log.v("Items", "Mis items");
-                        //myItems.loadItems();
+                        //if(myItems!=null)
+                        //    myItems.loadItems();
                         break;
                     case 2:
                         //Log.v("Items", "Simulación");
                         if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
                             if(simulation.tView != null){
+                                Log.v("Simu", "simulación");
                                 simulation.loadData(simulation.tView);
                             }
                         }else{
@@ -362,7 +364,7 @@ public class mHome extends AppCompatActivity
 
         TextView tabFour = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
         tabFour.setText("Tips");
-        tabFour.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_action_home, 0, 0);
+        tabFour.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_action_tips, 0, 0);
         tabLayout.getTabAt(3).setCustomView(tabFour);
 
 

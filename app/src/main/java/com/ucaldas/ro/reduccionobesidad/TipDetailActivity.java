@@ -39,23 +39,55 @@ public class TipDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tip_detail);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
-        String title = getIntent().getStringExtra("title");
-        String description = getIntent().getStringExtra("description");
-        String image = getIntent().getStringExtra("image");
-        String id = getIntent().getStringExtra("id");
-
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("");
         descriptionC = (TextView) findViewById(R.id.description);
         imageC = (ImageView) findViewById(R.id.image);
 
-        descriptionC.setText(description);
-        Glide.with(getApplicationContext()).load(image).into(imageC);
+        String type = getIntent().getStringExtra("notificationType");
 
-        toolbar.setTitle(title);
+        if(type!=null && type.equals("tip")){
+            final String id = getIntent().getStringExtra("id");
 
-        setSupportActionBar(toolbar);
-        configureToolbarAndActions(id);
+            DatabaseReference db;
+            db = FirebaseDatabase.getInstance().getReference().child("tips");
+
+            db.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    if(dataSnapshot.getValue() != null) {
+                        Tip tip = dataSnapshot.getValue(Tip.class);
+                        descriptionC.setText(tip.getDescription());
+                        Glide.with(getApplicationContext()).load(tip.getImage()).into(imageC);
+
+                        toolbar.setTitle(tip.getName());
+                        setSupportActionBar(toolbar);
+                        configureToolbarAndActions(id);
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+
+        }else{
+            String title = getIntent().getStringExtra("title");
+            String description = getIntent().getStringExtra("description");
+            String image = getIntent().getStringExtra("image");
+            String id = getIntent().getStringExtra("id");
+
+            descriptionC.setText(description);
+            Glide.with(getApplicationContext()).load(image).into(imageC);
+
+            toolbar.setTitle(title);
+            setSupportActionBar(toolbar);
+            configureToolbarAndActions(id);
+
+        }
     }
 
     private void configureToolbarAndActions(final String id) {

@@ -29,6 +29,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -54,36 +55,36 @@ public class PostDetail extends AppCompatActivity {
         init();
     }
 
-    private void configureDatabase(){
+    private void configureDatabase() {
         database = FirebaseDatabase.getInstance();
-        if(database!=null && mHome.user!=null){
-            if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
+        if (database != null && mHome.user != null) {
+            if (WelcomeActivity.CURRENT_APP_VERSION.equals("A")) {
                 datRef = database.getReference().child("user-comments");
-            }else{
+            } else {
                 datRef = database.getReference().child("user-comments-reflexive");
             }
         }
 
     }
 
-    private void configureDatabaseForGetDetail(){
+    private void configureDatabaseForGetDetail() {
         database = FirebaseDatabase.getInstance();
-        if(database != null && mHome.user!=null){
-            if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
+        if (database != null && mHome.user != null) {
+            if (WelcomeActivity.CURRENT_APP_VERSION.equals("A")) {
                 datRef = database.getReference().child("user-posts");
-            }else{
+            } else {
                 datRef = database.getReference().child("user-posts-reflexive");
             }
         }
     }
 
 
-    private void init(){
+    private void init() {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        if(getSupportActionBar() != null){
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
@@ -99,24 +100,24 @@ public class PostDetail extends AppCompatActivity {
         commentListView.setAdapter(comAdapter);
 
         String type = getIntent().getStringExtra("notificationType");
-        if(type != null && !type.equals("")){
+        if (type != null && !type.equals("")) {
             configureDatabaseForGetDetail();
             postId = getIntent().getStringExtra("id");
 
-            if(postId!=null && postId!=""){
+            if (postId != null && postId != "") {
 
-                DatabaseReference db =  FirebaseDatabase.getInstance().getReference();
-               if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
-                   db = database.getReference().child("user-posts");
-               }else{
-                   db = database.getReference().child("user-posts-reflexive");
-               }
+                DatabaseReference db = FirebaseDatabase.getInstance().getReference();
+                if (WelcomeActivity.CURRENT_APP_VERSION.equals("A")) {
+                    db = database.getReference().child("user-posts");
+                } else {
+                    db = database.getReference().child("user-posts-reflexive");
+                }
 
                 db.child(postId).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
 
-                        if(dataSnapshot.getValue() != null) {
+                        if (dataSnapshot.getValue() != null) {
                             Post post = dataSnapshot.getValue(Post.class);
                             listData(post.getName(), post.getImage(), post.getUser(), post.getR_pi(), post.getR_aa(), post.getR_ch(), post.getR_gs(), post.getResult());
                         }
@@ -129,7 +130,7 @@ public class PostDetail extends AppCompatActivity {
                 });
             }
 
-        }else{
+        } else {
             //Recuperación de datos de la vista anterior
             String name = getIntent().getStringExtra("name");
             String imageForComment = getIntent().getStringExtra("image");
@@ -146,7 +147,7 @@ public class PostDetail extends AppCompatActivity {
 
     }
 
-    private void listData(String name, String imageForComment, String user, double r_pi, double r_aa, double r_gs, double r_ch, long result){
+    private void listData(String name, String imageForComment, String user, double r_pi, double r_aa, double r_gs, double r_ch, long result) {
 
 
         //Actualización componentes gráficos
@@ -158,16 +159,16 @@ public class PostDetail extends AppCompatActivity {
         title.setText(name);
         userName.setText(user);
 
-        LinearLayout corusQualificationContainer = (LinearLayout)  findViewById(R.id.corus_qualification);
-        LinearLayout coconoQualificationContainer = (LinearLayout)  findViewById(R.id.cocono_qualification);
+        LinearLayout corusQualificationContainer = (LinearLayout) findViewById(R.id.corus_qualification);
+        LinearLayout coconoQualificationContainer = (LinearLayout) findViewById(R.id.cocono_qualification);
 
-        if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
+        if (WelcomeActivity.CURRENT_APP_VERSION.equals("A")) {
             corusQualificationContainer.setVisibility(View.VISIBLE);
             coconoQualificationContainer.setVisibility(View.GONE);
 
             LinearLayout resultItem = (LinearLayout) findViewById(R.id.result_item);
 
-            switch ((int)result) {
+            switch ((int) result) {
                 case 0:
                     resultItem.setBackgroundDrawable(getResources().getDrawable(R.drawable.circle_clock));
                     break;
@@ -182,7 +183,7 @@ public class PostDetail extends AppCompatActivity {
                     break;
             }
 
-        }else{
+        } else {
             corusQualificationContainer.setVisibility(View.GONE);
             coconoQualificationContainer.setVisibility(View.VISIBLE);
 
@@ -194,20 +195,20 @@ public class PostDetail extends AppCompatActivity {
         getPostComments();
     }
 
-    private void closeKeyboard(){
+    private void closeKeyboard() {
         View view = this.getCurrentFocus();
         if (view != null) {
-            InputMethodManager imm = (InputMethodManager)getSystemService(this.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) getSystemService(this.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
 
-    public void saveComment(View view){
+    public void saveComment(View view) {
 
-        if(isOnline()){
+        if (isOnline()) {
             final EditText editMessage = ((EditText) findViewById(R.id.edit_message));
             String comment = editMessage.getText().toString();
-            if(!comment.equals("")){
+            if (!comment.equals("")) {
                 Calendar cal = Calendar.getInstance();
                 long timeInMillis = cal.getTimeInMillis();
 
@@ -219,18 +220,18 @@ public class PostDetail extends AppCompatActivity {
 
                 String key;
 
-                if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
+                if (WelcomeActivity.CURRENT_APP_VERSION.equals("A")) {
                     key = database.child("user-comments").push().getKey();
-                }else{
+                } else {
                     key = database.child("user-comments-reflexive").push().getKey();
                 }
 
                 Map<String, Object> commentValues = com.toMap();
                 Map<String, Object> childUpdates = new HashMap<>();
 
-                if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
+                if (WelcomeActivity.CURRENT_APP_VERSION.equals("A")) {
                     childUpdates.put("/user-comments/" + key, commentValues);
-                }else{
+                } else {
                     childUpdates.put("/user-comments-reflexive/" + key, commentValues);
                 }
 
@@ -245,7 +246,7 @@ public class PostDetail extends AppCompatActivity {
                             closeKeyboard();
 
                         } else {
-                            if(getCurrentFocus()!=null)
+                            if (getCurrentFocus() != null)
                                 Snackbar.make(getCurrentFocus(), "Revise su conexión a internet o intentelo más tarde", 2000).show();
                         }
                     }
@@ -254,15 +255,15 @@ public class PostDetail extends AppCompatActivity {
 
             }
 
-        }else{
+        } else {
             View piContainer = findViewById(R.id.piContainer);
             Snackbar.make(piContainer, "No tienes conexión a internet", Snackbar.LENGTH_INDEFINITE).show();
         }
     }
 
-    private void addCommentsCounterToPost(String idPost){
+    private void addCommentsCounterToPost(String idPost) {
 
-        if(WelcomeActivity.CURRENT_APP_VERSION.equals("A"))
+        if (WelcomeActivity.CURRENT_APP_VERSION.equals("A"))
             datRef = database.getReference().child("user-posts");
         else
             datRef = database.getReference().child("user-posts-reflexive");
@@ -279,24 +280,47 @@ public class PostDetail extends AppCompatActivity {
 
                 p.countOfComments = p.countOfComments + 1;
 
-                mutableData.setValue(p);
+                HashMap<String, Object> map = (HashMap) mutableData.getValue();
+                HashMap tokens = (HashMap) map.get("notificationTokens");
+
+                Map<String, Object> postMap = p.toMap();
+
+                if(tokens != null)
+                    postMap.put("notificationTokens", tokens);
+
+                String currentToken = FirebaseInstanceId.getInstance().getToken();
+
+                if (currentToken != null && !currentToken.equals("")) {
+                    if (tokens != null) {
+                        tokens.put(currentToken, true);
+
+                    }else{
+                        tokens = new HashMap();
+                        tokens.put(currentToken, true);
+                    }
+
+                    postMap.put("notificationTokens", tokens);
+
+                }
+
+                mutableData.setValue(postMap);
+
                 return Transaction.success(mutableData);
             }
 
             @Override
             public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
-                if(databaseError!=null){
-                    if(getCurrentFocus()!=null){
+                if (databaseError != null) {
+                    if (getCurrentFocus() != null) {
                         Snackbar.make(getCurrentFocus(), "Revise su conexión a internet o intentelo más tarde", 2000).show();
                     }
                 }
             }
-
         });
 
     }
 
-    private void getPostComments(){
+    private void getPostComments() {
         configureDatabase();
         updateComments();
     }
@@ -308,33 +332,33 @@ public class PostDetail extends AppCompatActivity {
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
-    private void getCommentsDetail(){
+    private void getCommentsDetail() {
         final DatabaseReference userDataDB = FirebaseDatabase.getInstance().getReference();
         configureDatabase();
 
-        if(datRef != null){
+        if (datRef != null) {
             datRef.orderByChild("id").equalTo(postId).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    if(dataSnapshot.getValue() != null){
-                        HashMap<String, HashMap<String, Object>> map = (HashMap)dataSnapshot.getValue();
+                    if (dataSnapshot.getValue() != null) {
+                        HashMap<String, HashMap<String, Object>> map = (HashMap) dataSnapshot.getValue();
                         SortedSet<String> keys = new TreeSet<String>(map.keySet());
 
                         DatabaseReference userDataRef;
 
                         mComments.clear();
-                        for (String k: keys){
+                        for (String k : keys) {
                             final Comment com = new Comment();
-                            com.setDetail(map.get(k).get("detail")+"");
-                            com.setDate((long)map.get(k).get("date"));
-                            com.setId(map.get(k).get("id")+"");
+                            com.setDetail(map.get(k).get("detail") + "");
+                            com.setDate((long) map.get(k).get("date"));
+                            com.setId(map.get(k).get("id") + "");
 
-                            if(map.get(k).get("user") != null){
-                                String userKey = map.get(k).get("user")+"";
+                            if (map.get(k).get("user") != null) {
+                                String userKey = map.get(k).get("user") + "";
 
-                                if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
+                                if (WelcomeActivity.CURRENT_APP_VERSION.equals("A")) {
                                     userDataRef = userDataDB.child("users");
-                                }else{
+                                } else {
                                     userDataRef = userDataDB.child("users-reflexive");
                                 }
 
@@ -345,12 +369,12 @@ public class PostDetail extends AppCompatActivity {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
 
-                                        if(dataSnapshot.hasChildren()){
-                                            HashMap<String, HashMap<String, Object>> map = (HashMap)dataSnapshot.getValue();
+                                        if (dataSnapshot.hasChildren()) {
+                                            HashMap<String, HashMap<String, Object>> map = (HashMap) dataSnapshot.getValue();
                                             SortedSet<String> keys = new TreeSet<String>(map.keySet());
 
-                                            com.setUser(map.get("mUserName")+"");
-                                            com.setUserPhoto(map.get("mPhotoUrl")+"");
+                                            com.setUser(map.get("mUserName") + "");
+                                            com.setUserPhoto(map.get("mPhotoUrl") + "");
 
 
                                             comAdapter.notifyDataSetChanged();
@@ -377,26 +401,26 @@ public class PostDetail extends AppCompatActivity {
 
     }
 
-    private void updateComments(){
-        if(isOnline()){
-            if(datRef != null){
+    private void updateComments() {
+        if (isOnline()) {
+            if (datRef != null) {
                 getCommentsDetail();
-            }else{
+            } else {
                 try {
                     configureDatabase();
                     getCommentsDetail();
-                }catch (DatabaseException de){
+                } catch (DatabaseException de) {
                     //Log.v("Error", de.getMessage());
                 }
 
             }
-        }else{
+        } else {
             View piContainer = findViewById(R.id.piContainer);
             Snackbar.make(piContainer, "No tienes conexión a internet", Snackbar.LENGTH_INDEFINITE).show();
         }
     }
 
-    private void updateQualificationInfo(double pi, double aa, double gs, double ch){
+    private void updateQualificationInfo(double pi, double aa, double gs, double ch) {
         View piContainer = findViewById(R.id.piContainer);
         View aaContainer = findViewById(R.id.aaContainer);
         View gsContainer = findViewById(R.id.gsContainer);
@@ -406,9 +430,9 @@ public class PostDetail extends AppCompatActivity {
         int maxCalificationForPI = 10;
         int relativeLayoutHeight = 50;
 
-        if(pi != 0){
-            int percentage = (int)(pi*100)/maxCalificationForPI;
-            int graphicalHeight = (percentage*relativeLayoutHeight) / 100;
+        if (pi != 0) {
+            int percentage = (int) (pi * 100) / maxCalificationForPI;
+            int graphicalHeight = (percentage * relativeLayoutHeight) / 100;
 
             ViewGroup.LayoutParams piParams = piContainer.getLayoutParams();
             piParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, graphicalHeight, getResources().getDisplayMetrics());
@@ -416,28 +440,28 @@ public class PostDetail extends AppCompatActivity {
         }
 
         int maxCalificationForOthers = 3;
-        if(aa != 0){
-            int percentage = (int)(aa*100)/maxCalificationForOthers;
-            int graphicalHeight = (percentage*relativeLayoutHeight)/ 100;
+        if (aa != 0) {
+            int percentage = (int) (aa * 100) / maxCalificationForOthers;
+            int graphicalHeight = (percentage * relativeLayoutHeight) / 100;
 
             ViewGroup.LayoutParams aaParams = aaContainer.getLayoutParams();
             aaParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, graphicalHeight, getResources().getDisplayMetrics());
             aaContainer.setLayoutParams(aaParams);
         }
 
-        if(gs != 0){
-            int percentage = (int)(gs*100)/maxCalificationForOthers;
-            int graphicalHeight = (percentage*relativeLayoutHeight)/ 100;
+        if (gs != 0) {
+            int percentage = (int) (gs * 100) / maxCalificationForOthers;
+            int graphicalHeight = (percentage * relativeLayoutHeight) / 100;
 
             ViewGroup.LayoutParams gsParams = gsContainer.getLayoutParams();
             gsParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, graphicalHeight, getResources().getDisplayMetrics());
             gsContainer.setLayoutParams(gsParams);
         }
 
-        if(ch != 0){
+        if (ch != 0) {
 
-            int percentage = (int)(ch*100)/maxCalificationForOthers;
-            int graphicalHeight = (percentage*relativeLayoutHeight)/ 100;
+            int percentage = (int) (ch * 100) / maxCalificationForOthers;
+            int graphicalHeight = (percentage * relativeLayoutHeight) / 100;
             ViewGroup.LayoutParams chParams = chContainer.getLayoutParams();
             chParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, graphicalHeight, getResources().getDisplayMetrics());
             chContainer.setLayoutParams(chParams);

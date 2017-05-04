@@ -58,6 +58,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -414,6 +415,8 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
         } else {
             post = new Post(key, nameText.toString(), category.toString(), frecuency.toString(), downloadUrl + "", mHome.user.getUid(), resultForReply, averageForReply);
         }
+
+
         return post;
     }
 
@@ -579,6 +582,17 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
 
         if (post != null) {
             Map<String, Object> postValues = post.toMap();
+
+            String currentToken = FirebaseInstanceId.getInstance().getToken();
+
+            if (currentToken != null && !currentToken.equals("")) {
+                HashMap<String,Object> tokens = new HashMap<>();
+                tokens.put(currentToken, true);
+
+                postValues.put("notificationTokens",tokens);
+            }
+
+
             Map<String, Object> childUpdates = new HashMap<>();
 
             if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){

@@ -122,7 +122,7 @@ public class MyItems extends Fragment {
         else
             firebaseDatabase = mDatabase.child("user-data-reflexive").child(mHome.user.getUid());
 
-
+        myItems.clear();
         firebaseDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -239,6 +239,7 @@ public class MyItems extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        myItems.clear();
 
         myItems = new ArrayList<>();
         itemAdapter.notifyDataSetChanged();

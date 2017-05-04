@@ -21,6 +21,8 @@ import static android.content.ContentValues.TAG;
 
 public class FirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService {
 
+    static int countOfNotf = 1;
+
     public FirebaseMessagingService() {
     }
 
@@ -91,7 +93,8 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
                 NotificationManager mNotificationManager =
                         (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                 // mId allows you to update the notification later on.
-                mNotificationManager.notify(1, mBuilder.build());
+                mNotificationManager.notify(0, mBuilder.build());
+                countOfNotf++;
             }
         }
 
