@@ -19,7 +19,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_launcher_cocono"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -107,7 +107,7 @@
         <!-- eliminar .cocono al exportar corus (com.ucaldas.android.cocono.fileprovider)-->
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.ucaldas.android.fileprovider"
+            android:authorities="com.ucaldas.android.cocono.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
