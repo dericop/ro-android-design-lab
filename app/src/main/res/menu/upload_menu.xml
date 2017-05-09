@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/showMedia"
+        android:icon="@drawable/ic_action_media"
+        android:title="Galería"/>
+
+    <item android:id="@+id/takePhoto"
+        android:icon="@drawable/ic_action_camera"
+        android:title="Tomar foto" />
+</menu>

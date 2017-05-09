@@ -266,6 +266,9 @@ public class Simulation extends Fragment {
 
                                             Post post = dataSnapshot.getValue(Post.class);
                                             countOfElements.incrementAndGet();
+
+                                            Log.v("SElements", countOfElements.get()+" keys size -1: "+ (keys.size() - 1) +"");
+
                                             if (post.getResult() != 0) {
                                                 calculatePostQualification(post, frecuenciesCost, frecuencies, sumOfFrecuencies, countOfHealthy, countOfMedium, countOfBad);
 

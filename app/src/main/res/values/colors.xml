@@ -3,12 +3,16 @@
     <color name="colorPrimary">#44494e</color>
     <color name="colorPrimaryDark">#44494e</color>
 
-    <color name="colorAccent">#00adee</color>
-    <!--<color name="colorAccent">#f6931e</color>-->
+    <!--<color name="colorAccent">#00adee</color>-->
+    <color name="colorAccent">#f6931e</color>
     <color name="textColorPrimary">#FFFFFF</color>
     <color name="windowBackground">#FFFFFF</color>
     <color name="navigationBarColor">#000000</color>
     <color name="form_labels">#848688</color>
+
+    <color name="tab_text_disabled">#a9a9a9</color>
+    <color name="tab_text_enabled">#fff</color>
+
 
     <color name="floatButtonColor">#f7ff1e</color>
     <color name="toolbarTextColor">#666</color>

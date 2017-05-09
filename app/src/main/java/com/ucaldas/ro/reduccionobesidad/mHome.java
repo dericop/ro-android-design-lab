@@ -2,6 +2,7 @@ package com.ucaldas.ro.reduccionobesidad;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,10 +16,12 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -303,14 +306,69 @@ public class mHome extends AppCompatActivity
 
                 switch(tab.getPosition()) {
                     case 0:
-                        //Log.v("Items", "Home");
+                        TextView hView = ((TextView)tab.getCustomView());
+                        if(hView!=null){
+                            hView.setTextColor(getResources().getColor(R.color.tab_text_enabled));
+                            hView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_action_home, 0, 0);
+                        }
+
+                        TextView ht1 = ((TextView)tabLayout.getTabAt(1).getCustomView());
+                        ht1.setTextColor(getResources().getColor(R.color.tab_text_disabled));
+                        ht1.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_action_items_disabled, 0, 0);
+
+                        TextView ht2 = ((TextView)tabLayout.getTabAt(2).getCustomView());
+                        ht2.setTextColor(getResources().getColor(R.color.tab_text_disabled));
+                        ht2.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_action_simulation_disabled, 0, 0);
+
+                        TextView ht3 = ((TextView)tabLayout.getTabAt(3).getCustomView());
+                        ht3.setTextColor(getResources().getColor(R.color.tab_text_disabled));
+                        ht3.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_action_tips_disabled, 0, 0);
+
+
                         break;
                     case 1:
+                        TextView tView = ((TextView)tab.getCustomView());
+                        if(tView!=null){
+                            tView.setTextColor(getResources().getColor(R.color.tab_text_enabled));
+                            tView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_action_items, 0, 0);
+                        }
+
+                        TextView tt1 = ((TextView)tabLayout.getTabAt(0).getCustomView());
+                        tt1.setTextColor(getResources().getColor(R.color.tab_text_disabled));
+                        tt1.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_action_home_disabled, 0, 0);
+
+                        TextView tt2 = ((TextView)tabLayout.getTabAt(2).getCustomView());
+                        tt2.setTextColor(getResources().getColor(R.color.tab_text_disabled));
+                        tt2.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_action_simulation_disabled, 0, 0);
+
+                        TextView tt3 = ((TextView)tabLayout.getTabAt(3).getCustomView());
+                        tt3.setTextColor(getResources().getColor(R.color.tab_text_disabled));
+                        tt3.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_action_tips_disabled, 0, 0);
+
+
                         //Log.v("Items", "Mis items");
                         //if(myItems!=null)
                         //    myItems.loadItems();
                         break;
                     case 2:
+                        TextView tiView = ((TextView)tab.getCustomView());
+                        if(tiView!=null){
+                            tiView.setTextColor(getResources().getColor(R.color.tab_text_enabled));
+                            tiView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_action_simulation, 0, 0);
+                        }
+
+                        TextView it1 = ((TextView)tabLayout.getTabAt(0).getCustomView());
+                        it1.setTextColor(getResources().getColor(R.color.tab_text_disabled));
+                        it1.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_action_home_disabled, 0, 0);
+
+                        TextView it2 = ((TextView)tabLayout.getTabAt(1).getCustomView());
+                        it2.setTextColor(getResources().getColor(R.color.tab_text_disabled));
+                        it2.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_action_items_disabled, 0, 0);
+
+                        TextView it3 = ((TextView)tabLayout.getTabAt(3).getCustomView());
+                        it3.setTextColor(getResources().getColor(R.color.tab_text_disabled));
+                        it3.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_action_tips_disabled, 0, 0);
+
                         //Log.v("Items", "Simulación");
                         if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
                             if(simulation.tView != null){
@@ -322,6 +380,27 @@ public class mHome extends AppCompatActivity
                                 simulationv2.loadItems(simulationv2.tView);
                             }
                         }
+
+                        break;
+
+                    case 3:
+                        TextView tnView = ((TextView)tab.getCustomView());
+                        if(tnView!=null){
+                            tnView.setTextColor(getResources().getColor(R.color.tab_text_enabled));
+                            tnView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_action_tips, 0, 0);
+                        }
+
+                        TextView nt1 = ((TextView)tabLayout.getTabAt(0).getCustomView());
+                        nt1.setTextColor(getResources().getColor(R.color.tab_text_disabled));
+                        nt1.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_action_home_disabled, 0, 0);
+
+                        TextView nt2 = ((TextView)tabLayout.getTabAt(1).getCustomView());
+                        nt2.setTextColor(getResources().getColor(R.color.tab_text_disabled));
+                        nt2.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_action_items_disabled, 0, 0);
+
+                        TextView nt3 = ((TextView)tabLayout.getTabAt(2).getCustomView());
+                        nt3.setTextColor(getResources().getColor(R.color.tab_text_disabled));
+                        nt3.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_action_simulation_disabled, 0, 0);
 
                         break;
                 }
@@ -346,10 +425,10 @@ public class mHome extends AppCompatActivity
         tabOne.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_action_home, 0, 0);
         tabLayout.getTabAt(0).setCustomView(tabOne);
 
-
         TextView tabTwo = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
         tabTwo.setText("Mis items");
-        tabTwo.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_action_items, 0, 0);
+        tabTwo.setTextColor(getResources().getColor(R.color.tab_text_disabled));
+        tabTwo.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_action_items_disabled, 0, 0);
         tabLayout.getTabAt(1).setCustomView(tabTwo);
 
         TextView tabThree = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
@@ -359,16 +438,23 @@ public class mHome extends AppCompatActivity
         else
             tabThree.setText("Simulación");
 
-        tabThree.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_action_simulation, 0, 0);
+        tabThree.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_action_simulation_disabled, 0, 0);
+        tabThree.setTextColor(getResources().getColor(R.color.tab_text_disabled));
         tabLayout.getTabAt(2).setCustomView(tabThree);
 
         TextView tabFour = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
         tabFour.setText("Tips");
-        tabFour.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_action_tips, 0, 0);
+        tabFour.setTextColor(getResources().getColor(R.color.tab_text_disabled));
+        tabFour.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_action_tips_disabled, 0, 0);
         tabLayout.getTabAt(3).setCustomView(tabFour);
 
+    }
 
-
+    public void showUploadPopUp(View v) {
+        PopupMenu popup = new PopupMenu(this, v);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.upload_menu, popup.getMenu());
+        popup.show();
     }
 
     @Override
@@ -395,14 +481,23 @@ public class mHome extends AppCompatActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        Log.v("Upload", "Si ingresa");
+        switch (item.getItemId()) {
+            case R.id.showMedia:
+                Intent gallery_intent = new Intent(getBaseContext(), AddPost.class);
+                gallery_intent.putExtra("source", "gallery");
+                startActivity(gallery_intent);
 
-        //noinspection SimplifiableIfStatement
-        /*if (id == R.id.action_settings) {
-            return true;
-        }*/
+                return true;
+            case R.id.takePhoto:
+                Intent camera_intent = new Intent(getBaseContext(), AddPost.class);
+                camera_intent.putExtra("source","camera");
+                startActivity(camera_intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
 
-        return super.onOptionsItemSelected(item);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -417,6 +512,8 @@ public class mHome extends AppCompatActivity
         }//else if(id == R.id.nav_intro){
 //
        // }
+
+        Log.v("Upload", "Probando");
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
