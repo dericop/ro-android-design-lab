@@ -115,6 +115,7 @@ public class mHome extends AppCompatActivity
         }
     }
 
+
     private void initMHome() {
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
@@ -533,7 +534,13 @@ public class mHome extends AppCompatActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        Log.v("Upload", "Si ingresa");
+        switch(item.getItemId()){
+            case R.id.gamification:
+                Intent gamificationIntent = new Intent(getContext(), GamificationActivity.class);
+                startActivity(gamificationIntent);
+
+                break;
+        }
         return true;
     }
 

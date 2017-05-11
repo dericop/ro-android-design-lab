@@ -415,5 +415,7 @@
         <item>R</item>
     </string-array>
 
+    <string name="title_activity_gamification">GamificationActivity</string>
+
 
 </resources>

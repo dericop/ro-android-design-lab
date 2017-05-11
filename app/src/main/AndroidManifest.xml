@@ -63,20 +63,16 @@
             android:label="@string/title_activity_library_post"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
-
         <activity
             android:name=".PostDetail"
             android:label="Comentar"
+            android:parentActivityName=".mHome"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"
-            android:parentActivityName=".mHome">
-
+            android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".mHome" />
-
         </activity>
-
         <activity
             android:name=".LibraryActivity"
             android:screenOrientation="portrait" />
@@ -104,7 +100,7 @@
             android:label="Configuración"
             android:screenOrientation="portrait" />
 
-        <!-- eliminar .cocono al exportar corus (com.ucaldas.android.cocono.fileprovider)-->
+        <!-- eliminar .cocono al exportar corus (com.ucaldas.android.cocono.fileprovider) -->
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.ucaldas.android.fileprovider"
@@ -112,23 +108,22 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"/>
+                android:resource="@xml/file_paths" />
         </provider>
 
         <activity
             android:name=".TipDetailActivity"
             android:label="@string/title_activity_tip_detail"
-            android:theme="@style/AppTheme"
-            android:screenOrientation="portrait">
-
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".mHome" />
-
         </activity>
-
-        <activity android:name=".AddTipActivity"
-            android:label="Nuevo anuncio"/>
+        <activity
+            android:name=".AddTipActivity"
+            android:label="Nuevo anuncio" />
+        <activity android:name=".GamificationActivity"></activity>
     </application>
 
 </manifest>
