@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
@@ -103,13 +104,23 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
     }
 
     View mheaderView;
+    View successView;
+    View errorView;
+    LayoutInflater mInflater;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        mheaderView = inflater.inflate(R.layout.header_home, null);
+        mInflater = inflater;
+        if(WelcomeActivity.CURRENT_APP_VERSION.equals("A"))
+            mheaderView = inflater.inflate(R.layout.header_home, null);
+        else
+            mheaderView = inflater.inflate(R.layout.header_home_reflexive, null);
+
+        successView = inflater.inflate(R.layout.header_home_success, null);
+        errorView = inflater.inflate(R.layout.header_home_error, null);
 
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
@@ -124,12 +135,53 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
                 getActivity(),
                 mPostList);
 
+        setListAdapter(mPostAdapter);
+        getListView().setOnItemClickListener(this);
+    }
+
+    private void loadChallenge(View view){
         if (mheaderView != null){
             this.getListView().addHeaderView(mheaderView);
         }
 
         setListAdapter(mPostAdapter);
-        getListView().setOnItemClickListener(this);
+
+        Button opt1 = (Button) view.findViewById(R.id.opt_1);
+        opt1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getListView().removeHeaderView(mheaderView);
+                getListView().addHeaderView(successView);
+
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        getListView().removeHeaderView(successView);
+                    }
+                }, 2000);
+
+            }
+        });
+
+        Button opt2 = (Button) view.findViewById(R.id.opt_2);
+        opt2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getListView().removeHeaderView(mheaderView);
+                getListView().addHeaderView(errorView);
+
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        getListView().removeHeaderView(errorView);
+                        getListView().addHeaderView(mheaderView);
+                    }
+                }, 2000);
+            }
+        });
+
     }
 
     @Override
@@ -152,9 +204,9 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
             //Inicialización
             initGraphicalElementsAndEvents(view);
             initData();
-
             //Consultar los primeros posts
             refreshPostList();
+            loadChallenge(view);
         }
     }
 
@@ -534,6 +586,11 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
             public void onScroll(AbsListView view, int firstVisibleItem,
                                  int visibleItemCount, int totalItemCount) {
 
+
+                Log.v("Header", "Total"+totalItemCount+"");
+                Log.v("Header", "Visible"+ (firstVisibleItem+visibleItemCount));
+                Log.v("Header", "Flag: "+flag_loading);
+
                 if(firstVisibleItem+visibleItemCount == totalItemCount && totalItemCount!=0)
                 {
                     if(!flag_loading)
@@ -542,6 +599,8 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
                         loadNextPage();
                     }
                 }
+
+                Log.v("Header", getListView().getHeaderViewsCount()+"");
             }
         });
 

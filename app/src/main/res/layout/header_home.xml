@@ -62,7 +62,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:onClick="showUploadPopUp"
-                        android:background="@drawable/ic_action_add_test" />
+                        android:background="@drawable/ic_action_add_test"/>
 
                 </LinearLayout>
             </RelativeLayout>
