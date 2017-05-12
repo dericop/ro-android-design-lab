@@ -141,12 +141,12 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
 
     private void loadChallenge(View view){
         if (mheaderView != null){
-            this.getListView().addHeaderView(mheaderView);
+//            this.getListView().addHeaderView(mheaderView);
         }
 
         setListAdapter(mPostAdapter);
 
-        Button opt1 = (Button) view.findViewById(R.id.opt_1);
+        /*Button opt1 = (Button) view.findViewById(R.id.opt_1);
         opt1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -180,7 +180,7 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
                     }
                 }, 2000);
             }
-        });
+        });*/
 
     }
 
