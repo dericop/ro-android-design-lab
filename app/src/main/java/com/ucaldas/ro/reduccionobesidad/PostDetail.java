@@ -300,7 +300,6 @@ public class PostDetail extends AppCompatActivity {
                     }
 
                     postMap.put("notificationTokens", tokens);
-
                 }
 
                 mutableData.setValue(postMap);

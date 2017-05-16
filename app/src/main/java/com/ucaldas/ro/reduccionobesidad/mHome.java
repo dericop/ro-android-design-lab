@@ -104,7 +104,6 @@ public class mHome extends AppCompatActivity
                         Log.d("AUser", "onAuthStateChanged:signed_out");
                         //progress.dismiss();
                         Toast.makeText(getBaseContext(), getString(R.string.login_fail), Toast.LENGTH_LONG);
-
                     }
                 }
             };
