@@ -124,7 +124,12 @@
             android:name=".AddTipActivity"
             android:label="Nuevo anuncio" />
         <activity android:name=".GamificationActivity" />
-        <activity android:name=".QuestionHistoricActivity"></activity>
+
+        <activity android:name=".QuestionHistoricActivity"
+            android:screenOrientation="portrait"
+            android:label="Respuestas">
+
+        </activity>
     </application>
 
 </manifest>

@@ -6,8 +6,7 @@
        android:id="@+id/gamification"
        android:title="Alerts"
        app:actionLayout="@layout/header_item_gamification"
-       app:showAsAction="ifRoom" />
+       app:showAsAction="ifRoom"
+       android:onClick="doThis"/>
 
 </menu>
-
-

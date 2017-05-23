@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -76,6 +77,7 @@ public class mHome extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_m_home);
+
 
         String type = getIntent().getStringExtra("type");
         /*if(type != null){
@@ -525,14 +527,30 @@ public class mHome extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.m_home, menu);
+        for (int i = 0; i< menu.size() ;i++) {
+            MenuItem menuItem = menu.getItem(i);
+            if (menuItem.getItemId() == R.id.gamification) {
+                View view = MenuItemCompat.getActionView(menuItem);
+                if (view != null) {
+                    view.setOnClickListener(new View.OnClickListener() {
+
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(getContext(), QuestionHistoricActivity.class);
+                            startActivity(intent);
+                        }
+                    });
+                }
+            }
+        }
+
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
+        Log.v("Gamification", "Menu selected");
         switch(item.getItemId()){
             case R.id.gamification:
                 Intent gamificationIntent = new Intent(getContext(), GamificationActivity.class);
@@ -542,6 +560,11 @@ public class mHome extends AppCompatActivity
         }
         return true;
     }
+
+    public void doThis(MenuItem item){
+        Toast.makeText(this, "Hello World", Toast.LENGTH_LONG).show();
+    }
+
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override

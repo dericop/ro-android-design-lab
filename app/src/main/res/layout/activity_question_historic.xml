@@ -45,16 +45,16 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/gamification_item_shadow"
-            android:paddingBottom="8dp"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
+
+
+
             android:paddingTop="8dp"
             android:scrollbarStyle="outsideInset">
-
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
+                android:layout_marginLeft="0dp"
                 android:orientation="vertical">
 
                 <RelativeLayout
@@ -62,32 +62,111 @@
                     android:layout_height="match_parent">
 
                     <LinearLayout
-                        android:layout_width="220dp"
+                        android:layout_width="200dp"
                         android:layout_height="80dp"
                         android:layout_centerInParent="true"
                         android:background="@drawable/gamification_item_shadow_hard"
                         android:orientation="horizontal"
-                        android:padding="7dp">
+                        android:padding="6dp">
 
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_weight="0.3">
+                            android:layout_weight="0.6"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_marginTop="16dp"
+                                android:orientation="horizontal">
+
+                                <LinearLayout
+                                    android:layout_width="30dp"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical">
+
+                                    <ImageView
+                                        android:layout_width="20dp"
+                                        android:layout_height="20dp"
+                                        android:layout_gravity="center"
+                                        android:background="@drawable/green_circle"/>
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:text="13"
+                                        android:textAlignment="center"
+                                        android:textColor="#fff"
+                                        android:textStyle="bold"
+                                        android:layout_marginTop="7dp"/>
+
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="30dp"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical">
+
+                                    <ImageView
+                                        android:layout_width="20dp"
+                                        android:layout_height="20dp"
+                                        android:layout_gravity="center"
+                                        android:background="@drawable/red_circle"/>
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:text="18"
+                                        android:textAlignment="center"
+                                        android:textColor="#fff"
+                                        android:textStyle="bold"
+                                        android:layout_marginTop="7dp"/>
+
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="30dp"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical">
+
+                                    <ImageView
+                                        android:layout_width="20dp"
+                                        android:layout_height="20dp"
+                                        android:layout_gravity="center"
+                                        android:background="@drawable/gray_circle"/>
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:text="10"
+                                        android:textAlignment="center"
+                                        android:textColor="#fff"
+                                        android:textStyle="bold"
+                                        android:layout_marginTop="7dp"/>
+
+                                </LinearLayout>
+                            </LinearLayout>
+
+
 
                         </LinearLayout>
 
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_weight="0.7">
+                            android:layout_weight="0.4"
+                            android:orientation="horizontal">
 
                             <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:gravity="center"
                                 android:text="/31"
                                 android:textColor="#fff"
-                                android:textSize="40sp"
+                                android:textSize="43sp"
+                                android:layout_gravity="bottom|left"
                                 android:textStyle="bold" />
 
                         </LinearLayout>
@@ -101,10 +180,23 @@
                     android:textColor="#d9d9d9"
                     android:layout_marginTop="15dp"
                     android:textStyle="italic"
-                    android:textSize="11sp"
+                    android:textSize="12sp"
                     android:paddingLeft="15dp"
                     android:paddingRight="15dp"
+                    android:textAlignment="center"
                     android:text="Este es el histórico de todas las preguntas con sus respectivas respuestas."/>
+                
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@drawable/gamification_item_shadow"
+                    android:layout_marginTop="10dp"/>
+
+                <ListView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                </ListView>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -113,18 +205,27 @@
 
                     <LinearLayout
                         android:layout_width="0dp"
+                        android:layout_height="wrap_content"
                         android:layout_weight="0.25"
-                        android:layout_height="wrap_content">
+                        android:orientation="vertical">
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Tu respuesta"
-                            android:textStyle="italic"
-                            android:textSize="12sp"
                             android:layout_marginTop="20dp"
+                            android:text="Tu respuesta"
                             android:textAlignment="center"
-                            android:textColor="#d9d9d9"/>
+                            android:textColor="#d9d9d9"
+                            android:textSize="12sp"
+                            android:textStyle="italic" />
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="10dp"
+                            android:background="@drawable/green_circle" />
+
 
                     </LinearLayout>
 
@@ -138,15 +239,18 @@
                             android:layout_height="wrap_content"
                             android:background="@drawable/gamification_item_shadow_hard"
                             android:orientation="vertical"
-                            android:padding="10dp">
+                            android:padding="10dp"
+                            android:layout_marginRight="3dp">
 
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:textColor="#fff"
-                                android:text="¿Qué es más procesado?"
+                                android:text="¿Qué es más procesado el uno o el otro?"
                                 android:textAlignment="center"
-                                android:textSize="16sp"/>
+                                android:maxLines="2"
+                                android:ellipsize="end"
+                                android:textSize="15sp"/>
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -157,16 +261,21 @@
                                 <Button
                                     android:layout_width="0dp"
                                     android:layout_weight="0.4"
-                                    android:layout_height="30dp"
-                                    android:background="#d6de23"
-                                    android:text="Jamón"/>
+                                    android:layout_height="42dp"
+                                    android:text="Salchichones"
+                                    android:maxLines="1"
+                                    android:textAllCaps="false"
+                                    android:ellipsize="marquee"/>
 
                                 <Button
                                     android:layout_width="0dp"
                                     android:layout_weight="0.4"
                                     android:layout_height="42dp"
                                     android:layout_marginLeft="5dp"
-                                    android:text="Queso"/>
+                                    android:text="Queso"
+                                    android:maxLines="1"
+                                    android:textAllCaps="false"
+                                    android:ellipsize="marquee"/>
 
                             </LinearLayout>
 
@@ -176,25 +285,36 @@
 
                     </LinearLayout>
 
-                </LinearLayout><LinearLayout
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp">
 
                     <LinearLayout
                         android:layout_width="0dp"
+                        android:layout_height="wrap_content"
                         android:layout_weight="0.25"
-                        android:layout_height="wrap_content">
+                        android:orientation="vertical">
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Tu respuesta"
-                            android:textStyle="italic"
-                            android:textSize="12sp"
                             android:layout_marginTop="20dp"
+                            android:text="Tu respuesta"
                             android:textAlignment="center"
-                            android:textColor="#d9d9d9"/>
+                            android:textColor="#d9d9d9"
+                            android:textSize="12sp"
+                            android:textStyle="italic" />
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="10dp"
+                            android:background="@drawable/red_circle" />
+
 
                     </LinearLayout>
 
@@ -208,15 +328,18 @@
                             android:layout_height="wrap_content"
                             android:background="@drawable/gamification_item_shadow_hard"
                             android:orientation="vertical"
-                            android:padding="10dp">
+                            android:padding="10dp"
+                            android:layout_marginRight="3dp">
 
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:textColor="#fff"
-                                android:text="¿Qué es más procesado?"
+                                android:text="¿Qué es más procesado el uno o el otro?"
                                 android:textAlignment="center"
-                                android:textSize="16sp"/>
+                                android:maxLines="2"
+                                android:ellipsize="end"
+                                android:textSize="15sp"/>
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -227,16 +350,21 @@
                                 <Button
                                     android:layout_width="0dp"
                                     android:layout_weight="0.4"
-                                    android:layout_height="30dp"
-                                    android:background="#d6de23"
-                                    android:text="Jamón"/>
+                                    android:layout_height="42dp"
+                                    android:text="Salchichones"
+                                    android:maxLines="1"
+                                    android:textAllCaps="false"
+                                    android:ellipsize="marquee"/>
 
                                 <Button
                                     android:layout_width="0dp"
                                     android:layout_weight="0.4"
                                     android:layout_height="42dp"
                                     android:layout_marginLeft="5dp"
-                                    android:text="Queso"/>
+                                    android:text="Queso"
+                                    android:textAllCaps="false"
+                                    android:maxLines="1"
+                                    android:ellipsize="marquee"/>
 
                             </LinearLayout>
 
@@ -246,25 +374,36 @@
 
                     </LinearLayout>
 
-                </LinearLayout><LinearLayout
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp">
 
                     <LinearLayout
                         android:layout_width="0dp"
+                        android:layout_height="wrap_content"
                         android:layout_weight="0.25"
-                        android:layout_height="wrap_content">
+                        android:orientation="vertical">
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Tu respuesta"
-                            android:textStyle="italic"
-                            android:textSize="12sp"
                             android:layout_marginTop="20dp"
+                            android:text="Tu respuesta"
                             android:textAlignment="center"
-                            android:textColor="#d9d9d9"/>
+                            android:textColor="#d9d9d9"
+                            android:textSize="12sp"
+                            android:textStyle="italic" />
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="10dp"
+                            android:background="@drawable/gray_circle" />
+
 
                     </LinearLayout>
 
@@ -278,15 +417,18 @@
                             android:layout_height="wrap_content"
                             android:background="@drawable/gamification_item_shadow_hard"
                             android:orientation="vertical"
-                            android:padding="10dp">
+                            android:padding="10dp"
+                            android:layout_marginRight="3dp">
 
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:textColor="#fff"
-                                android:text="¿Qué es más procesado?"
+                                android:text="¿Qué es más procesado el uno o el otro?"
                                 android:textAlignment="center"
-                                android:textSize="16sp"/>
+                                android:maxLines="2"
+                                android:ellipsize="end"
+                                android:textSize="15sp"/>
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -297,16 +439,21 @@
                                 <Button
                                     android:layout_width="0dp"
                                     android:layout_weight="0.4"
-                                    android:layout_height="30dp"
-                                    android:background="#d6de23"
-                                    android:text="Jamón"/>
+                                    android:layout_height="42dp"
+                                    android:text="Salchichones"
+                                    android:maxLines="1"
+                                    android:textAllCaps="false"
+                                    android:ellipsize="marquee"/>
 
                                 <Button
                                     android:layout_width="0dp"
                                     android:layout_weight="0.4"
                                     android:layout_height="42dp"
                                     android:layout_marginLeft="5dp"
-                                    android:text="Queso"/>
+                                    android:text="Queso"
+                                    android:maxLines="1"
+                                    android:textAllCaps="false"
+                                    android:ellipsize="marquee"/>
 
                             </LinearLayout>
 
