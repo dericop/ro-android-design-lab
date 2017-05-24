@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.25"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Tu respuesta"
+                android:textAlignment="center"
+                android:textColor="#d9d9d9"
+                android:textSize="12sp"
+                android:textStyle="italic" />
+
+            <ImageView
+                android:id="@+id/userResponse"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/green_circle" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="0.75"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/gamification_item_shadow_hard"
+                android:orientation="vertical"
+                android:padding="10dp"
+                android:layout_marginRight="3dp">
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#fff"
+                    android:text="¿Qué es más procesado el uno o el otro?"
+                    android:textAlignment="center"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    android:textSize="15sp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="8dp">
+
+                    <Button
+                        android:id="@+id/response1"
+                        android:layout_width="0dp"
+                        android:layout_weight="0.4"
+                        android:layout_height="42dp"
+                        android:text="Salchichones"
+                        android:maxLines="1"
+                        android:textAllCaps="false"
+                        android:ellipsize="marquee"/>
+
+                    <Button
+                        android:id="@+id/response2"
+                        android:layout_width="0dp"
+                        android:layout_weight="0.4"
+                        android:layout_height="42dp"
+                        android:layout_marginLeft="5dp"
+                        android:text="Queso"
+                        android:maxLines="1"
+                        android:textAllCaps="false"
+                        android:ellipsize="marquee"/>
+
+                </LinearLayout>
+
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
