@@ -560,10 +560,10 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
             isTheFirstLoad = false;
         }
 
-        if (isTheFirstLoad)
+        /*if (isTheFirstLoad)
             btn_new_posts.setVisibility(View.INVISIBLE);
         else
-            btn_new_posts.setVisibility(View.VISIBLE);
+            btn_new_posts.setVisibility(View.VISIBLE);*/
 
         mPostAdapter.notifyDataSetChanged();
         mSwipeRefreshing.setRefreshing(false);
@@ -579,7 +579,7 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
     //Inicializa elementos gráficos y asigna eventos iniciales.
     private void initGraphicalElementsAndEvents(View view) {
         //Obtener elementos gráficos
-        btn_new_posts = (Button) view.findViewById(R.id.btn_new_posts);
+        //btn_new_posts = (Button) view.findViewById(R.id.btn_new_posts);
         mSwipeRefreshing = (SwipeRefreshLayout) view.findViewById(R.id.swiperefresh);
 
 
@@ -620,19 +620,19 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
         });
 
         //Evento para mostrar los posts nuevos.
-        btn_new_posts.setOnClickListener(new View.OnClickListener() {
+        /*btn_new_posts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 getListView().smoothScrollToPosition(0);
                 btn_new_posts.setVisibility(View.INVISIBLE);
             }
-        });
+        });*/
 
         //Evento para esconder boton de nuevas publicaciones.
         mSwipeRefreshing.setOnChildScrollUpCallback(new SwipeRefreshLayout.OnChildScrollUpCallback() {
             @Override
             public boolean canChildScrollUp(SwipeRefreshLayout parent, @Nullable View child) {
-                btn_new_posts.setVisibility(View.INVISIBLE);
+                //btn_new_posts.setVisibility(View.INVISIBLE);
                 return true;
             }
         });

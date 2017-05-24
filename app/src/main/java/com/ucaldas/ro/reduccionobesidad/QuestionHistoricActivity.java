@@ -96,8 +96,6 @@ public class QuestionHistoricActivity extends AppCompatActivity {
                             mQuestionsAdapter.notifyDataSetChanged();
 
                         }
-
-
                     }
                 }
 

@@ -22,14 +22,29 @@
             android:layout_weight="0.7"
             android:orientation="vertical">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="¿Cuál de los siguientes contiene más azúcar?"
-                android:textColor="#fff"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:gravity="center"/>
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="0.9"
+                    android:layout_height="wrap_content"
+                    android:text="¿Cuál de los siguientes contiene más azúcar?"
+                    android:textColor="#fff"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:gravity="center"/>
+
+                <ImageButton
+                    android:layout_width="0dp"
+                    android:layout_weight="0.1"
+                    android:layout_height="30dp"
+                    android:background="@drawable/ic_action_close"/>
+
+            </LinearLayout>
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -59,7 +74,7 @@
             </LinearLayout>
 
         </LinearLayout>
-
+        
     </LinearLayout>
 
 </LinearLayout>
