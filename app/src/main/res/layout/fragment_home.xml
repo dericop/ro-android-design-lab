@@ -23,12 +23,24 @@
                 android:orientation="vertical">
 
                 <LinearLayout
+                    android:id="@+id/questionsContainer"
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
+                    android:layout_margin="0dp"
                     android:padding="0dp"
-                    android:layout_margin="0dp">
+                    android:visibility="gone">
 
-                    <include layout="@layout/header_home_reflexive"/>
+                    <include
+                        android:id="@+id/questionView"
+                        layout="@layout/header_home_reflexive"/>
+
+                    <include
+                        android:id="@+id/successView"
+                        layout="@layout/header_home_success"/>
+
+                    <include
+                        android:id="@+id/errorView"
+                        layout="@layout/header_home_error"/>
 
                 </LinearLayout>
 
@@ -41,7 +53,6 @@
                 </ListView>
 
             </LinearLayout>
-
 
 
         </android.support.v4.widget.SwipeRefreshLayout>

@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +17,10 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -24,7 +29,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -104,8 +112,6 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
     }
 
     View mheaderView;
-    View successView;
-    View errorView;
     LayoutInflater mInflater;
 
     @Override
@@ -118,9 +124,6 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
             mheaderView = inflater.inflate(R.layout.header_home, null);
         else
             mheaderView = inflater.inflate(R.layout.header_home_reflexive, null);
-
-        successView = inflater.inflate(R.layout.header_home_success, null);
-        errorView = inflater.inflate(R.layout.header_home_error, null);
 
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
@@ -139,48 +142,139 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
         getListView().setOnItemClickListener(this);
     }
 
-    private void loadChallenge(View view) {
-        if (mheaderView != null) {
-//            this.getListView().addHeaderView(mheaderView);
+    private void sendResponseToServer(boolean response, String questionId){
+        DatabaseReference responseRef = FirebaseDatabase.getInstance().getReference();
+
+        if(mHome.user != null){
+            HashMap data= new HashMap();
+            data.put("isCorrect",response);
+            data.put("question",questionId);
+
+            responseRef = responseRef.child("questions-user").child(mHome.user.getUid());
+            responseRef.child("/"+questionId).setValue(data);
         }
+    }
 
-        setListAdapter(mPostAdapter);
+    private void updateViewWithQuestion(final Question question, View view){
 
-        /*Button opt1 = (Button) view.findViewById(R.id.opt_1);
+        final LinearLayout questionscontainer = (LinearLayout) view.findViewById(R.id.questionsContainer);
+        questionscontainer.setVisibility(View.VISIBLE);
+        TextView txtTitle = (TextView) view.findViewById(R.id.questionTitle);
+        txtTitle.setText(question.getTitle());
+
+        final ImageButton questionClose = (ImageButton) view.findViewById(R.id.closeQuestion);
+        questionClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                questionscontainer.setVisibility(View.GONE);
+            }
+        });
+
+        final LinearLayout questionView = (LinearLayout) view.findViewById(R.id.questionView);
+        final LinearLayout successView = (LinearLayout) view.findViewById(R.id.successView);
+        final LinearLayout errorView = (LinearLayout) view.findViewById(R.id.errorView);
+
+        final Button opt1 = (Button) view.findViewById(R.id.opt_1);
+        opt1.setText(question.getResponse1());
+
         opt1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getListView().removeHeaderView(mheaderView);
-                getListView().addHeaderView(successView);
+                questionView.setVisibility(View.GONE);
+
+                if(question.getResponse1().equals(question.getCorrect())){
+                    successView.setVisibility(View.VISIBLE);
+                    errorView.setVisibility(View.GONE);
+                    sendResponseToServer(true, question.getId());
+                }else{
+                    successView.setVisibility(View.GONE);
+                    errorView.setVisibility(View.VISIBLE);
+                    sendResponseToServer(false, question.getId());
+                }
 
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        getListView().removeHeaderView(successView);
+                        questionscontainer.setVisibility(View.GONE);
                     }
                 }, 2000);
-
             }
         });
 
         Button opt2 = (Button) view.findViewById(R.id.opt_2);
+        opt2.setText(question.getResponse2());
+
         opt2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getListView().removeHeaderView(mheaderView);
-                getListView().addHeaderView(errorView);
+                questionView.setVisibility(View.GONE);
+
+                if(question.getResponse2().equals(question.getCorrect())){
+                    successView.setVisibility(View.VISIBLE);
+                    errorView.setVisibility(View.GONE);
+                    sendResponseToServer(true, question.getId());
+                }else{
+                    successView.setVisibility(View.GONE);
+                    errorView.setVisibility(View.VISIBLE);
+                    sendResponseToServer(false, question.getId());
+                }
 
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        getListView().removeHeaderView(errorView);
-                        getListView().addHeaderView(mheaderView);
+                        questionscontainer.setVisibility(View.GONE);
                     }
                 }, 2000);
             }
-        });*/
+        });
+    }
+
+    private void loadQuestion(final View view) {
+        setListAdapter(mPostAdapter);
+        DatabaseReference challengeRef = FirebaseDatabase.getInstance().getReference();
+        challengeRef.child("questions").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.getValue() != null){
+                    HashMap<String, HashMap> map = (HashMap) dataSnapshot.getValue();
+                    Iterator keys = map.keySet().iterator();
+                    while(keys.hasNext()){
+                        String key = keys.next()+"";
+
+                        Calendar sDate = Calendar.getInstance();
+                        sDate.setTimeInMillis(((long)map.get(key).get("startDate")));
+
+                        Calendar eDate = Calendar.getInstance();
+                        eDate.setTimeInMillis(((long)map.get(key).get("endDate")));
+
+                        Calendar cDate = Calendar.getInstance();
+
+                        Log.v("Questions", sDate.compareTo(cDate)+"");
+
+                        if(sDate.compareTo(cDate) <= 0 && eDate.compareTo(cDate) >= 0){
+                            //Comparar el tema de fechas
+                            Question question = new Question();
+                            question.setId(map.get(key).get("id")+"");
+                            question.setStartDate((long)map.get(key).get("startDate"));
+                            question.setEndDate((long)map.get(key).get("endDate"));
+                            question.setResponse1(map.get(key).get("response1")+"");
+                            question.setResponse2(map.get(key).get("response2")+"");
+                            question.setTitle(map.get(key).get("title")+"");
+                            question.setCorrect(map.get(key).get("correct")+"");
+
+                            updateViewWithQuestion(question, view);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
     }
 
@@ -206,7 +300,7 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
             initData();
             //Consultar los primeros posts
             refreshPostList();
-            loadChallenge(view);
+            loadQuestion(view);
         }
     }
 

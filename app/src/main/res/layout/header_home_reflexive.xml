@@ -28,19 +28,20 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/questionTitle"
                     android:layout_width="0dp"
-                    android:layout_weight="0.9"
+                    android:layout_weight="0.92"
                     android:layout_height="wrap_content"
-                    android:text="¿Cuál de los siguientes contiene más azúcar?"
                     android:textColor="#fff"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:gravity="center"/>
 
                 <ImageButton
+                    android:id="@+id/closeQuestion"
                     android:layout_width="0dp"
-                    android:layout_weight="0.1"
-                    android:layout_height="30dp"
+                    android:layout_weight="0.08"
+                    android:layout_height="28dp"
                     android:background="@drawable/ic_action_close"/>
 
             </LinearLayout>
@@ -51,15 +52,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:gravity="center">
-                
+
                 <Button
                     android:id="@+id/opt_1"
                     android:layout_width="150dp"
                     android:layout_height="match_parent"
-                    android:text="Jugo de naranja"
+                    android:background="@drawable/home_item_shadow"
                     android:textAllCaps="false"
-                    android:textColor="#595959"
-                    android:background="@drawable/home_item_shadow"/>
+                    android:textColor="#595959" />
 
                 <Button
                     android:id="@+id/opt_2"
@@ -68,7 +68,6 @@
                     android:layout_marginLeft="20dp"
                     android:textAllCaps="false"
                     android:textColor="#595959"
-                    android:text="Gaseosa"
                     android:background="@drawable/home_item_shadow"/>
                 
             </LinearLayout>
