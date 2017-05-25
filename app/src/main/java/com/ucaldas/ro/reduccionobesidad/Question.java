@@ -17,6 +17,7 @@ public class Question {
     private long startDate;
     private long endDate;
     private String title;
+    private boolean userResponse;
 
     public Question(){}
 
@@ -29,6 +30,7 @@ public class Question {
         this.startDate = startDate;
         this.endDate = endDate;
         this.title = title;
+        userResponse = false;
     }
 
     public String getId() {
@@ -85,6 +87,14 @@ public class Question {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public void setUserResponse(boolean userResponse) {
+        this.userResponse = userResponse;
+    }
+
+    public boolean isUserResponse() {
+        return userResponse;
     }
 
     @Exclude

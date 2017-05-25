@@ -54,6 +54,20 @@ public class QuestionsAdapter extends ArrayAdapter<Question>{
         response1.setText(cQuestion.getResponse1());
         response2.setText(cQuestion.getResponse2());
 
+        if(cQuestion.isUserResponse()){
+            userResponse.setImageDrawable(mContext.getResources().getDrawable(R.drawable.green_circle));
+        }else{
+            userResponse.setImageDrawable(mContext.getResources().getDrawable(R.drawable.red_circle));
+        }
+
+        if(response1.getText().equals(cQuestion.getCorrect())){
+            response1.setBackgroundResource(R.drawable.success_response);
+            response1.setTextColor(mContext.getResources().getColor(R.color.colorPrimaryDark));
+        }else{
+            response2.setBackgroundResource(R.drawable.success_response);
+            response2.setTextColor(mContext.getResources().getColor(R.color.colorPrimaryDark));
+        }
+
         return convertView;
     }
 

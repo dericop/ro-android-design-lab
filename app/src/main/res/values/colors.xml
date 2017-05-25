@@ -9,6 +9,9 @@
     <color name="success">#13b10b</color>
     <color name="error">#cf1c25</color>
 
+    <color name="success_response">#d8e436</color>
+    <color name="non_selected_response">#a9a9a9</color>
+
     <color name="textColorPrimary">#FFFFFF</color>
     <color name="windowBackground">#FFFFFF</color>
     <color name="navigationBarColor">#000000</color>

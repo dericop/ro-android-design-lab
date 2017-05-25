@@ -255,7 +255,7 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
 
                         if(sDate.compareTo(cDate) <= 0 && eDate.compareTo(cDate) >= 0){
                             //Comparar el tema de fechas
-                            Question question = new Question();
+                            final Question question = new Question();
                             question.setId(map.get(key).get("id")+"");
                             question.setStartDate((long)map.get(key).get("startDate"));
                             question.setEndDate((long)map.get(key).get("endDate"));
@@ -264,7 +264,23 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
                             question.setTitle(map.get(key).get("title")+"");
                             question.setCorrect(map.get(key).get("correct")+"");
 
-                            updateViewWithQuestion(question, view);
+                            if(mHome.user != null){
+
+                            }
+                                FirebaseDatabase.getInstance().getReference().child("questions-user")
+                                        .child(mHome.user.getUid()).orderByKey().equalTo(question.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        if(dataSnapshot.getValue() == null){
+                                            updateViewWithQuestion(question, view);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
                         }
                     }
                 }
