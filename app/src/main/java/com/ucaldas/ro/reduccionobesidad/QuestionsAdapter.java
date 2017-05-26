@@ -54,9 +54,9 @@ public class QuestionsAdapter extends ArrayAdapter<Question>{
         response1.setText(cQuestion.getResponse1());
         response2.setText(cQuestion.getResponse2());
 
-        if(cQuestion.isUserResponse()){
+        if(cQuestion.getUserResponse() == 1){
             userResponse.setImageDrawable(mContext.getResources().getDrawable(R.drawable.green_circle));
-        }else{
+        }else if(cQuestion.getUserResponse() == 2){
             userResponse.setImageDrawable(mContext.getResources().getDrawable(R.drawable.red_circle));
         }
 

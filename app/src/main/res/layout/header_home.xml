@@ -11,7 +11,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="100dp"
         android:background="@color/colorAccent"
         android:padding="9dp"
         android:orientation="horizontal">
@@ -31,12 +31,14 @@
                 android:textStyle="bold"/>
 
             <TextView
+                android:id="@+id/challengeTitle"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:textColor="#fff"
                 android:textSize="15sp"
+                android:paddingTop="5dp"
                 android:text="Toma jugo sin azúcar y comparte la fotografia"
-                android:maxLines="2"/>
+                android:maxLines="4"/>
             
         </LinearLayout>
         

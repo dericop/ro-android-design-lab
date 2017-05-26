@@ -42,6 +42,10 @@
                         android:id="@+id/errorView"
                         layout="@layout/header_home_error"/>
 
+                    <include
+                        android:id="@+id/challengeView"
+                        layout="@layout/header_home" />
+
                 </LinearLayout>
 
                 <ListView

@@ -142,7 +142,7 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
         getListView().setOnItemClickListener(this);
     }
 
-    private void sendResponseToServer(boolean response, String questionId){
+    private void sendResponseToServer(long response, String questionId){
         DatabaseReference responseRef = FirebaseDatabase.getInstance().getReference();
 
         if(mHome.user != null){
@@ -153,6 +153,30 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
             responseRef = responseRef.child("questions-user").child(mHome.user.getUid());
             responseRef.child("/"+questionId).setValue(data);
         }
+    }
+
+    private void updateViewWithChallenge(final Challenge challenge, View view){
+        final LinearLayout challengecontainer = (LinearLayout) view.findViewById(R.id.questionsContainer);
+        challengecontainer.setVisibility(View.VISIBLE);
+
+        TextView txtTitle = (TextView) view.findViewById(R.id.challengeTitle);
+        txtTitle.setText(challenge.getTitle());
+
+        final LinearLayout questionView = (LinearLayout) view.findViewById(R.id.questionView);
+        final LinearLayout successView = (LinearLayout) view.findViewById(R.id.successView);
+        final LinearLayout errorView = (LinearLayout) view.findViewById(R.id.errorView);
+
+        questionView.setVisibility(View.GONE);
+        successView.setVisibility(View.GONE);
+        errorView.setVisibility(View.GONE);
+
+        final ImageButton challengeClose = (ImageButton) view.findViewById(R.id.closeQuestion);
+        challengeClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+            challengecontainer.setVisibility(View.GONE);
+            }
+        });
     }
 
     private void updateViewWithQuestion(final Question question, View view){
@@ -185,11 +209,11 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
                 if(question.getResponse1().equals(question.getCorrect())){
                     successView.setVisibility(View.VISIBLE);
                     errorView.setVisibility(View.GONE);
-                    sendResponseToServer(true, question.getId());
+                    sendResponseToServer(1, question.getId());
                 }else{
                     successView.setVisibility(View.GONE);
                     errorView.setVisibility(View.VISIBLE);
-                    sendResponseToServer(false, question.getId());
+                    sendResponseToServer(2, question.getId());
                 }
 
                 Handler handler = new Handler();
@@ -213,11 +237,11 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
                 if(question.getResponse2().equals(question.getCorrect())){
                     successView.setVisibility(View.VISIBLE);
                     errorView.setVisibility(View.GONE);
-                    sendResponseToServer(true, question.getId());
+                    sendResponseToServer(1, question.getId());
                 }else{
                     successView.setVisibility(View.GONE);
                     errorView.setVisibility(View.VISIBLE);
-                    sendResponseToServer(false, question.getId());
+                    sendResponseToServer(2, question.getId());
                 }
 
                 Handler handler = new Handler();
@@ -229,6 +253,65 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
                 }, 2000);
             }
         });
+    }
+
+    private void loadChallenge(final View view){
+        setListAdapter(mPostAdapter);
+        DatabaseReference challengeRef = FirebaseDatabase.getInstance().getReference();
+        challengeRef.child("challenges").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.getValue() != null){
+                    HashMap<String, HashMap> map = (HashMap) dataSnapshot.getValue();
+                    Iterator keys = map.keySet().iterator();
+                    while(keys.hasNext()){
+                        String key = keys.next()+"";
+
+                        Calendar sDate = Calendar.getInstance();
+                        sDate.setTimeInMillis(((long)map.get(key).get("initDate")));
+
+                        Calendar eDate = Calendar.getInstance();
+                        eDate.setTimeInMillis(((long)map.get(key).get("endDate")));
+
+                        Calendar cDate = Calendar.getInstance();
+
+                        if(sDate.compareTo(cDate) <= 0 && eDate.compareTo(cDate) >= 0){
+                            //Comparar el tema de fechas
+                            final Challenge challenge = new Challenge();
+                            challenge.setId(map.get(key).get("id")+"");
+                            challenge.setInitDate((long)map.get(key).get("initDate"));
+                            challenge.setEndDate((long)map.get(key).get("endDate"));
+                            challenge.setTitle(map.get(key).get("title")+"");
+
+                            if(mHome.user != null){
+
+                                FirebaseDatabase.getInstance().getReference().child("challenges-user")
+                                        .child(mHome.user.getUid()).orderByKey().equalTo(challenge.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        if(dataSnapshot.getValue() == null) {
+                                            updateViewWithChallenge(challenge, view);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
     private void loadQuestion(final View view) {
@@ -266,7 +349,6 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
 
                             if(mHome.user != null){
 
-                            }
                                 FirebaseDatabase.getInstance().getReference().child("questions-user")
                                         .child(mHome.user.getUid()).orderByKey().equalTo(question.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
@@ -281,6 +363,7 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
 
                                     }
                                 });
+                            }
                         }
                     }
                 }
@@ -316,7 +399,13 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
             initData();
             //Consultar los primeros posts
             refreshPostList();
-            loadQuestion(view);
+
+            if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
+                loadChallenge(view);
+            }else{
+                loadQuestion(view);
+
+            }
         }
     }
 

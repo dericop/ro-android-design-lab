@@ -110,13 +110,14 @@ public class QuestionHistoricActivity extends AppCompatActivity {
                                                 Iterator it = map.keySet().iterator();
                                                 HashMap response = map.get(it.next()+"");
 
-                                                question.setUserResponse((boolean)response.get("isCorrect"));
+                                                question.setUserResponse((long)response.get("isCorrect"));
                                                 mQuestionsAdapter.notifyDataSetChanged();
 
-                                                if((boolean)response.get("isCorrect")){
+                                                if((long)response.get("isCorrect") == 1){
                                                     greenCount.incrementAndGet();
                                                     countOfGreen.setText(greenCount.get()+"");
-                                                }else{
+
+                                                }else if((long)response.get("isCorrect") == 2){
                                                     redCount.incrementAndGet();
                                                     countOfRed.setText(redCount.get()+"");
                                                 }

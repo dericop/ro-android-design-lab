@@ -17,7 +17,7 @@ public class Question {
     private long startDate;
     private long endDate;
     private String title;
-    private boolean userResponse;
+    private long userResponse;
 
     public Question(){}
 
@@ -30,7 +30,7 @@ public class Question {
         this.startDate = startDate;
         this.endDate = endDate;
         this.title = title;
-        userResponse = false;
+        userResponse = 0;
     }
 
     public String getId() {
@@ -89,11 +89,11 @@ public class Question {
         this.title = title;
     }
 
-    public void setUserResponse(boolean userResponse) {
+    public void setUserResponse(long userResponse) {
         this.userResponse = userResponse;
     }
 
-    public boolean isUserResponse() {
+    public long getUserResponse() {
         return userResponse;
     }
 
