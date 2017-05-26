@@ -203,6 +203,21 @@ public class PostDetail extends AppCompatActivity {
         }
     }
 
+    private void registerPoint(){
+        DatabaseReference gamfRef = FirebaseDatabase.getInstance().getReference();
+        if(mHome.user != null){
+            gamfRef = gamfRef.child("gamification-score").child(mHome.user.getUid());
+            String key = gamfRef.push().getKey();
+            HashMap childUpdates = new HashMap();
+            childUpdates.put("postid", postId);
+            childUpdates.put("type", "comment");
+            childUpdates.put("score", 1);
+
+            gamfRef.child("/"+key).setValue(childUpdates);
+        }
+
+    }
+
     public void saveComment(View view) {
 
         if (isOnline()) {
@@ -242,6 +257,7 @@ public class PostDetail extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             updateComments();
                             addCommentsCounterToPost(com.getId());
+                            registerPoint();
                             editMessage.setText("");
                             closeKeyboard();
 

@@ -107,6 +107,7 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
     private String typeForReply;
     private long resultForReply;
     private long averageForReply;
+    private boolean isChallenge = false;
 
     private String idForUpdate;
 
@@ -121,7 +122,6 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -210,6 +210,8 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
         });
         SOURCE = getIntent().getStringExtra("source"); //Obtiene el origen
 
+        isChallenge = getIntent().getBooleanExtra("challenge", false);
+
         // Creación del spinner de frecuencias para un nuevo post
         frecuencySpinner = (Spinner) findViewById(R.id.frecuency_spinner);
         ArrayAdapter<CharSequence> frecuencyAdapter;
@@ -267,7 +269,6 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
                 dispatchTakePictureIntent();
                 break;
             case "update":
-
 
                 Button btnDelete = (Button) findViewById(R.id.btn_delete);
                 btnDelete.setVisibility(View.VISIBLE);
@@ -567,7 +568,7 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
 
     private void addPost(Uri downloadUrl){
         DatabaseReference database = FirebaseDatabase.getInstance().getReference();
-        String key;
+        final String key;
         String dataKey;
 
         if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
@@ -608,8 +609,28 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
                 public void onComplete(@NonNull Task task) {
 
                     if (task.isSuccessful()) {
-                        progress.dismiss();
-                        finish();
+
+                        OnCompleteListener scoreListener = new OnCompleteListener() {
+                            @Override
+                            public void onComplete(@NonNull Task task) {
+                                if(task.isSuccessful()){
+                                    progress.dismiss();
+                                    mHome.comeBackFromChallenge = true;
+                                    finish();
+                                }else{
+                                    progress.dismiss();
+                                    if(getCurrentFocus()!=null)
+                                        Snackbar.make(getCurrentFocus(), "Revise su conexión a internet o intentelo más tarde", 2000).show();
+                                }
+                            }
+                        };
+
+                        if(isChallenge){
+                            registerPoint(0, "challenge", key, scoreListener);
+                        }else{
+                            registerPoint(2, "post", key, scoreListener);
+                        }
+
 
                     } else {
                         progress.dismiss();
@@ -620,6 +641,21 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
             };
             database.updateChildren(childUpdates).addOnCompleteListener(saveListener);
         }
+    }
+
+    private void registerPoint(int score, String type, String postId, OnCompleteListener callback){
+        DatabaseReference gamfRef = FirebaseDatabase.getInstance().getReference();
+        if(mHome.user != null){
+            gamfRef = gamfRef.child("gamification-score").child(mHome.user.getUid());
+            String key = gamfRef.push().getKey();
+            HashMap childUpdates = new HashMap();
+            childUpdates.put("postid", postId);
+            childUpdates.put("type", "post");
+            childUpdates.put("score", score);
+
+            gamfRef.child("/"+key).setValue(childUpdates).addOnCompleteListener(callback);
+        }
+
     }
 
     private void updatePost(){

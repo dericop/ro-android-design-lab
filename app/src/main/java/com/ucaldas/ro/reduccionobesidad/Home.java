@@ -155,6 +155,13 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        Log.v("Resume", "Resumete");
+    }
+
     private void updateViewWithChallenge(final Challenge challenge, View view){
         final LinearLayout challengecontainer = (LinearLayout) view.findViewById(R.id.questionsContainer);
         challengecontainer.setVisibility(View.VISIBLE);
@@ -170,7 +177,7 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
         successView.setVisibility(View.GONE);
         errorView.setVisibility(View.GONE);
 
-        final ImageButton challengeClose = (ImageButton) view.findViewById(R.id.closeQuestion);
+        final ImageButton challengeClose = (ImageButton) view.findViewById(R.id.closeChallenge);
         challengeClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

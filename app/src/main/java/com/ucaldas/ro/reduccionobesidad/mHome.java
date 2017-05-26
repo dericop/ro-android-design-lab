@@ -62,6 +62,7 @@ public class mHome extends AppCompatActivity
     static FirebaseUser user;
 
     static boolean isAdmin = false;
+    static boolean comeBackFromChallenge = false;
 
     // Tab References
     private Home home;
