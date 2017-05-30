@@ -27,6 +27,7 @@ public class AUser {
         mUserName = userName;
         mEmail = email;
         mPhotoUrl = photoUrl;
+        isAdmin = 0;
     }
 
     public String getmUid() {
@@ -70,6 +71,7 @@ public class AUser {
         result.put("mPhotoUrl", mPhotoUrl);
         result.put("mGender", mGender);
         result.put("mWeight", getmWeight());
+        result.put("isAdmin",isAdmin);
 
         return result;
 

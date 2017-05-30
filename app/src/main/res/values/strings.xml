@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CoCono</string>
+    <string name="app_name">CoRus</string>
     <string name="title_activity_welcome">Inicio</string>
     <string name="next">Siguiente</string>
     <string name="skip">Saltar</string>
@@ -33,7 +33,7 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_m_home">CoCono</string>
+    <string name="title_activity_m_home">CoRus</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
