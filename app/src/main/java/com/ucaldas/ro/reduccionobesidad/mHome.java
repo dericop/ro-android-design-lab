@@ -131,9 +131,9 @@ public class mHome extends AppCompatActivity
 
         if(!isFirstTime){
             if(comeBackFromChallenge){
-                score+=5;
+                /*score+=5;
                 if(score_view != null)
-                    score_view.setText(score+"pts");
+                    score_view.setText(score+"pts");*/
 
                 LinearLayout challengeView = (LinearLayout) findViewById(R.id.challengeView);
                 LinearLayout waitChallengeView = (LinearLayout) findViewById(R.id.wait_challenge);
@@ -144,7 +144,6 @@ public class mHome extends AppCompatActivity
                     comeBackFromChallenge = false;
                 }
 
-
             }else if(comeBackFromComment){
 
                 if(score_view != null){
@@ -152,8 +151,6 @@ public class mHome extends AppCompatActivity
                     score_view.setText(score+"pts");
                     comeBackFromComment = false;
                 }
-
-
 
             }else if(comeBackFromPost){
                 if(score_view != null) {

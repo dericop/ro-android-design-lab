@@ -288,7 +288,7 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
                     case R.id.showMedia:
                         Intent gallery_intent = new Intent(getContext(), AddPost.class);
                         gallery_intent.putExtra("source", "gallery");
-                        gallery_intent.putExtra("challenge", "true");
+                        gallery_intent.putExtra("challenge", true);
                         gallery_intent.putExtra("challengeId", challengeId);
                         startActivity(gallery_intent);
 
@@ -365,6 +365,7 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
                                                 result = (long) data.get("result");
 
                                             final LinearLayout challengeView = (LinearLayout) view.findViewById(R.id.challengeView);
+                                            final LinearLayout challengecontainer = (LinearLayout) view.findViewById(R.id.questionsContainer);
 
                                             if(result == 0) { // el reto esta en espera de calificación
 
@@ -385,10 +386,11 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
                                                     @Override
                                                     public void run() {
                                                         successChallengeView.setVisibility(View.GONE);
+                                                        challengecontainer.setVisibility(View.GONE);
                                                         FirebaseDatabase.getInstance().getReference().child("gamification-score")
                                                                 .child(mHome.user.getUid()).child(challenge.getId()).child("result").setValue(3);
                                                     }
-                                                }, 2000);
+                                                }, 7000);
 
                                             }else if(result == 2){ // el reto fué rechazado
                                                 challengeView.setVisibility(View.GONE);
@@ -404,7 +406,7 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
                                                         FirebaseDatabase.getInstance().getReference().child("gamification-score")
                                                                 .child(mHome.user.getUid()).child(challenge.getId()).removeValue();
                                                     }
-                                                }, 2000);
+                                                }, 7000);
                                             }
                                         }
                                     }
