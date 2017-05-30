@@ -117,7 +117,7 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
     private ArrayAdapter<CharSequence> categoryAdapter;
     private AppCompatActivity thisRef;
 
-    private final String FILE_PROVIDER = "com.ucaldas.android.fileprovider";
+    private final String FILE_PROVIDER = "com.ucaldas.android.cocono.fileprovider";
 
     private static String[] PERMISSIONS_STORAGE = {
             Manifest.permission.READ_EXTERNAL_STORAGE,

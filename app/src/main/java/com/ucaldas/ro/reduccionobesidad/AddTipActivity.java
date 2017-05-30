@@ -64,7 +64,7 @@ public class AddTipActivity extends AppCompatActivity implements ActivityCompat.
     private ArrayAdapter<CharSequence> typesAdapter;
     private ArrayAdapter<CharSequence> appAdapter;
 
-    private final String FILE_PROVIDER = "com.ucaldas.android.fileprovider";
+    private final String FILE_PROVIDER = "com.ucaldas.android.cocono.fileprovider";
     private static final int REQUEST_STORAGE_PERMISSION = 2;
     static final int RESULT_LOAD_IMAGE = 2;
     private static final String FRAGMENT_DIALOG = "dialog";
