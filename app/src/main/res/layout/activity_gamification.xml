@@ -75,10 +75,10 @@
                             android:layout_weight="0.3">
 
                             <ImageView
+                                android:id="@+id/img_coin"
                                 android:layout_width="60dp"
                                 android:layout_height="60dp"
-                                android:layout_marginTop="5dp"
-                                android:background="@drawable/ic_plata" />
+                                android:layout_marginTop="5dp" />
 
                         </LinearLayout>
 
@@ -88,10 +88,11 @@
                             android:layout_weight="0.7">
 
                             <TextView
+                                android:id="@+id/score"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:gravity="center"
-                                android:text="130pts"
+                                android:text="0pts"
                                 android:textColor="#fff"
                                 android:textSize="40sp"
                                 android:textStyle="bold" />
@@ -112,6 +113,7 @@
                         android:layout_height="wrap_content">
 
                         <LinearLayout
+                            android:id="@+id/percentage_container"
                             android:layout_width="270dp"
                             android:layout_height="10dp"
                             android:layout_centerInParent="true"
@@ -120,7 +122,8 @@
                             android:padding="1.5dp">
 
                             <View
-                                android:layout_width="200dp"
+                                android:id="@+id/percentage_view"
+                                android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:background="@color/colorPrimaryDark" />
 
@@ -162,8 +165,8 @@
                                 <ImageView
                                     android:layout_width="40dp"
                                     android:layout_height="40dp"
-                                    android:background="@drawable/ic_4nivel"
-                                    android:layout_gravity="center_horizontal"/>
+                                    android:layout_gravity="center_horizontal"
+                                    android:background="@drawable/ic_4nivel" />
 
                             </LinearLayout>
 
@@ -183,10 +186,10 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:text="Bronce"
-                                    android:textSize="11sp"
+                                    android:textAlignment="center"
                                     android:textColor="#c0b399"
-                                    android:textStyle="italic"
-                                    android:textAlignment="center"/>
+                                    android:textSize="11sp"
+                                    android:textStyle="italic" />
 
                             </LinearLayout>
 
@@ -206,10 +209,10 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:text="Plata"
-                                    android:textSize="11sp"
-                                    android:textStyle="italic"
+                                    android:textAlignment="center"
                                     android:textColor="#ced1d2"
-                                    android:textAlignment="center"/>
+                                    android:textSize="11sp"
+                                    android:textStyle="italic" />
 
                             </LinearLayout>
 
@@ -229,10 +232,10 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:text="Oro"
-                                    android:textSize="11sp"
-                                    android:textStyle="italic"
+                                    android:textAlignment="center"
                                     android:textColor="#f7eb33"
-                                    android:textAlignment="center"/>
+                                    android:textSize="11sp"
+                                    android:textStyle="italic" />
 
                             </LinearLayout>
 
@@ -248,15 +251,15 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="400dp"
+                    android:layout_marginTop="15dp"
                     android:background="@drawable/gamification_item_shadow_hard"
-                    android:padding="8dp"
-                    android:layout_marginTop="15dp">
+                    android:padding="8dp">
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/sistema_puntos"
-                        android:layout_marginTop="5dp"/>
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/sistema_puntos" />
 
 
                 </LinearLayout>

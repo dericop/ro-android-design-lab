@@ -123,7 +123,10 @@
         <activity
             android:name=".AddTipActivity"
             android:label="Nuevo anuncio" />
-        <activity android:name=".GamificationActivity" />
+
+        <activity android:name=".GamificationActivity"
+            android:label="Puntaje"
+            android:screenOrientation="portrait"/>
 
         <activity android:name=".QuestionHistoricActivity"
             android:screenOrientation="portrait"

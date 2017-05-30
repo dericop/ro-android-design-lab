@@ -46,6 +46,22 @@
                         android:id="@+id/challengeView"
                         layout="@layout/header_home" />
 
+                    <include
+                        android:id="@+id/good_challenge"
+                        layout="@layout/header_home_good_challenge"
+                        android:visibility="gone"/>
+
+                    <include
+                        android:id="@+id/bad_challenge"
+                        layout="@layout/header_home_bad_challenge"
+                        android:visibility="gone"/>
+
+                    <include
+                        android:id="@+id/wait_challenge"
+                        layout="@layout/header_home_wait_challenge"
+                        android:visibility="gone"/>
+
+
                 </LinearLayout>
 
                 <ListView

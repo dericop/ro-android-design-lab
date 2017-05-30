@@ -25,6 +25,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -44,6 +45,8 @@ import com.squareup.picasso.Picasso;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 public class mHome extends AppCompatActivity
@@ -63,6 +66,8 @@ public class mHome extends AppCompatActivity
 
     static boolean isAdmin = false;
     static boolean comeBackFromChallenge = false;
+    static boolean comeBackFromComment = false;
+    static boolean comeBackFromPost = false;
 
     // Tab References
     private Home home;
@@ -72,13 +77,16 @@ public class mHome extends AppCompatActivity
     private TipsFragment tips;
 
     private FloatingActionButton btn_add_tip;
+    TextView score_view;
+    long score;
+
+    private boolean isFirstTime = true;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_m_home);
-
 
         String type = getIntent().getStringExtra("type");
         /*if(type != null){
@@ -117,6 +125,49 @@ public class mHome extends AppCompatActivity
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if(!isFirstTime){
+            if(comeBackFromChallenge){
+                score+=5;
+                if(score_view != null)
+                    score_view.setText(score+"pts");
+
+                LinearLayout challengeView = (LinearLayout) findViewById(R.id.challengeView);
+                LinearLayout waitChallengeView = (LinearLayout) findViewById(R.id.wait_challenge);
+
+                if(challengeView!=null && waitChallengeView!=null){
+                    challengeView.setVisibility(View.GONE);
+                    waitChallengeView.setVisibility(View.VISIBLE);
+                    comeBackFromChallenge = false;
+                }
+
+
+            }else if(comeBackFromComment){
+
+                if(score_view != null){
+                    score+=1;
+                    score_view.setText(score+"pts");
+                    comeBackFromComment = false;
+                }
+
+
+
+            }else if(comeBackFromPost){
+                if(score_view != null) {
+                    score+=2;
+                    score_view.setText(score+"pts");
+                    comeBackFromPost = false;
+                }
+
+            }
+        }
+
+        isFirstTime = false;
+
+    }
 
     private void initMHome() {
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -140,6 +191,8 @@ public class mHome extends AppCompatActivity
     public void onActivityReenter(int resultCode, Intent data) {
         super.onActivityReenter(resultCode, data);
 
+        Log.v("Come", "Entra");
+
     }
 
     private void initViewPager() {
@@ -150,6 +203,54 @@ public class mHome extends AppCompatActivity
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);
 
+    }
+
+    private void loadScore(View view){
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+
+        score_view = (TextView)view.findViewById(R.id.score);
+        final ImageView img_coin = (ImageView) view.findViewById(R.id.img_coin);
+
+        if(mHome.user != null){
+
+            database.child("gamification-score").child(mHome.user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.getValue() != null){
+                        HashMap<String, Object> data = (HashMap) dataSnapshot.getValue();
+                        Iterator keysIt = data.keySet().iterator();
+                        score = 0;
+
+                        while(keysIt.hasNext()){
+                            String key = (String)keysIt.next();
+                            score += (long)((HashMap)data.get(key)).get("score");
+                        }
+
+                        score_view.setText(score +"pts");
+                        updateCoin(score, img_coin);
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
+    }
+
+    private void updateCoin(long score, ImageView img_coin){
+        if(score>=0 && score<=20){
+            img_coin.setImageDrawable(getResources().getDrawable(R.drawable.ic_5nivel));
+        }else if(score>20 && score<=60){
+            img_coin.setImageDrawable(getResources().getDrawable(R.drawable.ic_4nivel));
+        }else if(score>60 && score<=120){
+            img_coin.setImageDrawable(getResources().getDrawable(R.drawable.ic_bronce));
+        }else if(score>120 && score<=240){
+            img_coin.setImageDrawable(getResources().getDrawable(R.drawable.ic_plata));
+        }else if(score>240){
+            img_coin.setImageDrawable(getResources().getDrawable(R.drawable.ic_oro));
+        }
     }
 
     private void configureNavigationView() {
@@ -482,37 +583,7 @@ public class mHome extends AppCompatActivity
         tabLayout.getTabAt(3).setCustomView(tabFour);
     }
 
-    public void showUploadPopUp(View v) {
-        PopupMenu popup = new PopupMenu(this, v);
-        MenuInflater inflater = popup.getMenuInflater();
-        inflater.inflate(R.menu.upload_menu, popup.getMenu());
-        popup.show();
 
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.showMedia:
-                        Intent gallery_intent = new Intent(getBaseContext(), AddPost.class);
-                        gallery_intent.putExtra("source", "gallery");
-                        gallery_intent.putExtra("challenge", "true");
-                        startActivity(gallery_intent);
-
-                        break;
-                    case R.id.takePhoto:
-                        Intent camera_intent = new Intent(getBaseContext(), AddPost.class);
-                        camera_intent.putExtra("source", "camera");
-                        camera_intent.putExtra("challenge", "true");
-                        startActivity(camera_intent);
-                        break;
-                    default:
-                        break;
-                }
-
-                return false;
-            }
-        });
-    }
 
     @Override
     public void onBackPressed() {
@@ -527,7 +598,13 @@ public class mHome extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.m_home, menu);
+
+        if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
+            getMenuInflater().inflate(R.menu.m_home_corus, menu);
+        }else{
+            getMenuInflater().inflate(R.menu.m_home, menu);
+        }
+
         for (int i = 0; i< menu.size() ;i++) {
             MenuItem menuItem = menu.getItem(i);
             if (menuItem.getItemId() == R.id.gamification) {
@@ -542,8 +619,23 @@ public class mHome extends AppCompatActivity
                         }
                     });
                 }
+            }else if(menuItem.getItemId() == R.id.gamification_corus){
+                View view = MenuItemCompat.getActionView(menuItem);
+                if (view != null) {
+                    view.setOnClickListener(new View.OnClickListener() {
+
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(getContext(), GamificationActivity.class);
+                            startActivity(intent);
+                        }
+                    });
+                    loadScore(view);
+                }
             }
         }
+
+
 
         return true;
     }
@@ -576,9 +668,11 @@ public class mHome extends AppCompatActivity
         if (id == R.id.nav_manage) {
             Intent confIntent = new Intent(getContext(), ConfigurationActivity.class);
             startActivity(confIntent);
-        }//else if(id == R.id.nav_intro){
-//
-        // }
+        }else if(id == R.id.nav_intro){
+            WelcomeActivity.isOnRepeatTutorial = true;
+            Intent intent = new Intent(getContext(), WelcomeActivity.class);
+            startActivity(intent);
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

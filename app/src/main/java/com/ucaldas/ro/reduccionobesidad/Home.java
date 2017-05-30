@@ -2,6 +2,7 @@ package com.ucaldas.ro.reduccionobesidad;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,8 +11,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.PopupMenu;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -184,6 +188,14 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
             challengecontainer.setVisibility(View.GONE);
             }
         });
+
+        final ImageButton closeWaitChallenge = (ImageButton) view.findViewById(R.id.closeWaitChallenge);
+        closeWaitChallenge.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                challengecontainer.setVisibility(View.GONE);
+            }
+        });
     }
 
     private void updateViewWithQuestion(final Question question, View view){
@@ -262,9 +274,47 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
         });
     }
 
+
+    public void showUploadPopUp(View v, final String challengeId) {
+        PopupMenu popup = new PopupMenu(getContext(), v);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.upload_menu, popup.getMenu());
+        popup.show();
+
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.showMedia:
+                        Intent gallery_intent = new Intent(getContext(), AddPost.class);
+                        gallery_intent.putExtra("source", "gallery");
+                        gallery_intent.putExtra("challenge", "true");
+                        gallery_intent.putExtra("challengeId", challengeId);
+                        startActivity(gallery_intent);
+
+                        break;
+                    case R.id.takePhoto:
+                        Intent camera_intent = new Intent(getContext(), AddPost.class);
+                        camera_intent.putExtra("source", "camera");
+                        camera_intent.putExtra("challenge", "true");
+                        camera_intent.putExtra("challengeId", challengeId);
+                        startActivity(camera_intent);
+
+                        break;
+                    default:
+                        break;
+                }
+
+                return false;
+            }
+        });
+    }
+
     private void loadChallenge(final View view){
         setListAdapter(mPostAdapter);
         DatabaseReference challengeRef = FirebaseDatabase.getInstance().getReference();
+        final ImageButton uploadBtn = (ImageButton)view.findViewById(R.id.uploadBtn);
+
         challengeRef.child("challenges").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -285,20 +335,77 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
                         if(sDate.compareTo(cDate) <= 0 && eDate.compareTo(cDate) >= 0){
                             //Comparar el tema de fechas
                             final Challenge challenge = new Challenge();
-                            challenge.setId(map.get(key).get("id")+"");
+                            final String challengeId = map.get(key).get("id")+"";
+                            challenge.setId(challengeId);
                             challenge.setInitDate((long)map.get(key).get("initDate"));
                             challenge.setEndDate((long)map.get(key).get("endDate"));
                             challenge.setTitle(map.get(key).get("title")+"");
 
+                            uploadBtn.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    showUploadPopUp(v, challengeId);
+                                }
+                            });
+
                             if(mHome.user != null){
 
-                                FirebaseDatabase.getInstance().getReference().child("challenges-user")
-                                        .child(mHome.user.getUid()).orderByKey().equalTo(challenge.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                FirebaseDatabase.getInstance().getReference().child("gamification-score")
+                                        .child(mHome.user.getUid()).child(challenge.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
 
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         if(dataSnapshot.getValue() == null) {
                                             updateViewWithChallenge(challenge, view);
+                                        }else{ //existe el registro
+
+                                            HashMap<String,Object> data = (HashMap) dataSnapshot.getValue();
+                                            long result = 0;
+                                            if(data.get("result") != null)
+                                                result = (long) data.get("result");
+
+                                            final LinearLayout challengeView = (LinearLayout) view.findViewById(R.id.challengeView);
+
+                                            if(result == 0) { // el reto esta en espera de calificación
+
+                                                LinearLayout waitChallengeView = (LinearLayout) view.findViewById(R.id.wait_challenge);
+
+                                                if(challengeView!=null && waitChallengeView!=null){
+                                                    challengeView.setVisibility(View.GONE);
+                                                    waitChallengeView.setVisibility(View.VISIBLE);
+                                                }
+
+                                            }else if(result == 1){ // el reto fué aceptado
+                                                challengeView.setVisibility(View.GONE);
+                                                final LinearLayout successChallengeView = (LinearLayout) view.findViewById(R.id.good_challenge);
+                                                successChallengeView.setVisibility(View.VISIBLE);
+
+                                                Handler handler = new Handler();
+                                                handler.postDelayed(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        successChallengeView.setVisibility(View.GONE);
+                                                        FirebaseDatabase.getInstance().getReference().child("gamification-score")
+                                                                .child(mHome.user.getUid()).child(challenge.getId()).child("result").setValue(3);
+                                                    }
+                                                }, 2000);
+
+                                            }else if(result == 2){ // el reto fué rechazado
+                                                challengeView.setVisibility(View.GONE);
+                                                final LinearLayout badChallengeView = (LinearLayout) view.findViewById(R.id.bad_challenge);
+                                                badChallengeView.setVisibility(View.VISIBLE);
+
+                                                Handler handler = new Handler();
+                                                handler.postDelayed(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        badChallengeView.setVisibility(View.GONE);
+                                                        challengeView.setVisibility(View.VISIBLE);
+                                                        FirebaseDatabase.getInstance().getReference().child("gamification-score")
+                                                                .child(mHome.user.getUid()).child(challenge.getId()).removeValue();
+                                                    }
+                                                }, 2000);
+                                            }
                                         }
                                     }
 
@@ -580,11 +687,7 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
 
                 }
             });
-
-
         }
-
-
     }
 
 

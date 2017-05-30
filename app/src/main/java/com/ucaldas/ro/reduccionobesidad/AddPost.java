@@ -108,6 +108,7 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
     private long resultForReply;
     private long averageForReply;
     private boolean isChallenge = false;
+    private String challengeId = "";
 
     private String idForUpdate;
 
@@ -211,6 +212,8 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
         SOURCE = getIntent().getStringExtra("source"); //Obtiene el origen
 
         isChallenge = getIntent().getBooleanExtra("challenge", false);
+        if(isChallenge)
+            challengeId = getIntent().getStringExtra("challengeId");
 
         // Creación del spinner de frecuencias para un nuevo post
         frecuencySpinner = (Spinner) findViewById(R.id.frecuency_spinner);
@@ -615,7 +618,12 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
                             public void onComplete(@NonNull Task task) {
                                 if(task.isSuccessful()){
                                     progress.dismiss();
-                                    mHome.comeBackFromChallenge = true;
+
+                                    if(isChallenge)
+                                        mHome.comeBackFromChallenge = true;
+                                    else
+                                        mHome.comeBackFromPost = true;
+
                                     finish();
                                 }else{
                                     progress.dismiss();
@@ -626,9 +634,9 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
                         };
 
                         if(isChallenge){
-                            registerPoint(0, "challenge", key, scoreListener);
+                            registerChallenge(0, key, scoreListener);
                         }else{
-                            registerPoint(2, "post", key, scoreListener);
+                            registerPoint(2, key, scoreListener);
                         }
 
 
@@ -643,7 +651,7 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
         }
     }
 
-    private void registerPoint(int score, String type, String postId, OnCompleteListener callback){
+    private void registerPoint(int score, String postId, OnCompleteListener callback){
         DatabaseReference gamfRef = FirebaseDatabase.getInstance().getReference();
         if(mHome.user != null){
             gamfRef = gamfRef.child("gamification-score").child(mHome.user.getUid());
@@ -655,7 +663,20 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
 
             gamfRef.child("/"+key).setValue(childUpdates).addOnCompleteListener(callback);
         }
+    }
 
+    private void registerChallenge(int score, String postId,OnCompleteListener callback){
+        DatabaseReference gamfRef = FirebaseDatabase.getInstance().getReference();
+        if(mHome.user != null){
+            gamfRef = gamfRef.child("gamification-score").child(mHome.user.getUid());
+            //String key = gamfRef.push().getKey();
+            HashMap childUpdates = new HashMap();
+            childUpdates.put("postid", postId);
+            childUpdates.put("challenge", challengeId);
+            childUpdates.put("score", score);
+
+            gamfRef.child("/"+challengeId).setValue(childUpdates).addOnCompleteListener(callback);
+        }
     }
 
     private void updatePost(){

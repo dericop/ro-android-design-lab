@@ -213,6 +213,8 @@ public class PostDetail extends AppCompatActivity {
             childUpdates.put("type", "comment");
             childUpdates.put("score", 1);
 
+            mHome.comeBackFromComment = true;
+
             gamfRef.child("/"+key).setValue(childUpdates);
         }
 

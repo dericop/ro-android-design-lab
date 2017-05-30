@@ -28,7 +28,8 @@ public class WelcomeActivity extends AppCompatActivity{
     private Button btnSkip, btnNext;
     private PrefManager prefManager;
 
-    public static String CURRENT_APP_VERSION = "R"; //Existen dos opciones "A", "R"
+    public static String CURRENT_APP_VERSION = "A"; //Existen dos opciones "A", "R"
+    public static boolean isOnRepeatTutorial = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +38,7 @@ public class WelcomeActivity extends AppCompatActivity{
 
         // Checking for first time launch - before calling setContentView()
         prefManager = new PrefManager(this);
-        if (!prefManager.isFirstTimeLaunch()) {
+        if (!prefManager.isFirstTimeLaunch() && !isOnRepeatTutorial) {
             launchHomeScreen();
             finish();
         }

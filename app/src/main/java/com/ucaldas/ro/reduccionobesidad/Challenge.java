@@ -14,7 +14,9 @@ public class Challenge {
     private long initDate;
     private long endDate;
     private String title;
+    private long result;
 
+    public Challenge(){}
 
     public String getId() {
         return id;
@@ -48,6 +50,14 @@ public class Challenge {
         this.title = title;
     }
 
+    public long getResult() {
+        return result;
+    }
+
+    public void setResult(long result) {
+        this.result = result;
+    }
+
     @Exclude
     public Map<String, Object> toMap(){
         HashMap<String, Object> result = new HashMap<>();
@@ -55,6 +65,7 @@ public class Challenge {
         result.put("initDate", initDate);
         result.put("endDate", endDate);
         result.put("title", title);
+        result.put("result", result);
 
         return result;
     }
