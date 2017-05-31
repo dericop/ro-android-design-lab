@@ -53,11 +53,6 @@
             android:label="@string/title_activity_m_home"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
-        <!--<activity
-            android:name=".AddMenu"
-            android:label="@string/title_activity_add_menu"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />-->
         <activity
             android:name=".AddPost"
             android:label="@string/title_activity_library_post"
@@ -73,9 +68,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".mHome" />
         </activity>
-        <activity
-            android:name=".LibraryActivity"
-            android:screenOrientation="portrait" />
         <activity
             android:name=".TermsAndConditions"
             android:screenOrientation="portrait" />
@@ -103,7 +95,7 @@
         <!-- eliminar .cocono al exportar corus (com.ucaldas.android.cocono.fileprovider) -->
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.ucaldas.android.cocono.fileprovider"
+            android:authorities="com.ucaldas.android.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

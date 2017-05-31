@@ -20,9 +20,6 @@ import com.bumptech.glide.Glide;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Created by Dericop on 12/01/17.
- */
 
 public class HomeAdapter extends ArrayAdapter<Post>{
 
@@ -40,8 +37,6 @@ public class HomeAdapter extends ArrayAdapter<Post>{
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         final Post post = getItem(position);
-        // ¿Existe el view actual?
-        //if (null == convertView) {
         List foodList = Arrays.asList(mContext.getResources().getStringArray(R.array.new_post_food_categories));
 
         if(WelcomeActivity.CURRENT_APP_VERSION.equals("R")){
@@ -93,11 +88,8 @@ public class HomeAdapter extends ArrayAdapter<Post>{
         if(post.getReplyCount()!=0)
             txtReply.setText(post.getReplyCount()+"");
 
-
-
         if(post.getCountOfComments()!=0)
             txtCommentsC.setText(post.getCountOfComments()+"");
-
 
         long result = post.getResult();
         if(result == 0){
@@ -113,8 +105,6 @@ public class HomeAdapter extends ArrayAdapter<Post>{
 
         }else{
             if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
-                //txtAverage.setVisibility(View.VISIBLE);
-                //txtAverage.setText(post.getAverage()+"");
 
                 switch ((int)result){
                     case 1:
@@ -147,11 +137,10 @@ public class HomeAdapter extends ArrayAdapter<Post>{
                     }
 
                 }else{
-                    View piContainer = (View) convertView.findViewById(R.id.piContainer);
-                    View aaContainer = (View) convertView.findViewById(R.id.aaContainer);
-                    View gsContainer = (View) convertView.findViewById(R.id.gsContainer);
-                    View chContainer = (View) convertView.findViewById(R.id.chContainer);
-
+                    View piContainer = convertView.findViewById(R.id.piContainer);
+                    View aaContainer = convertView.findViewById(R.id.aaContainer);
+                    View gsContainer = convertView.findViewById(R.id.gsContainer);
+                    View chContainer = convertView.findViewById(R.id.chContainer);
 
                     int maxCalificationForPI = 10;
                     int relativeLayoutHeight = 50;
@@ -213,7 +202,6 @@ public class HomeAdapter extends ArrayAdapter<Post>{
             }
         });
 
-
         ImageButton action_comment = (ImageButton) convertView.findViewById(R.id.action_comment);
         action_comment.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -259,21 +247,10 @@ public class HomeAdapter extends ArrayAdapter<Post>{
 
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(Math.round(imageWidthInPX),
                         Math.round(imageWidthInPX * (float)imgPrev.getHeight() / (float)imgPrev.getWidth()));
-                //imgPrev.setLayoutParams(layoutParams);
 
                 dialog.setOnShowListener(new DialogInterface.OnShowListener() {
                     @Override
                     public void onShow(DialogInterface d) {
-
-                     /* Bitmap icon = BitmapFactory.decodeResource("");
-                    float imageWidthInPX = (float)image.getWidth();
-
-                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(Math.round(imageWidthInPX),
-                            Math.round(imageWidthInPX * (float)icon.getHeight() / (float)icon.getWidth()));
-                    image.setLayoutParams(layoutParams);*/
-
-                    //Glide.with(mContext).load(post.getImage()).into(imgPrev);
-
 
                     }
                 });

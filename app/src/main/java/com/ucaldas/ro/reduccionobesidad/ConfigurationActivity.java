@@ -95,14 +95,14 @@ public class ConfigurationActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        if(getSupportActionBar() != null){
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }
 
     private static int RESULT_LOAD_IMAGE = 1;
 
-    private void initGraphicalComponents(){
+    private void initGraphicalComponents() {
         this.photo = (ImageView) findViewById(R.id.photo);
         this.textInputName = (TextView) findViewById(R.id.textInputName);
         this.textInputEditWeight = (TextView) findViewById(R.id.textInputEditWeight);
@@ -112,9 +112,9 @@ public class ConfigurationActivity extends AppCompatActivity {
         this.nameLayout = (TextInputLayout) findViewById(R.id.txt_input_layour_name);
 
         genderAdapter = ArrayAdapter.createFromResource(this,
-                R.array.gender_options, android.R.layout.simple_spinner_dropdown_item );
+                R.array.gender_options, android.R.layout.simple_spinner_dropdown_item);
 
-        this.gender_spinner.setAdapter(genderAdapter);;
+        this.gender_spinner.setAdapter(genderAdapter);
 
         this.btn_saveChanges.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,14 +127,14 @@ public class ConfigurationActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                if(i.resolveActivity(getPackageManager()) != null){
+                if (i.resolveActivity(getPackageManager()) != null) {
                     startActivityForResult(i, RESULT_LOAD_IMAGE);
                 }
             }
         });
 
         EditText nameEditText = nameLayout.getEditText();
-        if(nameEditText!=null) {
+        if (nameEditText != null) {
             nameEditText.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -160,9 +160,9 @@ public class ConfigurationActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if(requestCode == RESULT_LOAD_IMAGE){
+        if (requestCode == RESULT_LOAD_IMAGE) {
 
-            if(data != null){
+            if (data != null) {
                 Uri selectedImage = data.getData();
                 String[] orientationColumn = {MediaStore.Images.Media.ORIENTATION};
                 Cursor cur = managedQuery(selectedImage, orientationColumn, null, null, null);
@@ -172,7 +172,7 @@ public class ConfigurationActivity extends AppCompatActivity {
                     orientation = cur.getInt(cur.getColumnIndex(orientationColumn[0]));
                 }
 
-                if(loadImageResultInImageView(photo, data, orientation)){
+                if (loadImageResultInImageView(photo, data, orientation)) {
 
                     FirebaseStorage storage = FirebaseStorage.getInstance();
                     StorageReference storageRef = storage.getReferenceFromUrl("gs://reduccion-de-obesidad-7414c.appspot.com");
@@ -200,7 +200,7 @@ public class ConfigurationActivity extends AppCompatActivity {
                             @Override
                             public void onFailure(@NonNull Exception exception) {
 
-                                if(getCurrentFocus() != null)
+                                if (getCurrentFocus() != null)
                                     Snackbar.make(getCurrentFocus(), "Revise su conexión a internet e intentelo más tarde", 2000).show();
                                 progressDialog.dismiss();
 
@@ -208,14 +208,14 @@ public class ConfigurationActivity extends AppCompatActivity {
                         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                if(taskSnapshot != null){
+                                if (taskSnapshot != null) {
                                     Uri downloadUrl = taskSnapshot.getDownloadUrl();
                                     updateUserPhoto(downloadUrl);
                                 }
                             }
                         });
                     } else {
-                        if(getCurrentFocus()!=null)
+                        if (getCurrentFocus() != null)
                             Snackbar.make(getCurrentFocus(), "Revise su conexión a internet e intentelo más tarde", 2000).show();
                         progressDialog.dismiss();
                     }
@@ -226,13 +226,13 @@ public class ConfigurationActivity extends AppCompatActivity {
         }
     }
 
-    private void updateUserPhoto(final Uri downloadUrl){
+    private void updateUserPhoto(final Uri downloadUrl) {
         this.confRef.child(mHome.user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.getValue() != null){
+                if (dataSnapshot.getValue() != null) {
                     AUser user = dataSnapshot.getValue(AUser.class);
-                    if(!downloadUrl.equals(""))
+                    if (!downloadUrl.equals(""))
                         user.setmPhotoUrl(downloadUrl.toString());
                     confRef.child(mHome.user.getUid()).updateChildren(user.toMap()).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
@@ -271,9 +271,9 @@ public class ConfigurationActivity extends AppCompatActivity {
             Bitmap scaled = Bitmap.createScaledBitmap(selectedImage, 512, nh, true);
 
             Bitmap rotated;
-            if(orientation == 90)
+            if (orientation == 90)
                 rotated = rotateBitmap(scaled, 90);
-            else if(orientation == 270)
+            else if (orientation == 270)
                 rotated = ConfigurationActivity.rotateBitmap(scaled, 270);
             else
                 rotated = rotateBitmap(scaled, 0);
@@ -287,15 +287,14 @@ public class ConfigurationActivity extends AppCompatActivity {
         }
     }
 
-    public static Bitmap rotateBitmap(Bitmap source, float angle)
-    {
+    public static Bitmap rotateBitmap(Bitmap source, float angle) {
         Matrix matrix = new Matrix();
         matrix.postRotate(angle);
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
     }
 
 
-    private void updateDataInDB(){
+    private void updateDataInDB() {
         HashMap data;
         final CharSequence name = this.textInputName.getText();
         final CharSequence gender = this.gender_spinner.getSelectedItem().toString();
@@ -303,33 +302,33 @@ public class ConfigurationActivity extends AppCompatActivity {
 
         final AppCompatActivity that = this;
 
-        if(!(name.length()==0)){
+        if (!(name.length() == 0)) {
             final String uid = mHome.user.getUid();
             final String email = mHome.user.getEmail();
             final String uName = name.toString().replace("\n", "");
 
             configureDBReference();
-            if(isOnline()){
+            if (isOnline()) {
 
                 confRef.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.getValue() != null){
+                        if (dataSnapshot.getValue() != null) {
                             AUser user = dataSnapshot.getValue(AUser.class);
                             user.setmUserName(uName);
 
-                            if(!gender.equals(""))
+                            if (!gender.equals(""))
                                 user.setmGender(gender.toString());
 
-                            if(!weight.equals(""))
+                            if (!weight.equals(""))
                                 user.setmWeight(Long.parseLong(weight.toString()));
 
                             HashMap userData = user.toMap();
                             HashMap dataToUpdate = new HashMap();
 
-                            if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
-                                dataToUpdate.put("/users/"+uid, userData);
-                            }else{
+                            if (WelcomeActivity.CURRENT_APP_VERSION.equals("A")) {
+                                dataToUpdate.put("/users/" + uid, userData);
+                            } else {
                                 dataToUpdate.put("/users-reflexive/" + uid, userData);
                             }
 
@@ -351,13 +350,13 @@ public class ConfigurationActivity extends AppCompatActivity {
                     }
                 });
 
-            }else{
-                if(getCurrentFocus()!=null)
+            } else {
+                if (getCurrentFocus() != null)
                     Snackbar.make(getCurrentFocus(), "Revise su conexión a internet e intentelo más tarde", 2000).show();
                 progressDialog.dismiss();
             }
 
-        }else{
+        } else {
             nameLayout.setError("El nombre es requerido");
             nameLayout.setErrorEnabled(true);
         }
@@ -372,28 +371,28 @@ public class ConfigurationActivity extends AppCompatActivity {
         }
     }
 
-    private void loadData(){
+    private void loadData() {
 
         this.progressDialog = progressDialog.show(this, "Recuperando información", "Espere un momento", true);
         this.progressDialog.setCancelable(true);
         final ConfigurationActivity that = this;
 
-        if(confRef != null && mHome.user != null){
+        if (confRef != null && mHome.user != null) {
             confRef.child(mHome.user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
 
-                    if(dataSnapshot.getValue() != null){
+                    if (dataSnapshot.getValue() != null) {
                         AUser user = dataSnapshot.getValue(AUser.class);
                         String remoteName = user.getmUserName();
                         String remoteGender = user.getmGender();
-                        String remoteWeight = user.getmWeight()+"";
+                        String remoteWeight = user.getmWeight() + "";
                         String photoUrl = user.getmPhotoUrl();
 
-                        if(!remoteWeight.equals(""))
+                        if (!remoteWeight.equals(""))
                             textInputEditWeight.setText(remoteWeight);
 
-                        if(remoteGender!=null && !remoteGender.equals("")){
+                        if (remoteGender != null && !remoteGender.equals("")) {
                             int pos = genderAdapter.getPosition(remoteGender);
                             gender_spinner.setSelection(pos);
                         }
@@ -402,7 +401,7 @@ public class ConfigurationActivity extends AppCompatActivity {
                         textInputName.setText(remoteName);
                     }
 
-                    if(that != null && that.progressDialog!=null)
+                    if (that.progressDialog != null)
                         that.progressDialog.dismiss();
                 }
 
@@ -415,10 +414,10 @@ public class ConfigurationActivity extends AppCompatActivity {
 
     }
 
-    private void configureDBReference(){
-        if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
+    private void configureDBReference() {
+        if (WelcomeActivity.CURRENT_APP_VERSION.equals("A")) {
             this.confRef = mDatabase.child("users");
-        }else{
+        } else {
             this.confRef = mDatabase.child("users-reflexive");
         }
     }

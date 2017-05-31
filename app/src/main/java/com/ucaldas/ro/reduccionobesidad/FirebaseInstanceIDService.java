@@ -1,14 +1,7 @@
 package com.ucaldas.ro.reduccionobesidad;
 
-import android.util.Log;
-
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
-
-
-/**
- * Created by disenoestrategico on 9/03/17.
- */
 
 public class FirebaseInstanceIDService extends FirebaseInstanceIdService {
 
@@ -28,10 +21,6 @@ public class FirebaseInstanceIDService extends FirebaseInstanceIdService {
     }
 
     private void sendRegistrationToServer(final String token) {
-        // TODO: Implement this method to send token to your app server.
-
         currentToken = token;
-        Log.v("Token", currentToken);
-
     }
 }

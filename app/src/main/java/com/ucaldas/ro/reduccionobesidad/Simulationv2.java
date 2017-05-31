@@ -27,21 +27,12 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link Simulationv2.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link Simulationv2#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class Simulationv2 extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
@@ -77,19 +68,8 @@ public class Simulationv2 extends Fragment {
 
     public View tView;
 
-    public Simulationv2() {
-        // Required empty public constructor
-    }
+    public Simulationv2() {}
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment Simulationv2.
-     */
-    // TODO: Rename and change types and number of parameters
     public static Simulationv2 newInstance(String param1, String param2) {
         Simulationv2 fragment = new Simulationv2();
         Bundle args = new Bundle();
@@ -115,23 +95,11 @@ public class Simulationv2 extends Fragment {
         return inflater.inflate(R.layout.fragment_simulationv2, container, false);
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
     }
-
-    /*@Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }*/
 
     private boolean assignUserItemsDBReference() {
         if (mHome.user != null && firebaseDatabase != null) {
@@ -163,11 +131,6 @@ public class Simulationv2 extends Fragment {
         mListener = null;
     }
 
-    /* en onPostExecute()
-        if(isAdded()){
-            getResources().getString(R.string.app_name);
-        }
-    */
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
@@ -314,7 +277,6 @@ public class Simulationv2 extends Fragment {
     private void calculatePostQualification(Post post, List<String> frecuenciesCost, List<String> frecuencies, List<String> foodsCategories) {
 
         long frecuency = Integer.parseInt(frecuenciesCost.get(frecuencies.indexOf(post.getFrecuency())));
-        List foodList = Arrays.asList(this.getResources().getStringArray(R.array.new_post_food_categories));
 
         if (!foodsCategories.contains(post.getCategory())) {
             if (post.getAverage() != 0) {
@@ -387,8 +349,6 @@ public class Simulationv2 extends Fragment {
     }
 
     private void updateViewsAndRestarData(View view) {
-        Log.v("Total", chAverage + " pi");
-        Log.v("Total", chFrecuencies + " piFrecuencies");
 
         if (piFrecuencies != 0)
             piAverage /= piFrecuencies;
@@ -423,14 +383,12 @@ public class Simulationv2 extends Fragment {
         final View pi_medium_top = view.findViewById(R.id.pi_medium_top);
         final View pi_top = view.findViewById(R.id.pi_top);
 
-
         pi_without.setVisibility(View.INVISIBLE);
         pi_bottom.setVisibility(View.INVISIBLE);
         pi_bottom_medium.setVisibility(View.INVISIBLE);
         pi_medium.setVisibility(View.INVISIBLE);
         pi_medium_top.setVisibility(View.INVISIBLE);
         pi_top.setVisibility(View.INVISIBLE);
-
 
         if (piAverage == 0) {
             pi_without.setVisibility(View.VISIBLE);
@@ -603,16 +561,6 @@ public class Simulationv2 extends Fragment {
 
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);

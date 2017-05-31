@@ -54,36 +54,36 @@ public class GamificationActivity extends AppCompatActivity {
         return false;
     }
 
-    private void init(){
-        score_view = (TextView)findViewById(R.id.score);
+    private void init() {
+        score_view = (TextView) findViewById(R.id.score);
         percentage_view = findViewById(R.id.percentage_view);
         img_coin = (ImageView) findViewById(R.id.img_coin);
     }
 
-    private void configureDatabaseAndInitData(){
+    private void configureDatabaseAndInitData() {
         database = FirebaseDatabase.getInstance().getReference();
-        if(mHome.user != null){
+        if (mHome.user != null) {
 
             database.child("gamification-score").child(mHome.user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    if(dataSnapshot.getValue() != null){
+                    if (dataSnapshot.getValue() != null) {
                         HashMap<String, Object> data = (HashMap) dataSnapshot.getValue();
                         Iterator keysIt = data.keySet().iterator();
 
-                        while(keysIt.hasNext()){
-                            String key = (String)keysIt.next();
-                            score += (long)((HashMap)data.get(key)).get("score");
+                        while (keysIt.hasNext()) {
+                            String key = (String) keysIt.next();
+                            score += (long) ((HashMap) data.get(key)).get("score");
                         }
 
-                        score_view.setText(score +"pts");
+                        score_view.setText(score + "pts");
 
-                        if(score > COUNT_OF_GOLD_SCORE){
-                            score = (long)COUNT_OF_GOLD_SCORE;
+                        if (score > COUNT_OF_GOLD_SCORE) {
+                            score = (long) COUNT_OF_GOLD_SCORE;
                         }
 
-                        double percentage = score/COUNT_OF_GOLD_SCORE;
-                        int wTarget = (int)(270 * percentage);
+                        double percentage = score / COUNT_OF_GOLD_SCORE;
+                        int wTarget = (int) (270 * percentage);
 
                         final float scale = getBaseContext().getResources().getDisplayMetrics().density;
                         int pixels = (int) (wTarget * scale + 0.5f);
@@ -104,16 +104,16 @@ public class GamificationActivity extends AppCompatActivity {
         }
     }
 
-    private void updateCoin(){
-        if(score>=0 && score<=20){
+    private void updateCoin() {
+        if (score >= 0 && score <= 20) {
             img_coin.setImageDrawable(getResources().getDrawable(R.drawable.ic_5nivel));
-        }else if(score>20 && score<=60){
+        } else if (score > 20 && score <= 60) {
             img_coin.setImageDrawable(getResources().getDrawable(R.drawable.ic_4nivel));
-        }else if(score>60 && score<=120){
+        } else if (score > 60 && score <= 120) {
             img_coin.setImageDrawable(getResources().getDrawable(R.drawable.ic_bronce));
-        }else if(score>120 && score<=240){
+        } else if (score > 120 && score <= 240) {
             img_coin.setImageDrawable(getResources().getDrawable(R.drawable.ic_plata));
-        }else if(score>240){
+        } else if (score > 240) {
             img_coin.setImageDrawable(getResources().getDrawable(R.drawable.ic_oro));
         }
     }

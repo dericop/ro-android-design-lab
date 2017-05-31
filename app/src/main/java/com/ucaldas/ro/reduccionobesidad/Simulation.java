@@ -34,21 +34,10 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link Simulation.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link Simulation#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class Simulation extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-    //Elementos gráficos a actualizar
 
     //Textos
     private TextView healthyHabits;
@@ -64,7 +53,6 @@ public class Simulation extends Fragment {
     private ImageView human_image_view;
 
     //Medidores de tendencia en obesidad
-    private LinearLayout low_weight_container;
     private LinearLayout normal_weight_container;
     private LinearLayout overweight_container;
     private LinearLayout obesity_level_1_container;
@@ -73,10 +61,6 @@ public class Simulation extends Fragment {
 
     private SwipeRefreshLayout swiperefresh;
 
-    //Dialogo de progreso
-    private ProgressDialog progress;
-
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
@@ -97,19 +81,8 @@ public class Simulation extends Fragment {
 
     List foodList;
 
-    public Simulation() {
-        // Required empty public constructor
-    }
+    public Simulation() {}
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment Simulation.
-     */
-    // TODO: Rename and change types and number of parameters
     public static Simulation newInstance(String param1, String param2) {
         Simulation fragment = new Simulation();
         Bundle args = new Bundle();
@@ -141,18 +114,6 @@ public class Simulation extends Fragment {
             mListener.onFragmentInteraction(uri);
         }
     }
-
-    /*
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }*/
 
     private boolean assignUserItemsDBReference() {
         if (mHome.user != null && firebaseDatabase != null) {
@@ -226,8 +187,6 @@ public class Simulation extends Fragment {
 
     public void loadData(final View view) {
         if (mHome.user != null) {
-            final String[] foodsString = getResources().getStringArray(R.array.new_post_food_categories);
-            final List<String> foodsCategories = Arrays.asList(foodsString);
 
             firebaseDatabase = FirebaseDatabase.getInstance().getReference();
             if (assignUserItemsDBReference() && assignQualificationItemDBReference()) {
@@ -267,12 +226,9 @@ public class Simulation extends Fragment {
                                             Post post = dataSnapshot.getValue(Post.class);
                                             countOfElements.incrementAndGet();
 
-                                            Log.v("SElements", countOfElements.get()+" keys size -1: "+ (keys.size() - 1) +"");
-
                                             if (post.getResult() != 0) {
                                                 calculatePostQualification(post, frecuenciesCost, frecuencies, sumOfFrecuencies, countOfHealthy, countOfMedium, countOfBad);
 
-                                                //Log.v("Simulation", "cantidad: "+ countOfElements+" keys.size: "+(keys.size()-1)+"");
                                                 if (countOfElements.get() == (keys.size() - 1)) {
                                                     updateViewsAndRestarData(countOfHealthy, countOfMedium, countOfBad, view, sumOfFrecuencies);
                                                     swiperefresh.setRefreshing(false);
@@ -310,22 +266,6 @@ public class Simulation extends Fragment {
 
 
     private void updateViewsAndRestarData(AtomicInteger countOfHealthy, AtomicInteger countOfMedium, AtomicInteger countOfBad, View view, AtomicInteger sumOfFrecuencies) {
-        Log.v("Total", "Good: " + countOfHealthy.get());
-        Log.v("Total", "Medium " + countOfMedium.get());
-        Log.v("Total", "Bad " + countOfBad.get());
-
-        Log.v("Total", "Good Average: " + goodHabitsAverage);
-        Log.v("Total", "Medium Average: " + mediumHabitsAverage);
-        Log.v("Total", "Bad Average: " + badHabitsAverages);
-
-        /*if(countOfHealthy.get() != 0)
-            //goodHabitsAverage = goodHabitsAverage / countOfHealthy.get();
-
-        if(countOfMedium.get() != 0)
-            mediumHabitsAverage = mediumHabitsAverage / countOfMedium.get();
-
-        if(countOfBad.get() != 0)
-            badHabitsAverages = badHabitsAverages / countOfBad.get();*/
 
         updateCircleBoxSize(goodHabitsAverage, mediumHabitsAverage, badHabitsAverages, view, totalAverage, sumOfFrecuencies.get());
 
@@ -342,8 +282,6 @@ public class Simulation extends Fragment {
         sumOfFrecuencies.addAndGet((int) frecuency);
 
         int average = (int) post.getAverage();
-
-        Log.v("Simulation", frecuency + "");
 
         if (!foodList.contains(post.getCategory())) {
             switch (average) {
@@ -419,8 +357,6 @@ public class Simulation extends Fragment {
 
         Collections.sort(orderedList);
 
-        Log.v("Total", orderedList.toString());
-
         //Ubicación del tamaño para el componente 1
         if (orderedList.indexOf(newSizeBox1) == 2) {
             newSizeBox1 = 80;
@@ -474,7 +410,6 @@ public class Simulation extends Fragment {
     }
 
     private void paintLevel(double average, View view) {
-        Log.v("Simulation", "Pintate " + average);
         final RelativeLayout humanContainer = (RelativeLayout) view.findViewById(R.id.human_container);
         final ImageView humanImageView = (ImageView) view.findViewById(R.id.human_image_view);
 
@@ -579,17 +514,6 @@ public class Simulation extends Fragment {
         mListener = null;
     }
 
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);

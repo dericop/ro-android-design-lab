@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -19,23 +18,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-/**
- * A fragment representing a list of Items.
- * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
- * interface.
- */
 public class TipsFragment extends Fragment {
 
-    // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
 
@@ -50,15 +40,8 @@ public class TipsFragment extends Fragment {
 
     private int countOfElementsByPage = 10;
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
-    public TipsFragment() {
-    }
+    public TipsFragment() {}
 
-    // TODO: Customize parameter initialization
-    @SuppressWarnings("unused")
     public static TipsFragment newInstance(int columnCount) {
         TipsFragment fragment = new TipsFragment();
         Bundle args = new Bundle();
@@ -150,9 +133,7 @@ public class TipsFragment extends Fragment {
     }
 
     private void reloadData(){
-
         recyclerViewAdapter.notifyDataSetChanged();
-        //mSwipeRefreshing.setRefreshing(false);
     }
 
     //Position: 0 -> ingresar al principio, 1 - ingresar al final
@@ -238,14 +219,11 @@ public class TipsFragment extends Fragment {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 if(layoutManager.findLastCompletelyVisibleItemPosition() == (mTips.size() -1)){
-                    Log.v("Scrolled", flag_loading+"");
 
                     if(!flag_loading)
                     {
                         flag_loading = true;
                         loadNextPage();
-
-                        Log.v("Scrolled", "Next page");
                     }
                 }
             }
@@ -281,18 +259,7 @@ public class TipsFragment extends Fragment {
     }
 
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onListFragmentInteraction(Tip item);
     }
 }

@@ -114,8 +114,6 @@ public class MyItemAdapter extends BaseAdapter {
 
             }else{
                 if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
-                    //txtAverage.setVisibility(View.VISIBLE);
-                    //txtAverage.setText(post.getAverage()+"");
 
                     switch ((int)result){
                         case 1:
@@ -149,10 +147,10 @@ public class MyItemAdapter extends BaseAdapter {
                         }
 
                     }else{
-                        View piContainer = (View) convertView.findViewById(R.id.piContainer);
-                        View aaContainer = (View) convertView.findViewById(R.id.aaContainer);
-                        View gsContainer = (View) convertView.findViewById(R.id.gsContainer);
-                        View chContainer = (View) convertView.findViewById(R.id.chContainer);
+                        View piContainer = convertView.findViewById(R.id.piContainer);
+                        View aaContainer = convertView.findViewById(R.id.aaContainer);
+                        View gsContainer = convertView.findViewById(R.id.gsContainer);
+                        View chContainer = convertView.findViewById(R.id.chContainer);
 
 
                         int maxCalificationForPI = 10;
@@ -201,7 +199,7 @@ public class MyItemAdapter extends BaseAdapter {
             }
 
         } else {
-            convertView = (View) view;
+            convertView = view;
 
         }
 

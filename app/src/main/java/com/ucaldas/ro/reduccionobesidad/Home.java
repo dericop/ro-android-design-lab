@@ -1,15 +1,12 @@
 package com.ucaldas.ro.reduccionobesidad;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.PopupMenu;
 import android.util.Log;
@@ -22,7 +19,6 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -34,31 +30,19 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link Home.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link Home#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class Home extends ListFragment implements AdapterView.OnItemClickListener {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private SwipeRefreshLayout mSwipeRefreshing;
     boolean isTheFirstLoad = true;
     private HomeAdapter mPostAdapter = null;
-    private Button btn_new_posts = null;
     private String lastPostLoaded = "";
     private boolean flag_loading = false;
     private int countOfItemsLoadedForTime = 10;
@@ -66,33 +50,16 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
     private boolean isTheFirstItem = true; //usado para obtener la primer clave en la paginación
 
     private DatabaseReference mDatabase = null;
-    private DatabaseReference postRef = null;
     private DatabaseReference userRef = null;
     private DatabaseReference commentRef = null;
 
-
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
     LinkedList<Post> mPostList;
 
-    private int countOfPages = 0;
+    public Home() {}
 
-
-    public Home() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters. 40689793015911163  3013072302
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment Home.
-     */
-    // TODO: Rename and change types and number of parameters
     public static Home newInstance(String param1, String param2) {
         Home fragment = new Home();
         Bundle args = new Bundle();
@@ -162,8 +129,6 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
     @Override
     public void onResume() {
         super.onResume();
-
-        Log.v("Resume", "Resumete");
     }
 
     private void updateViewWithChallenge(final Challenge challenge, View view){
@@ -427,7 +392,6 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
 
             }
         });
-
     }
 
     private void loadQuestion(final View view) {
@@ -449,8 +413,6 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
                         eDate.setTimeInMillis(((long)map.get(key).get("endDate")));
 
                         Calendar cDate = Calendar.getInstance();
-
-                        Log.v("Questions", sDate.compareTo(cDate)+"");
 
                         if(sDate.compareTo(cDate) <= 0 && eDate.compareTo(cDate) >= 0){
                             //Comparar el tema de fechas
@@ -490,7 +452,6 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
 
             }
         });
-
     }
 
     @Override
@@ -545,14 +506,6 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
         return average;
     }
 
-    private void assignPostsReference() {
-        if (WelcomeActivity.CURRENT_APP_VERSION.equals("A")) {
-            postRef = mDatabase.child("user-posts");
-        } else {
-            postRef = mDatabase.child("user-posts-reflexive");
-        }
-    }
-
     private void assignUsersReference() {
         if (WelcomeActivity.CURRENT_APP_VERSION.equals("A")) {
             userRef = mDatabase.child("users");
@@ -572,12 +525,6 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
-        Activity activity;
-
-        if (context instanceof Activity) {
-
-        }
     }
 
     private Post createBasePost(HashMap postMap) {
@@ -617,8 +564,7 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
 
     //Position: 0 -> ingresar al principio, 1 - ingresar al final
     private void updatePostsFeed(HashMap map, int position) {
-        final HashMap<String, Object> postMap = map;
-        final Post post = createBasePost(postMap);
+        final Post post = createBasePost(map);
 
         if (post != null && post.getUser() != null) {
             if (position == 0)
@@ -844,7 +790,6 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
                         for (String key : keys) {
 
                             if (isTheFirstItem) {
-                                countOfPages++;
                                 lastPostLoaded = key + "";
                                 isTheFirstItem = false;
                             }
@@ -871,11 +816,6 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
             isTheFirstLoad = false;
         }
 
-        /*if (isTheFirstLoad)
-            btn_new_posts.setVisibility(View.INVISIBLE);
-        else
-            btn_new_posts.setVisibility(View.VISIBLE);*/
-
         mPostAdapter.notifyDataSetChanged();
         mSwipeRefreshing.setRefreshing(false);
     }
@@ -890,24 +830,16 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
     //Inicializa elementos gráficos y asigna eventos iniciales.
     private void initGraphicalElementsAndEvents(View view) {
         //Obtener elementos gráficos
-        //btn_new_posts = (Button) view.findViewById(R.id.btn_new_posts);
         mSwipeRefreshing = (SwipeRefreshLayout) view.findViewById(R.id.swiperefresh);
-
 
         getListView().setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView absListView, int i) {
-
             }
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem,
                                  int visibleItemCount, int totalItemCount) {
-
-
-                Log.v("Header", "Total" + totalItemCount + "");
-                Log.v("Header", "Visible" + (firstVisibleItem + visibleItemCount));
-                Log.v("Header", "Flag: " + flag_loading);
 
                 if (firstVisibleItem + visibleItemCount == totalItemCount && totalItemCount != 0) {
                     if (!flag_loading) {
@@ -915,8 +847,6 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
                         loadNextPage();
                     }
                 }
-
-                Log.v("Header", getListView().getHeaderViewsCount() + "");
             }
         });
 
@@ -925,26 +855,15 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
         mSwipeRefreshing.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                //refreshPostList();
-                mSwipeRefreshing.setRefreshing(false);
+            mSwipeRefreshing.setRefreshing(false);
             }
         });
-
-        //Evento para mostrar los posts nuevos.
-        /*btn_new_posts.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getListView().smoothScrollToPosition(0);
-                btn_new_posts.setVisibility(View.INVISIBLE);
-            }
-        });*/
 
         //Evento para esconder boton de nuevas publicaciones.
         mSwipeRefreshing.setOnChildScrollUpCallback(new SwipeRefreshLayout.OnChildScrollUpCallback() {
             @Override
             public boolean canChildScrollUp(SwipeRefreshLayout parent, @Nullable View child) {
-                //btn_new_posts.setVisibility(View.INVISIBLE);
-                return true;
+            return true;
             }
         });
     }
@@ -960,16 +879,6 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
 
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);

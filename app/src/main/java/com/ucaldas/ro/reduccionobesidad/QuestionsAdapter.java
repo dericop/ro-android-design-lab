@@ -1,7 +1,6 @@
 package com.ucaldas.ro.reduccionobesidad;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -14,20 +13,11 @@ import android.widget.TextView;
 
 import java.util.List;
 
-/**
- * Created by disenoestrategico on 24/05/17.
- */
 
 public class QuestionsAdapter extends ArrayAdapter<Question>{
 
     private Context mContext;
     private List mQuestions;
-
-    static class ViewHolder{
-        private String title;
-        private String response1;
-        private String response2;
-    }
 
     @NonNull
     @Override

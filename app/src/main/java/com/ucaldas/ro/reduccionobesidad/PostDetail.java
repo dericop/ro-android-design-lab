@@ -393,7 +393,6 @@ public class PostDetail extends AppCompatActivity {
                                             com.setUser(map.get("mUserName") + "");
                                             com.setUserPhoto(map.get("mPhotoUrl") + "");
 
-
                                             comAdapter.notifyDataSetChanged();
                                         }
                                     }

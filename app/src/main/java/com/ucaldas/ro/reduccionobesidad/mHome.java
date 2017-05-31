@@ -88,14 +88,6 @@ public class mHome extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_m_home);
 
-        String type = getIntent().getStringExtra("type");
-        /*if(type != null){
-            String data = getIntent().getStringExtra("data");
-            Intent detailIntent = new Intent(getApplicationContext(), TipDetailActivity.class);
-            detailIntent.putExtra("id", data);
-            detailIntent.putExtra("notificationType", "tip");
-        }*/
-
         if (mHome.user == null) {
             mAuth = FirebaseAuth.getInstance();
             mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -113,7 +105,6 @@ public class mHome extends AppCompatActivity
                     } else {
                         // AUser is signed out
                         Log.d("AUser", "onAuthStateChanged:signed_out");
-                        //progress.dismiss();
                         Toast.makeText(getBaseContext(), getString(R.string.login_fail), Toast.LENGTH_LONG);
                     }
                 }
@@ -131,9 +122,6 @@ public class mHome extends AppCompatActivity
 
         if(!isFirstTime){
             if(comeBackFromChallenge){
-                /*score+=5;
-                if(score_view != null)
-                    score_view.setText(score+"pts");*/
 
                 LinearLayout challengeView = (LinearLayout) findViewById(R.id.challengeView);
                 LinearLayout waitChallengeView = (LinearLayout) findViewById(R.id.wait_challenge);
@@ -158,7 +146,6 @@ public class mHome extends AppCompatActivity
                     score_view.setText(score+"pts");
                     comeBackFromPost = false;
                 }
-
             }
         }
 
@@ -175,8 +162,7 @@ public class mHome extends AppCompatActivity
         initViewPager();
 
         context = getApplicationContext();
-
-        Log.v("Notifias", FirebaseInstanceId.getInstance().getToken());
+        //Log.v("Notifias", FirebaseInstanceId.getInstance().getToken());
 
     }
 
@@ -187,9 +173,6 @@ public class mHome extends AppCompatActivity
     @Override
     public void onActivityReenter(int resultCode, Intent data) {
         super.onActivityReenter(resultCode, data);
-
-        Log.v("Come", "Entra");
-
     }
 
     private void initViewPager() {
@@ -350,12 +333,6 @@ public class mHome extends AppCompatActivity
                 btn_actions_menu.collapse();
             }
         });
-
-        /*TutoShowcase.from(this)
-                .setContentView(R.layout.list_home_item_reflexive)
-                .on(camera_action)
-                .addCircle()
-                .show();*/
     }
 
     private void configureToolbarAndToggleActionBar() {
@@ -371,10 +348,6 @@ public class mHome extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
-        /*if (Build.VERSION.SDK_INT >= 16){
-            toolbar.setBackground(ContextCompat.getDrawable(this, R.drawable.header));
-        }*/
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -465,9 +438,6 @@ public class mHome extends AppCompatActivity
                             tt3.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_action_tips_disabled, 0, 0);
                         }
 
-                        //Log.v("Items", "Mis items");
-                        //if(myItems!=null)
-                        //    myItems.loadItems();
                         break;
                     case 2:
                         TextView tiView = ((TextView) tab.getCustomView());
@@ -494,10 +464,8 @@ public class mHome extends AppCompatActivity
                             it3.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_action_tips_disabled, 0, 0);
                         }
 
-                        //Log.v("Items", "Simulación");
                         if (WelcomeActivity.CURRENT_APP_VERSION.equals("A")) {
                             if (simulation.tView != null) {
-                                Log.v("Simu", "simulación");
                                 simulation.loadData(simulation.tView);
                             }
                         } else {
@@ -640,7 +608,6 @@ public class mHome extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        Log.v("Gamification", "Menu selected");
         switch(item.getItemId()){
             case R.id.gamification:
                 Intent gamificationIntent = new Intent(getContext(), GamificationActivity.class);

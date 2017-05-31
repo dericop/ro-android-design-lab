@@ -26,33 +26,26 @@ import java.util.List;
  */
 
 
-
 public class CommentsAdapter extends ArrayAdapter<Comment> {
 
 
     private Context mContext;
     private List mComments;
 
-    public CommentsAdapter(Context context, List<Comment> comments){
-        super(context,0, comments);
+    public CommentsAdapter(Context context, List<Comment> comments) {
+        super(context, 0, comments);
         this.mContext = context;
         this.mComments = comments;
-    }
-
-    static class ViewHolder{
-        private String title;
-        private String detail;
     }
 
     @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder viewHolder;
 
         LayoutInflater inflater = (LayoutInflater) getContext()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        if(convertView == null){
+        if (convertView == null) {
             convertView = inflater.inflate(
                     R.layout.comment_item,
                     parent,
@@ -66,15 +59,15 @@ public class CommentsAdapter extends ArrayAdapter<Comment> {
         final ImageView avatar = (ImageView) convertView.findViewById(R.id.avatar);
         TextView time = (TextView) convertView.findViewById(R.id.time);
 
-        if(mHome.user != null){
+        if (mHome.user != null) {
             userName.setText(com.getUser());
             Glide.with(mContext)
-                .load(com.getUserPhoto())
-                .asBitmap()
-                .into(avatar);
+                    .load(com.getUserPhoto())
+                    .asBitmap()
+                    .into(avatar);
         }
 
-        if(com!=null){
+        if (com != null) {
             detail.setText(com.getDetail());
 
             Calendar currentCalendar = Calendar.getInstance();
@@ -88,33 +81,33 @@ public class CommentsAdapter extends ArrayAdapter<Comment> {
             int monthCom = commentCalendar.get(Calendar.MONTH);
             int yearCom = commentCalendar.get(Calendar.YEAR);
 
-            if(dayC == dayCom && monthC == monthCom && yearC==yearCom){
+            if (dayC == dayCom && monthC == monthCom && yearC == yearCom) {
                 int hourC = currentCalendar.get(Calendar.HOUR_OF_DAY);
                 int hourCom = commentCalendar.get(Calendar.HOUR_OF_DAY);
                 int timeC = hourC - hourCom;
-                if(timeC == 0){//Fué hace menos de una hora
+                if (timeC == 0) {//Fué hace menos de una hora
                     int minutesC = currentCalendar.get(Calendar.MINUTE);
                     int minutesCom = commentCalendar.get(Calendar.MINUTE);
                     int minuteC = minutesC - minutesCom;
 
-                    time.setText(minuteC +" minutos");
-                }else{
-                    time.setText(timeC+" horas");
+                    time.setText(minuteC + " minutos");
+                } else {
+                    time.setText(timeC + " horas");
                 }
-            }else if(yearC == yearCom){//Igual año
-                    time.setText(getMonthString(monthCom)+" "+dayCom);
-            }else{
-                time.setText(getMonthString(monthCom)+" "+yearCom);
+            } else if (yearC == yearCom) {//Igual año
+                time.setText(getMonthString(monthCom) + " " + dayCom);
+            } else {
+                time.setText(getMonthString(monthCom) + " " + yearCom);
             }
         }
 
         return convertView;
     }
 
-    private String getMonthString(int n){
+    private String getMonthString(int n) {
         String month = "";
 
-        switch (n){
+        switch (n) {
             case 0:
                 month = "Enero";
                 break;
@@ -156,25 +149,4 @@ public class CommentsAdapter extends ArrayAdapter<Comment> {
         return month;
     }
 
-    public static Bitmap getRoundedCornerBitmap(Bitmap bitmap, int pixels) {
-        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap
-                .getHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(output);
-
-        final int color = 0xff424242;
-        final Paint paint = new Paint();
-        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
-        final RectF rectF = new RectF(rect);
-        final float roundPx = pixels;
-
-        paint.setAntiAlias(true);
-        canvas.drawARGB(0, 0, 0, 0);
-        paint.setColor(color);
-        canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
-
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-        canvas.drawBitmap(bitmap, rect, rect, paint);
-
-        return output;
-    }
 }

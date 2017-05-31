@@ -120,8 +120,6 @@ public class TipDetailActivity extends AppCompatActivity {
                                                 SortedSet<String> keys = new TreeSet<String>(map.keySet());
                                                 String keyForDelete = keys.first();
 
-                                                Log.v("Delete", keyForDelete);
-
                                                 database.child("tips").child(keyForDelete).removeValue(new DatabaseReference.CompletionListener() {
                                                     @Override
                                                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {

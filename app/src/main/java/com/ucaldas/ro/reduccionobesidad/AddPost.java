@@ -24,7 +24,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v13.app.ActivityCompat;
@@ -34,7 +33,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -65,9 +63,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -79,50 +75,46 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 
-public class AddPost extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback{
+public class AddPost extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     static final int REQUEST_IMAGE_CAPTURE = 1; //Bandera para verificar en los resultados de actividad si se ha tomado una foto.
     static final int RESULT_LOAD_IMAGE = 2; //Bandera para verificar en los resultados de actividad si se ha cargado una foto de la galería
     private String SOURCE = ""; //Indica el origen de un llamado, con el objetivo de reutilizar la vista.
     private boolean isActivity;
-    private boolean radioButtonIsClicked = false;
+    private boolean radioButtonIsClicked = false;//Indica si se ha seleccionado el tipo de actividad
     private static final String FRAGMENT_DIALOG = "dialog";
     private static final int REQUEST_CAMERA_PERMISSION = 1;
     private static final int REQUEST_STORAGE_PERMISSION = 2;
 
     //Datos que el usuario va a ingresar para la publiación
-    private Spinner frecuencySpinner;
-    private Spinner categorySpinner;
-    private Spinner durationSpinner;
-    private ImageView prev;
+    private Spinner frecuencySpinner; //Spinner de frecuencias
+    private Spinner categorySpinner; //Spinner de categorias
+    private Spinner durationSpinner; //Spinner de duraciones
+    private ImageView prev; //Contenedor de la imagen de previsualización de alimento o actividad
 
-    private CharSequence nameText;
-    private CharSequence category;
-    private CharSequence frecuency;
-    private Drawable image;
-    private ProgressDialog progress;
+    private CharSequence nameText; //Titulo
+    private CharSequence category; //Categoría de la publicación
+    private CharSequence frecuency; // Frecuencia de la publicación
+    private Drawable image; //Imagen de previsualización de alimento o actividad
+    private ProgressDialog progress; // Menu que indica el progreso de la publicación
     final AppCompatActivity that = this; //Guardar el contexto para los menú de alerta.
-    private String idForReply;
-    private String imageForReply;
-    private String typeForReply;
-    private long resultForReply;
-    private long averageForReply;
-    private boolean isChallenge = false;
-    private String challengeId = "";
 
-    private String idForUpdate;
+    private String idForReply; //Identificador de la publicación que se va a repliar
+    private String imageForReply; //Imagen que se desea replicar
+    private String typeForReply; // tipo de publicación a replicar
+    private long resultForReply;    // calificación de la publicación a replicar
+    private long averageForReply; //promedio de calificación de la publicación a replicar
+    private boolean isChallenge = false; //Indica si el post que se quiere agregar se hace en el marco de un reto
+    private String challengeId = ""; // id del reto, puede ser vacío
 
-    private DatabaseReference database;
+    private String idForUpdate; //Id para actualzación en case de que se esté viendo el detalle
 
-    private ArrayAdapter<CharSequence> categoryAdapter;
-    private AppCompatActivity thisRef;
+    private DatabaseReference database; // referencia a la base de datos
 
-    private final String FILE_PROVIDER = "com.ucaldas.android.cocono.fileprovider";
+    private ArrayAdapter<CharSequence> categoryAdapter; //Arreglo de categorías
+    private AppCompatActivity thisRef; //referencia a this para usarse en otros contextos.
 
-    private static String[] PERMISSIONS_STORAGE = {
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-    };
+    private final String FILE_PROVIDER = "com.ucaldas.android.fileprovider"; //ruta para el manejo de archivos
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,6 +131,9 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
     }
 
     private void showSpinnerDurationAndLoadData() {
+        /*
+        * Se encarga de mostrar el spinner de duración si el usuario seleccionó la opción correspondiente, ademas de cargar los datos
+        * */
         Spinner spinnerDuration = (Spinner) findViewById(R.id.activity_duration);
         TextView spinner_duration_label = (TextView) findViewById(R.id.spinner_duration_label);
 
@@ -150,6 +145,9 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
     }
 
     private void hideSpinnerDurationAndLoadData() {
+        /*
+        * Se encarga de esconder el spinner de duración si el usuario seleccionó la opción correspondiente
+        * */
 
         Spinner spinnerDuration = (Spinner) findViewById(R.id.activity_duration);
         TextView spinner_duration_label = (TextView) findViewById(R.id.spinner_duration_label);
@@ -163,7 +161,10 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
     }
 
     public void onRadioButtonClicked(View view) {
-        // Is the button now checked?
+        /*
+        * Evento llamado cuando se clickea alguna de las opciones de radio.
+        * */
+
         boolean checked = ((RadioButton) view).isChecked();
         radioButtonIsClicked = true;
 
@@ -185,11 +186,17 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
     }
 
     private void loadAdapterWithActivityCategories() {
+        /*
+        * Cargar los datos de las categorías de actividades
+        * */
         categoryAdapter = ArrayAdapter.createFromResource(this,
                 R.array.new_post_activity_categories, android.R.layout.simple_spinner_dropdown_item); //Cargar con las categorias de actividades
     }
 
     private void loadAdapterWithFoodCategories() {
+        /*
+        * Cargar los datos de las categorías de alimentos
+        * */
         categoryAdapter = ArrayAdapter.createFromResource(this,
                 R.array.new_post_food_categories, android.R.layout.simple_spinner_dropdown_item); //Cargar con las categorias de alimentos
     }
@@ -199,6 +206,7 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
         * Asigna el origen de la creación de esta vista
         * Inicializa los datos con respecto al origen
         * */
+
         //Creación del spinner de categorias
         categorySpinner = (Spinner) findViewById(R.id.category_spinner);
 
@@ -212,7 +220,7 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
         SOURCE = getIntent().getStringExtra("source"); //Obtiene el origen
 
         isChallenge = getIntent().getBooleanExtra("challenge", false);
-        if(isChallenge)
+        if (isChallenge)
             challengeId = getIntent().getStringExtra("challengeId");
 
         // Creación del spinner de frecuencias para un nuevo post
@@ -241,7 +249,7 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
         RadioButton radioActivity = (RadioButton) findViewById(R.id.radio_activity);
         RadioButton radioFood = (RadioButton) findViewById(R.id.radio_food);
 
-        switch(SOURCE){
+        switch (SOURCE) {
             case "reply":
                 radioButtonIsClicked = true;
                 imageForReply = getIntent().getStringExtra("image");
@@ -280,17 +288,16 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
                 final String mCategory = getIntent().getStringExtra("category");
                 final String mFrecuency = getIntent().getStringExtra("frecuency");
                 final String mDuration = getIntent().getStringExtra("duration");
-                final String mImage= getIntent().getStringExtra("image");
+                final String mImage = getIntent().getStringExtra("image");
                 idForUpdate = getIntent().getStringExtra("id");
 
-                Log.v("Total", idForUpdate);
 
-                if(mName!=null){
+                if (mName != null) {
                     txt_name.setText(mName);
                     txt_name.setEnabled(false);
                 }
 
-                if(mCategory!=null){
+                if (mCategory != null) {
 
                     if (foodList.contains(mCategory)) {
                         radioFood.setChecked(true);
@@ -322,19 +329,18 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
                         new AlertDialog.Builder(thisRef)
                                 .setIcon(R.drawable.ic_delete)
                                 .setTitle("¿Estás seguro que deseas eliminar esta publicación?")
-                                .setPositiveButton("Si", new DialogInterface.OnClickListener()
-                                {
+                                .setPositiveButton("Si", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         assignUserDataReference();
-                                        if(mHome.user != null){
+                                        if (mHome.user != null) {
                                             database.child(mHome.user.getUid()).orderByChild("id").equalTo(idForUpdate).addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(DataSnapshot dataSnapshot) {
 
-                                                    if(dataSnapshot.hasChildren()){
-                                                        HashMap<String, Object> map = (HashMap)dataSnapshot.getValue();
-                                                        SortedSet<String> keys = new TreeSet<String>(map.keySet());
+                                                    if (dataSnapshot.hasChildren()) {
+                                                        HashMap<String, Object> map = (HashMap) dataSnapshot.getValue();
+                                                        SortedSet<String> keys = new TreeSet<>(map.keySet());
                                                         String keyForDelete = keys.first();
 
                                                         database.child(mHome.user.getUid()).child(keyForDelete).removeValue(new DatabaseReference.CompletionListener() {
@@ -363,7 +369,7 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
                     }
                 });
 
-                if(mImage!=null)
+                if (mImage != null)
                     Glide.with(this).load(mImage).into(prev);
 
                 break;
@@ -399,13 +405,18 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
         addSaveEventListener();
 
         changeStatusBarColor();
-        if(getSupportActionBar() != null){
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
     }
 
     private Post getPostData(String key, String downloadUrl) {
+        /*
+        * @param: key: es la clave del post que se desea crear
+        * @param: downloadUrl: es la url que contiene la imagen del post
+        * @return retorna un Post que contiene los parámetros ingresados.
+        * */
         Post post = null;
         if (isActivity) {
             View duration_view = durationSpinner.getSelectedView();
@@ -424,25 +435,30 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
         return post;
     }
 
-    private void assignUserPostsReference(){
-        if(WelcomeActivity.CURRENT_APP_VERSION.equals("A"))
+    private void assignUserPostsReference() {
+        /*
+        * Asigna la referencia a la base de datos de posts dependiendo de la versión
+        * */
+        if (WelcomeActivity.CURRENT_APP_VERSION.equals("A"))
             database = database.child("user-posts");
         else
             database = database.child("user-posts-reflexive");
     }
 
-    private void assignUserDataReference(){
-        if(WelcomeActivity.CURRENT_APP_VERSION.equals("A"))
+    private void assignUserDataReference() {
+        /*
+        * Asigna la referencia a la base de datos de usuarios dependiendo de la versión
+        * */
+        if (WelcomeActivity.CURRENT_APP_VERSION.equals("A"))
             database = database.child("user-data");
         else
             database = database.child("user-data-reflexive");
     }
 
-    private void assignUserPostsReferenceForTest(){
-        database = database.child("user-posts-reflexive-tests");
-    }
-
-    private void sumTocounterReply(String idForReply){
+    private void sumTocounterReply(String idForReply) {
+        /*
+        * Aumenta el contador de replicas
+        * */
         assignUserPostsReference();
         database = database.child(idForReply);
         database.runTransaction(new Transaction.Handler() {
@@ -463,11 +479,11 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
 
             @Override
             public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
-                if(databaseError!=null){
-                    if(getCurrentFocus()!=null){
+                if (databaseError != null) {
+                    if (getCurrentFocus() != null) {
                         Snackbar.make(getCurrentFocus(), "Revise su conexión a internet o intentelo más tarde", 2000).show();
                     }
-                }else{
+                } else {
                     progress.dismiss();
                     finish();
                 }
@@ -477,8 +493,10 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
 
     }
 
-    private void replyPost(){
-
+    private void replyPost() {
+        /*
+        * Replicar el post
+        * */
         progress = ProgressDialog.show(that, "Compartiendo Publicación...",
                 "Espera un momento", true);
 
@@ -486,7 +504,7 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
             database = FirebaseDatabase.getInstance().getReference();
 
             String dataKey;
-            if(WelcomeActivity.CURRENT_APP_VERSION.equals("A"))
+            if (WelcomeActivity.CURRENT_APP_VERSION.equals("A"))
                 dataKey = database.child("user-data").push().getKey();
             else
                 dataKey = database.child("user-data-reflexive").push().getKey();
@@ -497,10 +515,10 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
 
             Map<String, Object> mapForUpdate = new HashMap<>();
 
-            if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
+            if (WelcomeActivity.CURRENT_APP_VERSION.equals("A")) {
                 mapForUpdate.put("/user-posts/" + idForReply + "/" + "last_share", mHome.user.getUid());
                 mapForUpdate.put("/user-data/" + mHome.user.getUid() + "/" + dataKey, mapForItems);
-            }else{
+            } else {
                 mapForUpdate.put("/user-posts-reflexive/" + idForReply + "/" + "last_share", mHome.user.getUid());
                 mapForUpdate.put("/user-data-reflexive/" + mHome.user.getUid() + "/" + dataKey, mapForItems);
             }
@@ -514,14 +532,17 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
 
 
         } else {
-            if(getCurrentFocus()!=null){
+            if (getCurrentFocus() != null) {
                 Snackbar.make(getCurrentFocus(), "Revise su conexión a internet e intentelo más tarde", 2000).show();
             }
             progress.dismiss();
         }
     }
 
-    private void addPostAndUploadImage(){
+    private void addPostAndUploadImage() {
+        /*
+        * Agregar un nuevo post a la base de datos y subir la imagen al storage
+        * */
         progress = ProgressDialog.show(that, "Agregando Publicación...",
                 "Espera un momento", true);
 
@@ -548,7 +569,7 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
                 @Override
                 public void onFailure(@NonNull Exception exception) {
                     // Handle unsuccessful uploads
-                    if(getCurrentFocus() != null)
+                    if (getCurrentFocus() != null)
                         Snackbar.make(getCurrentFocus(), "Revise su conexión a internet e intentelo más tarde", 2000).show();
                     progress.dismiss();
 
@@ -563,21 +584,21 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
                 }
             });
         } else {
-            if(getCurrentFocus()!=null)
+            if (getCurrentFocus() != null)
                 Snackbar.make(getCurrentFocus(), "Revise su conexión a internet e intentelo más tarde", 2000).show();
             progress.dismiss();
         }
     }
 
-    private void addPost(Uri downloadUrl){
+    private void addPost(Uri downloadUrl) {
         DatabaseReference database = FirebaseDatabase.getInstance().getReference();
         final String key;
         String dataKey;
 
-        if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
+        if (WelcomeActivity.CURRENT_APP_VERSION.equals("A")) {
             key = database.child("user-posts").push().getKey();
             dataKey = database.child("user-data").push().getKey();
-        }else{
+        } else {
             key = database.child("user-posts-reflexive").push().getKey();
             dataKey = database.child("user-data-reflexive").push().getKey();
         }
@@ -590,19 +611,19 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
             String currentToken = FirebaseInstanceId.getInstance().getToken();
 
             if (currentToken != null && !currentToken.equals("")) {
-                HashMap<String,Object> tokens = new HashMap<>();
+                HashMap<String, Object> tokens = new HashMap<>();
                 tokens.put(currentToken, true);
 
-                postValues.put("notificationTokens",tokens);
+                postValues.put("notificationTokens", tokens);
             }
 
 
             Map<String, Object> childUpdates = new HashMap<>();
 
-            if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
+            if (WelcomeActivity.CURRENT_APP_VERSION.equals("A")) {
                 childUpdates.put("/user-posts/" + key, postValues);
                 childUpdates.put("/user-data/" + mHome.user.getUid() + "/" + dataKey, postValues);
-            }else{
+            } else {
                 childUpdates.put("/user-posts-reflexive/" + key, postValues);
                 childUpdates.put("/user-data-reflexive/" + mHome.user.getUid() + "/" + dataKey, postValues);
             }
@@ -616,33 +637,33 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
                         OnCompleteListener scoreListener = new OnCompleteListener() {
                             @Override
                             public void onComplete(@NonNull Task task) {
-                                if(task.isSuccessful()){
+                                if (task.isSuccessful()) {
                                     progress.dismiss();
 
-                                    if(isChallenge)
+                                    if (isChallenge)
                                         mHome.comeBackFromChallenge = true;
                                     else
                                         mHome.comeBackFromPost = true;
 
                                     finish();
-                                }else{
+                                } else {
                                     progress.dismiss();
-                                    if(getCurrentFocus()!=null)
+                                    if (getCurrentFocus() != null)
                                         Snackbar.make(getCurrentFocus(), "Revise su conexión a internet o intentelo más tarde", 2000).show();
                                 }
                             }
                         };
 
-                        if(isChallenge){
+                        if (isChallenge) {
                             registerChallenge(0, key, scoreListener);
-                        }else{
+                        } else {
                             registerPoint(2, key, scoreListener);
                         }
 
 
                     } else {
                         progress.dismiss();
-                        if(getCurrentFocus()!=null)
+                        if (getCurrentFocus() != null)
                             Snackbar.make(getCurrentFocus(), "Revise su conexión a internet o intentelo más tarde", 2000).show();
                     }
                 }
@@ -651,9 +672,9 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
         }
     }
 
-    private void registerPoint(int score, String postId, OnCompleteListener callback){
+    private void registerPoint(int score, String postId, OnCompleteListener callback) {
         DatabaseReference gamfRef = FirebaseDatabase.getInstance().getReference();
-        if(mHome.user != null){
+        if (mHome.user != null) {
             gamfRef = gamfRef.child("gamification-score").child(mHome.user.getUid());
             String key = gamfRef.push().getKey();
             HashMap childUpdates = new HashMap();
@@ -661,13 +682,13 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
             childUpdates.put("type", "post");
             childUpdates.put("score", score);
 
-            gamfRef.child("/"+key).setValue(childUpdates).addOnCompleteListener(callback);
+            gamfRef.child("/" + key).setValue(childUpdates).addOnCompleteListener(callback);
         }
     }
 
-    private void registerChallenge(int score, String postId,OnCompleteListener callback){
+    private void registerChallenge(int score, String postId, OnCompleteListener callback) {
         DatabaseReference gamfRef = FirebaseDatabase.getInstance().getReference();
-        if(mHome.user != null){
+        if (mHome.user != null) {
             gamfRef = gamfRef.child("gamification-score").child(mHome.user.getUid());
             //String key = gamfRef.push().getKey();
             HashMap childUpdates = new HashMap();
@@ -675,19 +696,19 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
             childUpdates.put("challenge", challengeId);
             childUpdates.put("score", score);
 
-            gamfRef.child("/"+challengeId).setValue(childUpdates).addOnCompleteListener(callback);
+            gamfRef.child("/" + challengeId).setValue(childUpdates).addOnCompleteListener(callback);
         }
     }
 
-    private void updatePost(){
+    private void updatePost() {
 
-        if(!idForUpdate.equals("")){
+        if (!idForUpdate.equals("")) {
             final DatabaseReference db = FirebaseDatabase.getInstance().getReference();
-            DatabaseReference updateref = db;
+            DatabaseReference updateref;
 
-            if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
+            if (WelcomeActivity.CURRENT_APP_VERSION.equals("A")) {
                 updateref = db.child("user-data").child(mHome.user.getUid());
-            }else{
+            } else {
                 updateref = db.child("user-data-reflexive").child(mHome.user.getUid());
             }
 
@@ -698,11 +719,11 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
                     progress = ProgressDialog.show(that, "Actualizando Publicación...",
                             "Espera un momento", true);
 
-                    if(dataSnapshot.hasChildren()){
-                        final HashMap<String, Object> userMap = (HashMap)dataSnapshot.getValue();
-                        final SortedSet<String> keys = new TreeSet<String>(userMap.keySet());
+                    if (dataSnapshot.hasChildren()) {
+                        final HashMap<String, Object> userMap = (HashMap) dataSnapshot.getValue();
+                        final SortedSet<String> keys = new TreeSet<>(userMap.keySet());
 
-                        final HashMap postMap = (HashMap)userMap.get(keys.first());
+                        final HashMap postMap = (HashMap) userMap.get(keys.first());
 
                         if (postMap != null) {
                             if (isActivity) {
@@ -716,14 +737,14 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
                                 }
                             }
 
-                            postMap.put("frecuency",frecuency.toString());
-                            postMap.put("category",category.toString());
+                            postMap.put("frecuency", frecuency.toString());
+                            postMap.put("category", category.toString());
 
                             Map<String, Object> childUpdates = new HashMap<>();
 
-                            if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
-                                childUpdates.put("/user-data/" + mHome.user.getUid() + "/" + keys.first(),postMap);
-                            }else{
+                            if (WelcomeActivity.CURRENT_APP_VERSION.equals("A")) {
+                                childUpdates.put("/user-data/" + mHome.user.getUid() + "/" + keys.first(), postMap);
+                            } else {
                                 childUpdates.put("/user-data-reflexive/" + mHome.user.getUid() + "/" + keys.first(), postMap);
                             }
 
@@ -731,10 +752,10 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
                                 @Override
                                 public void onComplete(@NonNull Task task) {
                                     Map<String, Object> updates = new HashMap<>();
-                                    if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
-                                        updates.put("/user-posts/" + idForUpdate +"/frecuency", frecuency.toString());
-                                    }else{
-                                        updates.put("/user-posts-reflexive/" + idForUpdate +"/frecuency", frecuency.toString());
+                                    if (WelcomeActivity.CURRENT_APP_VERSION.equals("A")) {
+                                        updates.put("/user-posts/" + idForUpdate + "/frecuency", frecuency.toString());
+                                    } else {
+                                        updates.put("/user-posts-reflexive/" + idForUpdate + "/frecuency", frecuency.toString());
                                     }
 
                                     if (task.isSuccessful()) {
@@ -750,7 +771,7 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
 
                                     } else {
                                         progress.dismiss();
-                                        if(getCurrentFocus()!=null)
+                                        if (getCurrentFocus() != null)
                                             Snackbar.make(getCurrentFocus(), "Revise su conexión a internet o intentelo más tarde", 2000).show();
                                     }
                                 }
@@ -758,8 +779,6 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
                             db.updateChildren(childUpdates).addOnCompleteListener(saveListener);
 
                         }
-                    }else{
-
                     }
                 }
 
@@ -769,8 +788,8 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
                 }
             });
 
-        }else{
-            if(getCurrentFocus()!=null)
+        } else {
+            if (getCurrentFocus() != null)
                 Snackbar.make(getCurrentFocus(), "Revise su conexión a internet o intentelo más tarde", 2000).show();
         }
     }
@@ -792,12 +811,12 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
 
                             replyPost();
 
-                        } else if(SOURCE.equals("update")){
+                        } else if (SOURCE.equals("update")) {
 
                             updatePost();
 
 
-                        }else {
+                        } else {
 
                             addPostAndUploadImage();
 
@@ -825,16 +844,16 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
                 if (imageIsOk()) {
                     return true;
                 } else {
-                    if(getCurrentFocus()!=null)
+                    if (getCurrentFocus() != null)
                         Snackbar.make(getCurrentFocus(), "Es necesario que adjunte una imagen.", 4000).show();
                 }
 
             } else {
-                if(getCurrentFocus()!=null)
+                if (getCurrentFocus() != null)
                     Snackbar.make(getCurrentFocus(), "Verifique la información ingresada.", 4000).show();
             }
-        }else{
-            if(getCurrentFocus()!=null)
+        } else {
+            if (getCurrentFocus() != null)
                 Snackbar.make(getCurrentFocus(), "Seleccione el tipo de publicación (actividad o alimento)", 4000).show();
         }
 
@@ -878,11 +897,10 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
     private boolean nameIsOK() {
         //Agregar la funcionalidad de validaciones
         final TextInputLayout nameLayout = (TextInputLayout) findViewById(R.id.txt_input_layour_name);
-//        nameLayout.setErrorEnabled(true);
 
         //Obtener el nombre ingresado
         EditText nameEditText = nameLayout.getEditText();
-        if(nameEditText!=null){
+        if (nameEditText != null) {
             nameEditText.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -953,15 +971,6 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
         return image;
     }
 
-    private void galleryAddPic() {
-        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        File f = new File(mCurrentPhotoPath);
-        Uri contentUri = Uri.fromFile(f);
-        mediaScanIntent.setData(contentUri);
-        this.sendBroadcast(mediaScanIntent);
-    }
-
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         /*
@@ -976,7 +985,7 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
                 setPic(mCurrentPhotoPath);
                 //galleryAddPic();
 
-            }else if(requestCode == RESULT_LOAD_IMAGE){
+            } else if (requestCode == RESULT_LOAD_IMAGE) {
 
                 Uri targetUri = data.getData();
                 setPic(getRealPathFromURI(targetUri));
@@ -1008,7 +1017,7 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
         int photoH = bmOptions.outHeight;
 
         // Determine how much to scale down the image
-        int scaleFactor = Math.min(photoW/targetW, photoH/targetH);
+        int scaleFactor = Math.min(photoW / targetW, photoH / targetH);
 
         // Decode the image file into a Bitmap sized to fill the View
         bmOptions.inJustDecodeBounds = false;
@@ -1023,12 +1032,12 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
 
             Bitmap rotated;
 
-            if(bitmap !=null){
-                if(orientation == ExifInterface.ORIENTATION_ROTATE_90)
+            if (bitmap != null) {
+                if (orientation == ExifInterface.ORIENTATION_ROTATE_90)
                     rotated = ConfigurationActivity.rotateBitmap(bitmap, 90);
-                else if(orientation == ExifInterface.ORIENTATION_ROTATE_270)
+                else if (orientation == ExifInterface.ORIENTATION_ROTATE_270)
                     rotated = ConfigurationActivity.rotateBitmap(bitmap, 270);
-                else if(orientation == ExifInterface.ORIENTATION_ROTATE_180)
+                else if (orientation == ExifInterface.ORIENTATION_ROTATE_180)
                     rotated = ConfigurationActivity.rotateBitmap(bitmap, 180);
                 else
                     rotated = ConfigurationActivity.rotateBitmap(bitmap, 0);
@@ -1037,34 +1046,6 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    private void loadImageResultInImageView(Intent data, int orientation) {
-
-        try {
-            final Uri imageUri = data.getData();
-            final InputStream imageStream = getContentResolver().openInputStream(imageUri);
-            final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-
-            int nh = (int) (selectedImage.getHeight() * (512.0 / selectedImage.getWidth()));
-
-
-            Bitmap scaled = Bitmap.createScaledBitmap(selectedImage, 512, nh, true);
-            Bitmap rotated;
-
-            if(orientation == 90)
-                rotated = ConfigurationActivity.rotateBitmap(scaled, 90);
-            else if(orientation == 270)
-                rotated = ConfigurationActivity.rotateBitmap(scaled, 270);
-            else
-                rotated = ConfigurationActivity.rotateBitmap(scaled, 0);
-
-            prev.setImageBitmap(rotated);
-
-        } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
 
@@ -1101,7 +1082,7 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
         startMedia();
     }
 
-    private void requestMediaPermission(){
+    private void requestMediaPermission() {
         ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE},
                 REQUEST_STORAGE_PERMISSION);
     }
@@ -1116,7 +1097,7 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
         //}
     }
 
-    private void startMedia(){
+    private void startMedia() {
 
         /*Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         if(i.resolveActivity(getPackageManager()) != null){
@@ -1146,7 +1127,7 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
         }
     }
 
-    private void startCamera(){
+    private void startCamera() {
         /*Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
@@ -1185,32 +1166,32 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
 
                     startCamera();
 
-                } else if(ActivityCompat.shouldShowRequestPermissionRationale(this, permissions[0])){
+                } else if (ActivityCompat.shouldShowRequestPermissionRationale(this, permissions[0])) {
 
                     ErrorDialog.newInstance(getString(R.string.request_permission))
                             .show(getFragmentManager(), FRAGMENT_DIALOG);
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
-                }else{
+                } else {
                     ErrorDialog.newInstance(getString(R.string.permission_indication))
                             .show(getFragmentManager(), FRAGMENT_DIALOG);
 
                 }
                 break;
             }
-            case REQUEST_STORAGE_PERMISSION:{
+            case REQUEST_STORAGE_PERMISSION: {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
                     startMedia();
 
-                } else if(ActivityCompat.shouldShowRequestPermissionRationale(this, permissions[0])){
+                } else if (ActivityCompat.shouldShowRequestPermissionRationale(this, permissions[0])) {
 
                     ErrorDialog.newInstance(getString(R.string.request_permission))
                             .show(getFragmentManager(), FRAGMENT_DIALOG);
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
-                }else{
+                } else {
                     ErrorDialog.newInstance(getString(R.string.permission_indication))
                             .show(getFragmentManager(), FRAGMENT_DIALOG);
                 }
@@ -1219,39 +1200,6 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
 
             // other 'case' lines to check for other
             // permissions this app might request
-        }
-    }
-
-
-
-    public static class ConfirmationDialog extends DialogFragment {
-
-        @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            final Activity parent = getActivity();
-            return new AlertDialog.Builder(getActivity())
-                    .setMessage(R.string.request_permission)
-                    .setCancelable(false)
-                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            ActivityCompat.requestPermissions(parent,
-                                    new String[]{Manifest.permission.CAMERA},
-                                    REQUEST_CAMERA_PERMISSION);
-                        }
-                    })
-                    .setNegativeButton(android.R.string.cancel,
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    Activity activity = parent;
-                                    if (activity != null) {
-                                        activity.finish();
-                                    }
-                                }
-                            })
-                    .create();
         }
     }
 

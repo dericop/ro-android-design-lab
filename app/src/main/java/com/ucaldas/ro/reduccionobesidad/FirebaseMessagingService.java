@@ -15,10 +15,6 @@ import com.google.firebase.messaging.RemoteMessage;
 
 import static android.content.ContentValues.TAG;
 
-/**
- * Created by disenoestrategico on 9/03/17.
- */
-
 public class FirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService {
 
     static int countOfNotf = 1;
@@ -28,14 +24,9 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        // ...
-
-        // TODO(developer): Handle FCM messages here.
-        Log.d(TAG, "From: " + remoteMessage.getFrom());
 
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
-            Log.d(TAG, "Message data payload: " + remoteMessage.getData());
 
             String type = remoteMessage.getData().get("type");
             String title = remoteMessage.getData().get("title");
@@ -49,14 +40,14 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
                             .setSmallIcon(R.drawable.ic_action_comment_white)
                             .setAutoCancel(true)
                             .setSound(alarmSound)
-                            .setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000 })
+                            .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
                             .setContentTitle(title)
                             .setStyle(new NotificationCompat.BigTextStyle().bigText(body))
                             .setContentText(body);
 
             Intent detailIntent = null;
 
-            switch(type){
+            switch (type) {
                 case "detail":
 
                     detailIntent = new Intent(getApplicationContext(), PostDetail.class);
@@ -74,7 +65,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
                     break;
             }
 
-            if(detailIntent != null){
+            if (detailIntent != null) {
 
                 TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
                 // Adds the back stack for the Intent (but not the Intent itself)
@@ -100,7 +91,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
         // Check if message contains a notification payload.
         if (remoteMessage.getNotification() != null) {
-            Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
+            //Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
         }
 
 

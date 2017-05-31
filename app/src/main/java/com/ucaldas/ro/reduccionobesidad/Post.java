@@ -33,9 +33,7 @@ public class Post{
     public long replyCount;
     public HashMap<String, Object> notificationTokens;
 
-    public Post(){
-
-    }
+    public Post(){}
 
     public Post(String id, String name, String category, String frecuency, String image, String user, long result, long average) {
         this.id = id;

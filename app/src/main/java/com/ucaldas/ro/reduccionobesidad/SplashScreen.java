@@ -8,10 +8,6 @@ import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
 
-/**
- * Created by disenoestrategico on 21/12/16.
- */
-
 public class SplashScreen extends Activity {
 
     @Override
@@ -19,7 +15,6 @@ public class SplashScreen extends Activity {
         super.onCreate(savedInstanceState);
         changeStatusBarColor();
         setContentView(R.layout.splash);
-
 
         Thread timerThread = new Thread(){
             public void run(){

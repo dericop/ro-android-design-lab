@@ -1,9 +1,8 @@
 package com.ucaldas.ro.reduccionobesidad;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -108,22 +107,22 @@ public class QuestionHistoricActivity extends AppCompatActivity {
                                             if (dataSnapshot.getValue() != null) {
                                                 HashMap<String, HashMap> map = (HashMap) dataSnapshot.getValue();
                                                 Iterator it = map.keySet().iterator();
-                                                HashMap response = map.get(it.next()+"");
+                                                HashMap response = map.get(it.next() + "");
 
-                                                question.setUserResponse((long)response.get("isCorrect"));
+                                                question.setUserResponse((long) response.get("isCorrect"));
                                                 mQuestionsAdapter.notifyDataSetChanged();
 
-                                                if((long)response.get("isCorrect") == 1){
+                                                if ((long) response.get("isCorrect") == 1) {
                                                     greenCount.incrementAndGet();
-                                                    countOfGreen.setText(greenCount.get()+"");
+                                                    countOfGreen.setText(greenCount.get() + "");
 
-                                                }else if((long)response.get("isCorrect") == 2){
+                                                } else if ((long) response.get("isCorrect") == 2) {
                                                     redCount.incrementAndGet();
-                                                    countOfRed.setText(redCount.get()+"");
+                                                    countOfRed.setText(redCount.get() + "");
                                                 }
-                                            }else{
+                                            } else {
                                                 grayCount.incrementAndGet();
-                                                countOfGray.setText(grayCount.get()+"");
+                                                countOfGray.setText(grayCount.get() + "");
                                             }
 
                                         }

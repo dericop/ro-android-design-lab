@@ -1,6 +1,5 @@
 package com.ucaldas.ro.reduccionobesidad;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -35,7 +34,6 @@ public class LoginActivity extends AppCompatActivity implements
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private static final int RC_SIGN_IN = 9001;
-    private ProgressDialog progress;
     private boolean buttonAgreeIsOK;
 
     @Override
@@ -112,22 +110,16 @@ public class LoginActivity extends AppCompatActivity implements
                     startActivity(new Intent(getBaseContext(), mHome.class));
 
                 } else {
-                    // AUser is signed out
-                    //progress.dismiss();
                     Toast.makeText(getBaseContext(), getString(R.string.login_fail), Toast.LENGTH_LONG);
-
                 }
             }
         };
-
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
-        /*progress = ProgressDialog.show(this, "Iniciando Sesión...",
-                "Espera un momento", true);*/
     }
 
     @Override
@@ -136,7 +128,6 @@ public class LoginActivity extends AppCompatActivity implements
         if(mAuthListener != null){
             mAuth.removeAuthStateListener(mAuthListener);
         }
-        //progress.dismiss();
     }
 
     @Override
@@ -150,19 +141,13 @@ public class LoginActivity extends AppCompatActivity implements
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
-                // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
-                //progress.dismiss();
             } else {
-                // Google Sign In failed, update UI appropriately
-                // ...
-                //progress.dismiss();
-                //Snackbar.make(getCurrentFocus(), "Revise su conexión a internet e intentelo más tarde", 2000).show();
+
                 handleSignInResult(result);
             }
         }
@@ -178,16 +163,12 @@ public class LoginActivity extends AppCompatActivity implements
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         Log.d("AUser", "signInWithCredential:onComplete:" + task.isSuccessful());
 
-                        // If sign in fails, display a message to the user. If sign in succeeds
-                        // the auth state listener will be notified and logic to handle the
-                        // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
                             Log.w("AUser", "signInWithCredential", task.getException());
 
                             Toast.makeText(LoginActivity.this, "Revisa tu conexión a internet e intentalo más tarde.",
                                     Toast.LENGTH_SHORT).show();
                         }
-                        // ...
                     }
                 });
     }
@@ -195,7 +176,6 @@ public class LoginActivity extends AppCompatActivity implements
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        //Log.v("AUser", connectionResult.getErrorMessage());
         Snackbar.make(getCurrentFocus(), "Revise su conexión a internet e intentelo más tarde", 2000).show();
     }
 
@@ -205,7 +185,6 @@ public class LoginActivity extends AppCompatActivity implements
             case R.id.sign_in_button:
                 signIn();
                 break;
-            // ...
         }
     }
 
@@ -217,12 +196,7 @@ public class LoginActivity extends AppCompatActivity implements
     private void handleSignInResult(GoogleSignInResult result) {
         Log.d("Sign In", "handleSignInResult:" + result.isSuccess());
         if (result.isSuccess()) {
-            // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
-            //mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
-
-        } else {
-            // Signed out, show unauthenticated UI.
         }
     }
 }

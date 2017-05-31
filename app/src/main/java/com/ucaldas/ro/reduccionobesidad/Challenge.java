@@ -5,9 +5,6 @@ import com.google.firebase.database.Exclude;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by disenoestrategico on 25/05/17.
- */
 
 public class Challenge {
     private String id;
@@ -16,7 +13,8 @@ public class Challenge {
     private String title;
     private long result;
 
-    public Challenge(){}
+    public Challenge() {
+    }
 
     public String getId() {
         return id;
@@ -59,15 +57,15 @@ public class Challenge {
     }
 
     @Exclude
-    public Map<String, Object> toMap(){
-        HashMap<String, Object> result = new HashMap<>();
-        result.put("id", id);
-        result.put("initDate", initDate);
-        result.put("endDate", endDate);
-        result.put("title", title);
-        result.put("result", result);
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> r = new HashMap<>();
+        r.put("id", id);
+        r.put("initDate", initDate);
+        r.put("endDate", endDate);
+        r.put("title", title);
+        r.put("result", result);
 
-        return result;
+        return r;
     }
 
 

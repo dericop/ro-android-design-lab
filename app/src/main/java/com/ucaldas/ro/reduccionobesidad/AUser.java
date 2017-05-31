@@ -4,9 +4,6 @@ import com.google.firebase.database.Exclude;
 
 import java.util.HashMap;
 
-/**
- * Created by disenoestrategico on 2/02/17.
- */
 
 public class AUser {
 
@@ -18,11 +15,9 @@ public class AUser {
     private long mWeight;
     private long isAdmin;
 
-    public AUser(){
+    public AUser() {}
 
-    }
-
-    public AUser(String uid, String userName, String email, String photoUrl){
+    public AUser(String uid, String userName, String email, String photoUrl) {
         mUid = uid;
         mUserName = userName;
         mEmail = email;
@@ -63,7 +58,7 @@ public class AUser {
     }
 
     @Exclude
-    public HashMap<String, Object> toMap(){
+    public HashMap<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
         result.put("mUid", mUid);
         result.put("mUserName", mUserName);
@@ -71,7 +66,7 @@ public class AUser {
         result.put("mPhotoUrl", mPhotoUrl);
         result.put("mGender", mGender);
         result.put("mWeight", getmWeight());
-        result.put("isAdmin",isAdmin);
+        result.put("isAdmin", isAdmin);
 
         return result;
 

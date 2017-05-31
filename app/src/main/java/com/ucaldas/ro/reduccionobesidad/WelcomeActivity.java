@@ -28,7 +28,7 @@ public class WelcomeActivity extends AppCompatActivity{
     private Button btnSkip, btnNext;
     private PrefManager prefManager;
 
-    public static String CURRENT_APP_VERSION = "R"; //Existen dos opciones "A", "R"
+    public static String CURRENT_APP_VERSION = "A"; //Existen dos opciones "A", "R"
     public static boolean isOnRepeatTutorial = false;
 
     @Override
@@ -132,13 +132,10 @@ public class WelcomeActivity extends AppCompatActivity{
         public void onPageSelected(int position) {
             addBottomDots(position);
 
-            // changing the next button text 'NEXT' / 'GOT IT'
             if (position == layouts.length - 1) {
-                // last page. make button text to GOT IT
                 btnNext.setText(getString(R.string.start));
                 btnSkip.setVisibility(View.GONE);
             } else {
-                // still pages are left
                 btnNext.setText(getString(R.string.next));
                 btnSkip.setVisibility(View.VISIBLE);
             }

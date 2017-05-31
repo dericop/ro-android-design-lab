@@ -9,30 +9,37 @@ import java.util.Map;
  * Created by disenoestrategico on 1/03/17.
  */
 
-public class Comment {
+class Comment {
     private String id;
     private String detail;
     private long date;
     private String user;
     private String userPhoto;
 
-    public Comment(){
-
+    public Comment() {
     }
 
-    public Comment(String detail, long date, String id){
+    public Comment(String detail, long date, String id) {
         this.setDetail(detail);
         this.setDate(date);
         this.setId(id);
     }
 
-    public String getUserPhoto(){ return userPhoto; }
+    public String getUserPhoto() {
+        return userPhoto;
+    }
 
-    public void setUserPhoto(String userPhoto){ this.userPhoto = userPhoto; }
+    public void setUserPhoto(String userPhoto) {
+        this.userPhoto = userPhoto;
+    }
 
-    public String getUser(){ return user; }
+    public String getUser() {
+        return user;
+    }
 
-    public void setUser(String user){ this.user = user; }
+    public void setUser(String user) {
+        this.user = user;
+    }
 
     public String getDetail() {
         return detail;
