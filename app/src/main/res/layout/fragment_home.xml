@@ -32,19 +32,23 @@
 
                     <include
                         android:id="@+id/questionView"
-                        layout="@layout/header_home_reflexive"/>
+                        layout="@layout/header_home_reflexive"
+                        android:visibility="gone"/>
 
                     <include
                         android:id="@+id/successView"
-                        layout="@layout/header_home_success"/>
+                        layout="@layout/header_home_success"
+                        android:visibility="gone"/>
 
                     <include
                         android:id="@+id/errorView"
-                        layout="@layout/header_home_error"/>
+                        layout="@layout/header_home_error"
+                        android:visibility="gone"/>
 
                     <include
                         android:id="@+id/challengeView"
-                        layout="@layout/header_home" />
+                        layout="@layout/header_home"
+                        android:visibility="gone"/>
 
                     <include
                         android:id="@+id/good_challenge"

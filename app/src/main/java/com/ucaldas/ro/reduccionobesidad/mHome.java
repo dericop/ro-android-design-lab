@@ -162,7 +162,8 @@ public class mHome extends AppCompatActivity
         initViewPager();
 
         context = getApplicationContext();
-        //Log.v("Notifias", FirebaseInstanceId.getInstance().getToken());
+
+        Log.v("Notifias", FirebaseInstanceId.getInstance().getToken());
 
     }
 

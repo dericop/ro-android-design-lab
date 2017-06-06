@@ -132,8 +132,10 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
     }
 
     private void updateViewWithChallenge(final Challenge challenge, View view){
+        final LinearLayout challengeView = (LinearLayout) view.findViewById(R.id.challengeView);
         final LinearLayout challengecontainer = (LinearLayout) view.findViewById(R.id.questionsContainer);
         challengecontainer.setVisibility(View.VISIBLE);
+        challengeView.setVisibility(View.VISIBLE);
 
         TextView txtTitle = (TextView) view.findViewById(R.id.challengeTitle);
         txtTitle.setText(challenge.getTitle());
@@ -167,6 +169,9 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
 
         final LinearLayout questionscontainer = (LinearLayout) view.findViewById(R.id.questionsContainer);
         questionscontainer.setVisibility(View.VISIBLE);
+        final LinearLayout questionsView = (LinearLayout) view.findViewById(R.id.questionView);
+        questionsView.setVisibility(View.VISIBLE);
+
         TextView txtTitle = (TextView) view.findViewById(R.id.questionTitle);
         txtTitle.setText(question.getTitle());
 
@@ -335,6 +340,7 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
                                             if(result == 0) { // el reto esta en espera de calificación
 
                                                 LinearLayout waitChallengeView = (LinearLayout) view.findViewById(R.id.wait_challenge);
+                                                challengecontainer.setVisibility(View.VISIBLE);
 
                                                 if(challengeView!=null && waitChallengeView!=null){
                                                     challengeView.setVisibility(View.GONE);
@@ -345,6 +351,7 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
                                                 challengeView.setVisibility(View.GONE);
                                                 final LinearLayout successChallengeView = (LinearLayout) view.findViewById(R.id.good_challenge);
                                                 successChallengeView.setVisibility(View.VISIBLE);
+                                                challengecontainer.setVisibility(View.VISIBLE);
 
                                                 Handler handler = new Handler();
                                                 handler.postDelayed(new Runnable() {
@@ -359,6 +366,7 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
 
                                             }else if(result == 2){ // el reto fué rechazado
                                                 challengeView.setVisibility(View.GONE);
+                                                challengecontainer.setVisibility(View.VISIBLE);
                                                 final LinearLayout badChallengeView = (LinearLayout) view.findViewById(R.id.bad_challenge);
                                                 badChallengeView.setVisibility(View.VISIBLE);
 
@@ -370,6 +378,7 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
                                                         challengeView.setVisibility(View.VISIBLE);
                                                         FirebaseDatabase.getInstance().getReference().child("gamification-score")
                                                                 .child(mHome.user.getUid()).child(challenge.getId()).removeValue();
+                                                        updateViewWithChallenge(challenge, view);
                                                     }
                                                 }, 7000);
                                             }
