@@ -43,16 +43,16 @@ android {
             signingConfig signingConfigs.CoRus
             targetSdkVersion 25
             testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
-            versionCode 10
-            versionName '2.4.0'
+            versionCode 11
+            versionName '2.4.1'
         }
         cocono {
             minSdkVersion 15
             applicationId 'com.ucaldas.ro.reduccionobesidad'
             signingConfig signingConfigs.CoCono
             targetSdkVersion 25
-            versionCode 10
-            versionName '2.4.0'
+            versionCode 11
+            versionName '2.4.1'
         }
     }
 }
