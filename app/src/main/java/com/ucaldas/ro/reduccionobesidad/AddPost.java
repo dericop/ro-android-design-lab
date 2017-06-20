@@ -114,7 +114,7 @@ public class AddPost extends AppCompatActivity implements ActivityCompat.OnReque
     private ArrayAdapter<CharSequence> categoryAdapter; //Arreglo de categorías
     private AppCompatActivity thisRef; //referencia a this para usarse en otros contextos.
 
-    private final String FILE_PROVIDER = "com.ucaldas.android.fileprovider"; //ruta para el manejo de archivos
+    private final String FILE_PROVIDER = "com.ucaldas.android.cocono.fileprovider"; //ruta para el manejo de archivos
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
