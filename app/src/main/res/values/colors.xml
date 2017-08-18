@@ -4,8 +4,8 @@
     <color name="colorPrimaryDark">#44494e</color>
     <color name="colorPrimarySoft">#3d4146</color>
 
-    <color name="colorAccent">#00adee</color>
-    <!--<color name="colorAccent">#f6931e</color>-->
+    <!-- <color name="colorAccent">#00adee</color> -->
+    <color name="colorAccent">#f6931e</color>
     <color name="success">#13b10b</color>
     <color name="error">#cf1c25</color>
 

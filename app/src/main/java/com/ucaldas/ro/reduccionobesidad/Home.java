@@ -727,6 +727,8 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
 
     private void refreshPostList() {
 
+        Log.v("test", "Prueba");
+
         //assignPostsReference();
         DatabaseReference pReference;
 

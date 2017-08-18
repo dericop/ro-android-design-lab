@@ -153,6 +153,7 @@ public class Simulation extends Fragment {
         badHabitsAverages = 1.0;
 
         tView = view;
+
         loadItems(view);
     }
 
@@ -186,6 +187,7 @@ public class Simulation extends Fragment {
     }
 
     public void loadData(final View view) {
+
         if (mHome.user != null) {
 
             firebaseDatabase = FirebaseDatabase.getInstance().getReference();
@@ -224,14 +226,14 @@ public class Simulation extends Fragment {
                                         if (dataSnapshot.getValue() != null) {
 
                                             Post post = dataSnapshot.getValue(Post.class);
-                                            countOfElements.incrementAndGet();
                                             Log.v("Simulacion", countOfElements.get()+"");
                                             Log.v("Simulacion", (keys.size() - 1)+"T");
 
                                             if (post.getResult() != 0) {
                                                 calculatePostQualification(post, frecuenciesCost, frecuencies, sumOfFrecuencies, countOfHealthy, countOfMedium, countOfBad);
 
-                                                if (countOfElements.get() == (keys.size() - 1)) {
+                                                Log.v("ElementsCounts", "Element of counts: "+countOfElements.get()+" Keys:"+keys.size());
+                                                if (countOfElements.get() == (keys.size() -1)) {
                                                     updateViewsAndRestarData(countOfHealthy, countOfMedium, countOfBad, view, sumOfFrecuencies);
                                                     swiperefresh.setRefreshing(false);
 
@@ -242,6 +244,14 @@ public class Simulation extends Fragment {
                                                     badHabitsAverages = 0.0;
                                                 }
                                             }
+
+                                            if (countOfElements.get() == (keys.size() -1)) {
+                                                swiperefresh.setRefreshing(false);
+                                            }else{
+                                                countOfElements.incrementAndGet();
+                                            }
+
+
                                         }
                                     }
 
