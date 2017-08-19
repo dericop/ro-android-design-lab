@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -94,6 +95,8 @@ public class MyItems extends Fragment {
                     myItems.clear();
                     HashMap<String, HashMap<String, String>> map = (HashMap) dataSnapshot.getValue();
 
+
+
                     for (String key : map.keySet()) {
                         HashMap<String, Object> values = (HashMap) map.get(key);
 
@@ -118,6 +121,8 @@ public class MyItems extends Fragment {
                             String duration = (String) values.get("duration");
                             post.setDuration(duration);
                         }
+
+                        Log.wtf("Map", post.toString());
 
                         itemsRef.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override

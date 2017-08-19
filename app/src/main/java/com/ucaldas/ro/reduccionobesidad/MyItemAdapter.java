@@ -54,11 +54,10 @@ public class MyItemAdapter extends BaseAdapter {
 
         View convertView;
 
-        if (view == null) {
+        final Post post = getItem(i);
+        List foodList = Arrays.asList(mContext.getResources().getStringArray(R.array.new_post_food_categories));
 
-            // Lead actual.
-            final Post post = getItem(i);
-            List foodList = Arrays.asList(mContext.getResources().getStringArray(R.array.new_post_food_categories));
+        if (view == null) {
 
             if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
 
@@ -72,135 +71,134 @@ public class MyItemAdapter extends BaseAdapter {
                 }
             }
 
-            // Referencias UI.
-            ImageView thumbnail = (ImageView) convertView.findViewById(R.id.thumbnail);
-            TextView name = (TextView) convertView.findViewById(R.id.title);
-            LinearLayout resultItem = (LinearLayout) convertView.findViewById(R.id.result_item);
-            TextView txtAverage = (TextView) convertView.findViewById(R.id.txt_average_data);
-            TextView txtActivityResult = (TextView) convertView.findViewById(R.id.txt_activity_result);
-            LinearLayout containerActivityResult = (LinearLayout) convertView.findViewById(R.id.container_txt_activity_result);
+        } else {
+            convertView = view;
+        }
 
-            thumbnail.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent detailIntent = new Intent(mContext, AddPost.class);
-                    detailIntent.putExtra("source", "update");
-                    detailIntent.putExtra("name", post.getName());
-                    detailIntent.putExtra("category", post.getCategory());
-                    detailIntent.putExtra("frecuency", post.getFrecuency());
-                    detailIntent.putExtra("duration", post.getDuration());
-                    detailIntent.putExtra("image", post.getImage());
-                    detailIntent.putExtra("id", post.getId());
+        // Referencias UI.
+        ImageView thumbnail = (ImageView) convertView.findViewById(R.id.thumbnail);
+        TextView name = (TextView) convertView.findViewById(R.id.title);
+        LinearLayout resultItem = (LinearLayout) convertView.findViewById(R.id.result_item);
+        TextView txtAverage = (TextView) convertView.findViewById(R.id.txt_average_data);
+        TextView txtActivityResult = (TextView) convertView.findViewById(R.id.txt_activity_result);
+        LinearLayout containerActivityResult = (LinearLayout) convertView.findViewById(R.id.container_txt_activity_result);
 
-                    mContext.startActivity(detailIntent);
-                }
-            });
+        thumbnail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent detailIntent = new Intent(mContext, AddPost.class);
+                detailIntent.putExtra("source", "update");
+                detailIntent.putExtra("name", post.getName());
+                detailIntent.putExtra("category", post.getCategory());
+                detailIntent.putExtra("frecuency", post.getFrecuency());
+                detailIntent.putExtra("duration", post.getDuration());
+                detailIntent.putExtra("image", post.getImage());
+                detailIntent.putExtra("id", post.getId());
 
-            // Setup
-            Glide.with(mContext).load(post.getImage()).into(thumbnail);
-            name.setText(post.getName());
-            long result = post.getResult();
+                mContext.startActivity(detailIntent);
+            }
+        });
 
-            if(result == 0){
-                if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
-                    txtAverage.setVisibility(View.INVISIBLE);
-                    resultItem.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.circle_clock));
-                }else{
-                    if(!foodList.contains(post.getCategory())){
-                        txtActivityResult.setText("Pendiente");
-                        containerActivityResult.setBackgroundColor(mContext.getResources().getColor(R.color.activity_wait_color));
-                    }
-                }
+        // Setup
+        Glide.with(mContext).load(post.getImage()).into(thumbnail);
+        name.setText(post.getName());
+        long result = post.getResult();
 
+        if(result == 0){
+            if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
+                txtAverage.setVisibility(View.INVISIBLE);
+                resultItem.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.circle_clock));
             }else{
-                if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
-
-                    switch ((int)result){
-                        case 1:
-                            resultItem.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.circle_bad));
-                            break;
-                        case 2:
-                            resultItem.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.circle_medium));
-                            break;
-                        case 3:
-                            resultItem.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.circle_good));
-                            break;
-                    }
-                }else{
-
-                    if(!foodList.contains(post.getCategory())){
-                        containerActivityResult.setBackgroundColor(mContext.getResources().getColor(R.color.colorAccent));
-                        int intResult = (int)result;
-
-                        if(intResult == 1){
-                            txtActivityResult.setText("Sedentario");
-                        }else if(intResult>1 && intResult<3){
-                            txtActivityResult.setText("Bajo");
-                        }else if(intResult>=3 && intResult<=4){
-                            txtActivityResult.setText("Medio Bajo");
-                        }else if(intResult>4 && intResult<=6){
-                            txtActivityResult.setText("Medio");
-                        }else if(intResult>6 && intResult<=8){
-                            txtActivityResult.setText("Medio Alto");
-                        }else if(intResult>8 && intResult<=10){
-                            txtActivityResult.setText("Alto");
-                        }
-
-                    }else{
-                        View piContainer = convertView.findViewById(R.id.piContainer);
-                        View aaContainer = convertView.findViewById(R.id.aaContainer);
-                        View gsContainer = convertView.findViewById(R.id.gsContainer);
-                        View chContainer = convertView.findViewById(R.id.chContainer);
-
-
-                        int maxCalificationForPI = 10;
-                        int relativeLayoutHeight = 50;
-
-                        if(post.getR_pi() != 0){
-                            int percentage = (int)(post.getR_pi()*100)/maxCalificationForPI;
-                            int graphicalHeight = (percentage*relativeLayoutHeight) / 100;
-
-                            ViewGroup.LayoutParams piParams = piContainer.getLayoutParams();
-                            piParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, graphicalHeight, mContext.getResources().getDisplayMetrics());
-                            piContainer.setLayoutParams(piParams);
-                        }
-
-                        int maxCalificationForOthers = 3;
-                        if(post.getR_aa() != 0){
-                            int percentage = (int)(post.getR_aa()*100)/maxCalificationForOthers;
-                            int graphicalHeight = (percentage*relativeLayoutHeight)/ 100;
-
-                            ViewGroup.LayoutParams aaParams = aaContainer.getLayoutParams();
-                            aaParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, graphicalHeight, mContext.getResources().getDisplayMetrics());
-                            aaContainer.setLayoutParams(aaParams);
-                        }
-
-                        if(post.getR_gs() != 0){
-                            int percentage = (int)(post.getR_gs()*100)/maxCalificationForOthers;
-                            int graphicalHeight = (percentage*relativeLayoutHeight)/ 100;
-
-                            ViewGroup.LayoutParams gsParams = gsContainer.getLayoutParams();
-                            gsParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, graphicalHeight, mContext.getResources().getDisplayMetrics());
-                            gsContainer.setLayoutParams(gsParams);
-                        }
-
-                        if(post.getR_ch() != 0){
-
-                            int percentage = (int)(post.getR_ch()*100)/maxCalificationForOthers;
-                            int graphicalHeight = (percentage*relativeLayoutHeight)/ 100;
-                            ViewGroup.LayoutParams chParams = chContainer.getLayoutParams();
-                            chParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, graphicalHeight, mContext.getResources().getDisplayMetrics());
-                            chContainer.setLayoutParams(chParams);
-                        }
-
-                    }
-
+                if(!foodList.contains(post.getCategory())){
+                    txtActivityResult.setText("Pendiente");
+                    containerActivityResult.setBackgroundColor(mContext.getResources().getColor(R.color.activity_wait_color));
                 }
             }
 
-        } else {
-            convertView = view;
+        }else{
+            if(WelcomeActivity.CURRENT_APP_VERSION.equals("A")){
 
+                switch ((int)result){
+                    case 1:
+                        resultItem.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.circle_bad));
+                        break;
+                    case 2:
+                        resultItem.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.circle_medium));
+                        break;
+                    case 3:
+                        resultItem.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.circle_good));
+                        break;
+                }
+            }else{
+
+                if(!foodList.contains(post.getCategory())){
+                    containerActivityResult.setBackgroundColor(mContext.getResources().getColor(R.color.colorAccent));
+                    int intResult = (int)result;
+
+                    if(intResult == 1){
+                        txtActivityResult.setText("Sedentario");
+                    }else if(intResult>1 && intResult<3){
+                        txtActivityResult.setText("Bajo");
+                    }else if(intResult>=3 && intResult<=4){
+                        txtActivityResult.setText("Medio Bajo");
+                    }else if(intResult>4 && intResult<=6){
+                        txtActivityResult.setText("Medio");
+                    }else if(intResult>6 && intResult<=8){
+                        txtActivityResult.setText("Medio Alto");
+                    }else if(intResult>8 && intResult<=10){
+                        txtActivityResult.setText("Alto");
+                    }
+
+                }else{
+                    View piContainer = convertView.findViewById(R.id.piContainer);
+                    View aaContainer = convertView.findViewById(R.id.aaContainer);
+                    View gsContainer = convertView.findViewById(R.id.gsContainer);
+                    View chContainer = convertView.findViewById(R.id.chContainer);
+
+
+                    int maxCalificationForPI = 10;
+                    int relativeLayoutHeight = 50;
+
+                    if(post.getR_pi() != 0){
+                        int percentage = (int)(post.getR_pi()*100)/maxCalificationForPI;
+                        int graphicalHeight = (percentage*relativeLayoutHeight) / 100;
+
+                        ViewGroup.LayoutParams piParams = piContainer.getLayoutParams();
+                        piParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, graphicalHeight, mContext.getResources().getDisplayMetrics());
+                        piContainer.setLayoutParams(piParams);
+                    }
+
+                    int maxCalificationForOthers = 3;
+                    if(post.getR_aa() != 0){
+                        int percentage = (int)(post.getR_aa()*100)/maxCalificationForOthers;
+                        int graphicalHeight = (percentage*relativeLayoutHeight)/ 100;
+
+                        ViewGroup.LayoutParams aaParams = aaContainer.getLayoutParams();
+                        aaParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, graphicalHeight, mContext.getResources().getDisplayMetrics());
+                        aaContainer.setLayoutParams(aaParams);
+                    }
+
+                    if(post.getR_gs() != 0){
+                        int percentage = (int)(post.getR_gs()*100)/maxCalificationForOthers;
+                        int graphicalHeight = (percentage*relativeLayoutHeight)/ 100;
+
+                        ViewGroup.LayoutParams gsParams = gsContainer.getLayoutParams();
+                        gsParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, graphicalHeight, mContext.getResources().getDisplayMetrics());
+                        gsContainer.setLayoutParams(gsParams);
+                    }
+
+                    if(post.getR_ch() != 0){
+
+                        int percentage = (int)(post.getR_ch()*100)/maxCalificationForOthers;
+                        int graphicalHeight = (percentage*relativeLayoutHeight)/ 100;
+                        ViewGroup.LayoutParams chParams = chContainer.getLayoutParams();
+                        chParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, graphicalHeight, mContext.getResources().getDisplayMetrics());
+                        chContainer.setLayoutParams(chParams);
+                    }
+
+                }
+
+            }
         }
 
         return convertView;

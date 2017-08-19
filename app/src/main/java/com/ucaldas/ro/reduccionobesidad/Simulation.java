@@ -154,11 +154,12 @@ public class Simulation extends Fragment {
 
         tView = view;
 
+        Log.wtf("Simulation", "test");
         loadItems(view);
     }
 
     private void loadItems(final View view) {
-
+        Log.wtf("Simulacion", "elementos");
         if (mHome.user == null) {
             mAuth = FirebaseAuth.getInstance();
             mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -187,7 +188,6 @@ public class Simulation extends Fragment {
     }
 
     public void loadData(final View view) {
-
         if (mHome.user != null) {
 
             firebaseDatabase = FirebaseDatabase.getInstance().getReference();
@@ -223,17 +223,17 @@ public class Simulation extends Fragment {
                                 quaDBRef.child(post.get("id") + "").addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
+                                        countOfElements.incrementAndGet();
+
                                         if (dataSnapshot.getValue() != null) {
 
                                             Post post = dataSnapshot.getValue(Post.class);
-                                            Log.v("Simulacion", countOfElements.get()+"");
-                                            Log.v("Simulacion", (keys.size() - 1)+"T");
 
                                             if (post.getResult() != 0) {
                                                 calculatePostQualification(post, frecuenciesCost, frecuencies, sumOfFrecuencies, countOfHealthy, countOfMedium, countOfBad);
 
-                                                Log.v("ElementsCounts", "Element of counts: "+countOfElements.get()+" Keys:"+keys.size());
-                                                if (countOfElements.get() == (keys.size() -1)) {
+                                                Log.wtf("ElementsCounts", "Element of counts: "+countOfElements.get()+" Keys:"+(keys.size()));
+                                                if (countOfElements.get() == keys.size()) {
                                                     updateViewsAndRestarData(countOfHealthy, countOfMedium, countOfBad, view, sumOfFrecuencies);
                                                     swiperefresh.setRefreshing(false);
 
@@ -245,10 +245,8 @@ public class Simulation extends Fragment {
                                                 }
                                             }
 
-                                            if (countOfElements.get() == (keys.size() -1)) {
+                                            if (countOfElements.get() == (keys.size())) {
                                                 swiperefresh.setRefreshing(false);
-                                            }else{
-                                                countOfElements.incrementAndGet();
                                             }
 
 
