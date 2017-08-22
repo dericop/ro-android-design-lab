@@ -32,7 +32,7 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.CoCono
-            applicationIdSuffix ''
+            applicationIdSuffix '.cocono'
         }
         debug {
         }
@@ -43,16 +43,16 @@ android {
             signingConfig signingConfigs.CoRus
             targetSdkVersion 25
             testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
-            versionCode 12
-            versionName '2.4.1'
+            versionCode 13
+            versionName '2.4.2'
         }
         cocono {
             minSdkVersion 15
             applicationId 'com.ucaldas.ro.reduccionobesidad'
             signingConfig signingConfigs.CoCono
             targetSdkVersion 25
-            versionCode 12
-            versionName '2.4.1'
+            versionCode 13
+            versionName '2.4.2'
         }
     }
 }
