@@ -44,6 +44,8 @@ public class QuestionsAdapter extends ArrayAdapter<Question>{
         response1.setText(cQuestion.getResponse1());
         response2.setText(cQuestion.getResponse2());
 
+        userResponse.setImageDrawable(mContext.getResources().getDrawable(R.drawable.gray_circle));
+
         if(cQuestion.getUserResponse() == 1){
             userResponse.setImageDrawable(mContext.getResources().getDrawable(R.drawable.green_circle));
         }else if(cQuestion.getUserResponse() == 2){
@@ -52,9 +54,11 @@ public class QuestionsAdapter extends ArrayAdapter<Question>{
 
         if(response1.getText().equals(cQuestion.getCorrect())){
             response1.setBackgroundResource(R.drawable.success_response);
+            response2.setBackgroundResource(R.drawable.disabled_response);
             response1.setTextColor(mContext.getResources().getColor(R.color.colorPrimaryDark));
         }else{
             response2.setBackgroundResource(R.drawable.success_response);
+            response1.setBackgroundResource(R.drawable.disabled_response);
             response2.setTextColor(mContext.getResources().getColor(R.color.colorPrimaryDark));
         }
 
@@ -67,6 +71,13 @@ public class QuestionsAdapter extends ArrayAdapter<Question>{
         mQuestions = questions;
     }
 
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
 
-
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
 }

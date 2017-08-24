@@ -70,4 +70,14 @@ public class TipsRecyclerViewAdapter extends RecyclerView.Adapter<TipsRecyclerVi
             return super.toString() + " '" + mTitle.getText() + "'";
         }
     }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
 }
