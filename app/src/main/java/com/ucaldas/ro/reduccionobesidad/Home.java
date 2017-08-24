@@ -268,7 +268,7 @@ public class Home extends ListFragment implements AdapterView.OnItemClickListene
                     case R.id.takePhoto:
                         Intent camera_intent = new Intent(getContext(), AddPost.class);
                         camera_intent.putExtra("source", "camera");
-                        camera_intent.putExtra("challenge", "true");
+                        camera_intent.putExtra("challenge", true);
                         camera_intent.putExtra("challengeId", challengeId);
                         startActivity(camera_intent);
 
