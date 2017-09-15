@@ -19,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -74,9 +75,54 @@ public class ConfigurationActivity extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         configureDBReference();
 
+        tests();
         initGraphicalComponents();
         loadData();
 
+    }
+
+    //28   //19
+    public void tests(){
+        final String mId = mHome.user.getUid();
+        if(!(mId == null) && !mId.equals("")){
+            mDatabase.child("users").child(mId).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    AUser usr = dataSnapshot.getValue(AUser.class);
+                    if(usr == null){
+                        AUser nUsr = new AUser();
+                        nUsr.setmUserName(mHome.user.getDisplayName());
+                        nUsr.setmEmail(mHome.user.getEmail());
+                        nUsr.setmPhotoUrl(mHome.user.getPhotoUrl().toString());
+
+                        nUsr.setmUid(mId);
+                        nUsr.setIsAdmin(0);
+
+                        HashMap userData = nUsr.toMap();
+                        HashMap dataToUpdate = new HashMap();
+
+                        if (WelcomeActivity.CURRENT_APP_VERSION.equals("A")) {
+                            dataToUpdate.put("/users/" + mId, userData);
+                        } else {
+                            dataToUpdate.put("/users-reflexive/" + mId, userData);
+                        }
+
+                        mDatabase.updateChildren(dataToUpdate).addOnSuccessListener(new OnSuccessListener() {
+                            @Override
+                            public void onSuccess(Object o) {
+                                initGraphicalComponents();
+                                loadData();
+                            }
+                        });
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
     }
 
     @Override
