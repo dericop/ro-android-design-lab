@@ -30,7 +30,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Inicia Sesión en CoCono"
+            android:text="Inicia Sesión en CoRus"
             android:id="@+id/txt_login_subtitle"
             android:textColor="#263238"
             android:textSize="22sp"
